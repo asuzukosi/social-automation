@@ -1,0 +1,1 @@
+"""Shared social domain contracts."""

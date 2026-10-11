@@ -1,0 +1,64 @@
+[project]
+name = "social-automation"
+version = "0.1.0"
+description = "One policy-controlled MCP server for X, Reddit, and LinkedIn"
+requires-python = ">=3.12.4,<3.15"
+license-files = [
+    "third_party/xactions/LICENSE",
+    "third_party/xactions/PROVENANCE",
+    "third_party/xactions/THIRD-PARTY-NOTICES.md",
+]
+dependencies = [
+    "defusedxml>=0.7,<1",
+    "fastmcp>=4.0.10,<5",
+    "httpx>=0.28,<1",
+    "mcp-server-linkedin==4.27.0",
+    "patchright>=1.55,<2",
+    "pydantic>=2.12,<3",
+]
+
+[project.scripts]
+social = "social_automation.server:main"
+
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+include = ["social_automation*"]
+
+[tool.setuptools.package-data]
+"social_automation.platforms.x" = ["worker.mjs"]
+
+[dependency-groups]
+dev = [
+    "mypy>=1.18",
+    "pytest>=8.4",
+    "pytest-asyncio>=1.2",
+    "ruff>=0.14",
+    "types-defusedxml>=0.7",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+asyncio_mode = "auto"
+addopts = "-q --strict-markers"
+
+[tool.ruff]
+line-length = 100
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM"]
+
+[tool.mypy]
+python_version = "3.12"
+strict = true
+packages = ["social_automation"]
+
+[tool.deptry.package_module_name_map]
+mcp-server-linkedin = "linkedin_mcp_server"
+
+[[tool.mypy.overrides]]
+module = ["linkedin_mcp_server.*"]
+follow_imports = "skip"
+ignore_missing_imports = true

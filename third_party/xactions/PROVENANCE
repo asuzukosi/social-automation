@@ -1,0 +1,9 @@
+XActions 3.5.0
+https://github.com/nirholas/xactions
+Source commit: b9c4bf7bd680f82d4ede0a1b48bb1c5dbfd7bb78
+
+social_automation/platforms/x/worker.mjs is a bundled subset of the HTTP
+client, search, thread, profile, action, engagement, and direct-message modules.
+It was built for Node 22 with esbuild using ESM output and retained legal
+comments. No XActions server, dashboard, scheduler, database, or AI module is
+included.
