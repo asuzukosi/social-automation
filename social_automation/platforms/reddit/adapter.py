@@ -1,5 +1,3 @@
-from __future__ import annotations
-
 from typing import Any
 
 from social_automation.core.models import (
@@ -54,12 +52,20 @@ class RedditAdapter:
     async def close(self) -> None:
         await self._browser.close()
 
+    async def authenticate(self, force: bool = False) -> dict[str, object]:
+        return await self._browser.authenticate(force)
+
+    async def authentication_status(self) -> dict[str, object]:
+        return await self._browser.authentication_status()
+
+    async def logout(self) -> dict[str, object]:
+        return await self._browser.logout()
+
     def capabilities(self) -> list[Capability]:
         reads = [self._capability(name, False, True) for name in READ_OPERATIONS]
-        writes = [
+        return reads + [
             self._capability(item.value, True, item in _SUPPORTED_WRITES) for item in ActionName
         ]
-        return reads + writes
 
     async def search(self, query: str, limit: int) -> ReadResult:
         data = await self._reader.json("/search", {"q": query, "limit": limit})
@@ -241,8 +247,4 @@ class RedditAdapter:
 
     @staticmethod
     def _read_limit(operation: str) -> int:
-        if operation == "get_thread":
-            return 200
-        if operation in {"search", "get_feed"}:
-            return 25
-        return 1
+        return {"get_thread": 200, "search": 25, "get_feed": 25}.get(operation, 1)

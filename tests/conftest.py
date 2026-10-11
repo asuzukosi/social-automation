@@ -33,6 +33,15 @@ class FakeAdapter:
     async def close(self) -> None:
         self.closed += 1
 
+    async def authenticate(self, force: bool = False) -> dict[str, object]:
+        return {"platform": self.platform.value, "authenticated": True, "forced": force}
+
+    async def authentication_status(self) -> dict[str, object]:
+        return {"authenticated": True}
+
+    async def logout(self) -> dict[str, object]:
+        return {"platform": self.platform.value, "authenticated": False}
+
     def capabilities(self) -> list[Capability]:
         return [
             Capability(

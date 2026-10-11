@@ -17,8 +17,6 @@ async def test_confirmation_executes_once(service: SocialService) -> None:
     arguments = (
         preview.operation_id,
         preview.preview_token,
-        preview.input_hash,
-        "idempotency-123",
         True,
     )
 
@@ -41,8 +39,6 @@ async def test_confirmation_requires_explicit_true(service: SocialService) -> No
         await service.confirm_action(
             preview.operation_id,
             preview.preview_token,
-            preview.input_hash,
-            "idempotency-123",
             False,
         )
 
@@ -59,16 +55,14 @@ async def test_cancelled_preview_cannot_execute(service: SocialService) -> None:
     )
 
     cancelled = service.cancel_action(preview.operation_id)
-    audit = service.get_action(preview.operation_id)
+    stored = service.get_action(preview.operation_id)
 
     assert cancelled["status"] == "cancelled"
-    assert [event["event"] for event in audit] == ["previewed", "cancelled"]
-    with pytest.raises(ValueError, match="already been consumed"):
+    assert stored["status"] == "cancelled"
+    with pytest.raises(ValueError, match="no longer confirmable"):
         await service.confirm_action(
             preview.operation_id,
             preview.preview_token,
-            preview.input_hash,
-            "idempotency-cancelled",
             True,
         )
     assert isinstance(adapter, FakeAdapter)
@@ -90,8 +84,6 @@ async def test_unexpected_write_failure_is_durable(service: SocialService) -> No
     arguments = (
         preview.operation_id,
         preview.preview_token,
-        preview.input_hash,
-        "idempotency-failure",
         True,
     )
 

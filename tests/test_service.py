@@ -82,11 +82,40 @@ async def test_service_closes_remaining_adapters_after_one_close_fails(
 def test_accounts_never_require_developer_credentials(service: SocialService) -> None:
     accounts = service.accounts()
 
-    assert {account["authentication"] for account in accounts} == {
-        "session_cookie",
-        "browser_profile",
-    }
+    assert {account["authentication"] for account in accounts} == {"browser_profile"}
     assert all(account["developer_credentials_required"] is False for account in accounts)
+
+
+async def test_authentication_routes_to_one_platform(service: SocialService) -> None:
+    adapter = service.adapters[Platform.X]
+    adapter.authenticate = AsyncMock(return_value={"platform": "x", "authenticated": True})
+
+    result = await service.authenticate(Platform.X, force=True)
+
+    assert result["authenticated"] is True
+    adapter.authenticate.assert_awaited_once_with(True)
+
+
+async def test_authentication_status_reports_every_platform(service: SocialService) -> None:
+    result = await service.authentication_status()
+
+    assert result == {
+        "platforms": {
+            "x": {"authenticated": True},
+            "reddit": {"authenticated": True},
+            "linkedin": {"authenticated": True},
+        }
+    }
+
+
+async def test_logout_routes_to_one_platform(service: SocialService) -> None:
+    adapter = service.adapters[Platform.REDDIT]
+    adapter.logout = AsyncMock(return_value={"platform": "reddit", "authenticated": False})
+
+    result = await service.logout(Platform.REDDIT)
+
+    assert result["authenticated"] is False
+    adapter.logout.assert_awaited_once_with()
 
 
 async def test_preview_performs_no_write(service: SocialService) -> None:
@@ -102,65 +131,6 @@ async def test_preview_performs_no_write(service: SocialService) -> None:
     assert preview.remaining_writes == 1
     assert isinstance(adapter, FakeAdapter)
     assert adapter.executions == 0
-
-
-async def test_draft_builds_distinct_variants_without_writing(
-    service: SocialService,
-) -> None:
-    draft = service.create_draft(
-        "A shared launch note",
-        [Platform.X, Platform.REDDIT, Platform.LINKEDIN],
-        "primary",
-        {"reddit": "r/automation"},
-        {"x": "A short launch note", "linkedin": "A professional launch note"},
-        {"reddit": "What we shipped"},
-    )
-
-    previews = await service.preview_draft(draft.draft_id)
-
-    assert [variant.text for variant in draft.variants] == [
-        "A short launch note",
-        "A shared launch note",
-        "A professional launch note",
-    ]
-    assert previews[1].action.request.target == "r/automation"
-    assert previews[1].action.request.title == "What we shipped"
-    assert all(
-        isinstance(adapter, FakeAdapter) and adapter.executions == 0
-        for adapter in service.adapters.values()
-    )
-
-
-def test_draft_rejects_invalid_platform_variants(service: SocialService) -> None:
-    with pytest.raises(ValueError, match="X draft exceeds 280"):
-        service.create_draft(
-            "x" * 281,
-            [Platform.X],
-            "primary",
-            {},
-            {},
-            {},
-        )
-
-    with pytest.raises(ValueError, match="Reddit drafts require"):
-        service.create_draft(
-            "hello",
-            [Platform.REDDIT],
-            "primary",
-            {"reddit": "r/automation"},
-            {},
-            {},
-        )
-
-    with pytest.raises(ValueError, match="unselected platforms"):
-        service.create_draft(
-            "hello",
-            [Platform.X],
-            "primary",
-            {},
-            {"linkedin": "not selected"},
-            {},
-        )
 
 
 async def test_preview_rejects_an_ambiguous_account(service: SocialService) -> None:

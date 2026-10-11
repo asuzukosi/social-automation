@@ -8,9 +8,10 @@ description: Read Reddit discussions and perform approved Reddit actions through
 Reddit reads use public JSON or RSS first. When Reddit blocks anonymous JSON,
 reads fall back to the dedicated visible browser profile and its first-party
 session. Writes use that same profile, never OAuth client credentials or an API
-key. Ask the user to sign in there when `social_status` reports unauthenticated.
-An `authenticated: null` status means the browser session has not been opened
-yet; do not open it just to probe authentication.
+key. Check `social_authentication_status` without opening the browser. Ask the
+user to sign in when it reports Reddit as unauthenticated. When login is needed,
+call `social_authenticate` for Reddit. Force a fresh login only at the user's
+request or after Reddit rejects the saved session.
 
 For a new post, target the subreddit name and include `title`. For top-level
 comments, votes, and deletes, use a Reddit canonical URL or native `t3_`

@@ -11,8 +11,9 @@ EXPECTED_TOOLS = {
     "social_status",
     "social_capabilities",
     "social_accounts",
-    "social_create_draft",
-    "social_preview_draft",
+    "social_authenticate",
+    "social_authentication_status",
+    "social_logout",
     "social_search",
     "social_get_feed",
     "social_get_profile",
@@ -43,6 +44,10 @@ async def test_preview_schema_has_no_untyped_provider_bag() -> None:
     assert "title" in properties
     assert properties["reaction"]["anyOf"][0]["enum"] == ["like", "up", "down", "remove"]
     assert tools["social_preview_action"].annotations.read_only_hint is False
+    assert tools["social_authenticate"].input_schema["properties"]["force"]["default"] is False
+    assert tools["social_authentication_status"].annotations.read_only_hint is True
+    confirm_properties = tools["social_confirm_action"].input_schema["properties"]
+    assert set(confirm_properties) == {"operation_id", "preview_token", "confirmed"}
 
 
 async def test_read_tools_enforce_conservative_result_limits() -> None:
@@ -65,6 +70,11 @@ async def test_public_platform_enum_contains_only_selected_networks() -> None:
 
     platforms = tools["social_search"].input_schema["properties"]["platforms"]
     assert platforms["items"]["enum"] == ["x", "reddit", "linkedin"]
+    assert tools["social_authenticate"].input_schema["properties"]["platform"]["enum"] == [
+        "x",
+        "reddit",
+        "linkedin",
+    ]
 
 
 async def test_social_content_is_marked_as_untrusted_data() -> None:

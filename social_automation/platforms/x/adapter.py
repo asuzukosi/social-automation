@@ -1,5 +1,3 @@
-"""Python owner for the temporary XActions Node worker."""
-
 from typing import Any
 
 from social_automation.core.models import (
@@ -17,6 +15,7 @@ from social_automation.core.models import (
 )
 from social_automation.core.redaction import redact_error
 from social_automation.platforms.base import READ_OPERATIONS
+from social_automation.platforms.x.auth import XAuthentication
 from social_automation.platforms.x.mapping import post_from_row, thread_nodes
 from social_automation.platforms.x.runtime import XRuntime
 from social_automation.platforms.x.urls import (
@@ -38,16 +37,26 @@ _SUPPORTED_WRITES = {
 
 
 class XAdapter:
-    """Expose XActions' proven HTTP client through a narrow internal bridge."""
-
     def __init__(self) -> None:
-        self._runtime = XRuntime()
+        self._authentication = XAuthentication()
+        self._runtime = XRuntime(self._authentication)
 
     async def status(self) -> dict[str, object]:
         return self._runtime.status()
 
     async def close(self) -> None:
         await self._runtime.close()
+
+    async def authenticate(self, force: bool = False) -> dict[str, object]:
+        await self._runtime.close()
+        return await self._authentication.authenticate(force)
+
+    async def authentication_status(self) -> dict[str, object]:
+        return {"authenticated": self._authentication.has_saved_session()}
+
+    async def logout(self) -> dict[str, object]:
+        await self._runtime.close()
+        return await self._authentication.logout()
 
     def capabilities(self) -> list[Capability]:
         reads = [self._capability(name, False) for name in READ_OPERATIONS]
@@ -204,7 +213,7 @@ class XAdapter:
             operation=operation,
             supported=supported,
             write=write,
-            authentication="X cookies required for writes and some reads",
+            authentication="Local X browser session for writes and personal reads",
             access=AccessMode.UNOFFICIAL_HTTP,
             automation_allowed=supported and not write,
             approval_required=supported and write,
@@ -216,11 +225,7 @@ class XAdapter:
 
     @staticmethod
     def _read_limit(operation: str) -> int:
-        if operation == "get_thread":
-            return 200
-        if operation in {"search", "get_feed"}:
-            return 25
-        return 1
+        return {"get_thread": 200, "search": 25, "get_feed": 25}.get(operation, 1)
 
     @staticmethod
     def _find_id(data: object) -> str | None:

@@ -1,5 +1,6 @@
-"""Write-gate persistence tests."""
+"""Write-state persistence tests."""
 
+import sqlite3
 import stat
 from pathlib import Path
 
@@ -15,17 +16,7 @@ from social_automation.core.models import (
 from social_automation.storage import ActionStore
 
 
-def test_state_database_is_private_to_current_user(tmp_path: Path) -> None:
-    path = tmp_path / "private" / "state.db"
-
-    ActionStore(path)
-
-    assert stat.S_IMODE(path.stat().st_mode) == 0o600
-    assert stat.S_IMODE(path.parent.stat().st_mode) == 0o700
-
-
 def action() -> RenderedAction:
-    """Return one exact rendered action."""
     return RenderedAction(
         request=ActionRequest(
             platform=Platform.X,
@@ -37,79 +28,50 @@ def action() -> RenderedAction:
     )
 
 
-def test_preview_does_not_create_execution_event(tmp_path: Path) -> None:
+def test_database_is_private_and_contains_one_table(tmp_path: Path) -> None:
+    path = tmp_path / "private" / "state.db"
+
+    ActionStore(path)
+
+    with sqlite3.connect(path) as db:
+        tables = {
+            row[0]
+            for row in db.execute(
+                "SELECT name FROM sqlite_master WHERE type = 'table' AND name NOT LIKE 'sqlite_%'"
+            )
+        }
+    assert tables == {"actions"}
+    assert stat.S_IMODE(path.stat().st_mode) == 0o600
+    assert stat.S_IMODE(path.parent.stat().st_mode) == 0o700
+
+
+def test_preview_stores_one_safe_operation(tmp_path: Path) -> None:
     store = ActionStore(tmp_path / "state.db")
     preview = store.create_preview(action())
 
-    assert preview.action.rendered_text == "hello"
-    assert [event["event"] for event in store.list_actions()] == ["previewed"]
+    stored = store.get_action(preview.operation_id)
+
+    assert stored["status"] == "previewed"
+    assert stored["action"]["rendered_text"] == "hello"
+    assert "preview_token" not in stored
 
 
-def test_changed_hash_is_rejected(tmp_path: Path) -> None:
-    store = ActionStore(tmp_path / "state.db")
-    preview = store.create_preview(action())
-
-    with pytest.raises(ValueError, match="changed"):
-        store.consume_preview(
-            preview.operation_id,
-            preview.preview_token,
-            "different",
-            "unique-key",
-        )
-
-
-def test_invalid_preview_token_is_rejected(tmp_path: Path) -> None:
+def test_invalid_or_expired_preview_is_rejected(tmp_path: Path) -> None:
     store = ActionStore(tmp_path / "state.db")
     preview = store.create_preview(action())
 
     with pytest.raises(ValueError, match="Invalid preview token"):
-        store.consume_preview(
-            preview.operation_id,
-            "wrong-token",
-            preview.input_hash,
-            "unique-key",
-        )
+        store.consume_preview(preview.operation_id, "wrong-token")
 
-
-def test_expired_preview_is_rejected(tmp_path: Path) -> None:
-    store = ActionStore(tmp_path / "state.db")
-    preview = store.create_preview(action(), ttl_seconds=-1)
-
+    expired = store.create_preview(action(), ttl_seconds=-1)
     with pytest.raises(ValueError, match="Preview has expired"):
-        store.consume_preview(
-            preview.operation_id,
-            preview.preview_token,
-            preview.input_hash,
-            "unique-key",
-        )
-
-
-def test_consumed_preview_is_audited_before_external_execution(tmp_path: Path) -> None:
-    store = ActionStore(tmp_path / "state.db")
-    preview = store.create_preview(action())
-
-    store.consume_preview(
-        preview.operation_id,
-        preview.preview_token,
-        preview.input_hash,
-        "unique-key",
-    )
-
-    assert [event["event"] for event in store.get_action(preview.operation_id)] == [
-        "previewed",
-        "execution_started",
-    ]
+        store.consume_preview(expired.operation_id, expired.preview_token)
 
 
 def test_confirmation_replay_returns_recorded_result(tmp_path: Path) -> None:
     store = ActionStore(tmp_path / "state.db")
     preview = store.create_preview(action())
-    rendered = store.consume_preview(
-        preview.operation_id,
-        preview.preview_token,
-        preview.input_hash,
-        "unique-key",
-    )
+    rendered = store.consume_preview(preview.operation_id, preview.preview_token)
     assert isinstance(rendered, RenderedAction)
     result = ActionResult(
         operation_id=preview.operation_id,
@@ -120,39 +82,29 @@ def test_confirmation_replay_returns_recorded_result(tmp_path: Path) -> None:
         retry_safe=False,
         native_id="123",
     )
-    store.record_result("unique-key", result)
+    store.record_result(result)
 
-    replay = store.consume_preview(
-        preview.operation_id,
-        preview.preview_token,
-        preview.input_hash,
-        "unique-key",
-    )
+    replay = store.consume_preview(preview.operation_id, preview.preview_token)
 
     assert replay == result
+    with sqlite3.connect(tmp_path / "state.db") as db:
+        retained = db.execute(
+            "SELECT token_hash, action_json FROM actions WHERE operation_id = ?",
+            (preview.operation_id,),
+        ).fetchone()
+    stored = store.get_action(preview.operation_id)
+    assert retained == (None, None)
+    assert stored["action"] is None
+    assert stored["expires_at"] is None
+    assert stored["result"]["native_id"] == "123"
 
 
-def test_idempotency_key_cannot_cross_operations(tmp_path: Path) -> None:
+def test_cancelled_preview_cannot_be_consumed(tmp_path: Path) -> None:
     store = ActionStore(tmp_path / "state.db")
-    first = store.create_preview(action())
-    store.consume_preview(first.operation_id, first.preview_token, first.input_hash, "shared-key")
-    store.record_result(
-        "shared-key",
-        ActionResult(
-            operation_id=first.operation_id,
-            platform=Platform.X,
-            action=ActionName.CREATE_POST,
-            status="confirmed",
-            confirmed=True,
-            retry_safe=False,
-        ),
-    )
-    second = store.create_preview(action())
+    preview = store.create_preview(action())
 
-    with pytest.raises(ValueError, match="another operation"):
-        store.consume_preview(
-            second.operation_id,
-            second.preview_token,
-            second.input_hash,
-            "shared-key",
-        )
+    store.cancel_action(preview.operation_id)
+
+    assert store.get_action(preview.operation_id)["action"] is None
+    with pytest.raises(ValueError, match="no longer confirmable"):
+        store.consume_preview(preview.operation_id, preview.preview_token)

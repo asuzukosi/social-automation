@@ -7,6 +7,10 @@ description: Research, publish, and engage on X through the unified social MCP u
 
 Use only the unified `social_*` tools. X reads and writes use the retained HTTP
 client internally and a user session cookie, never an X developer API key.
+Check `social_authentication_status` first. If X is unauthenticated, call
+`social_authenticate` and let the user complete the visible login. Use forced
+authentication only when the user requests a fresh session or the existing
+session is rejected.
 
 Use tweet IDs for reply, reaction, reshare, and delete targets; use usernames
 for follow and direct-message targets. Check `social_capabilities` before the

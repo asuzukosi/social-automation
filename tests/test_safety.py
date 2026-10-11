@@ -79,8 +79,6 @@ async def test_confirmations_are_serialized_across_platforms(service: SocialServ
             service.confirm_action(
                 preview.operation_id,
                 preview.preview_token,
-                preview.input_hash,
-                f"idempotency-{preview.action.request.platform.value}",
                 True,
             )
             for preview in previews

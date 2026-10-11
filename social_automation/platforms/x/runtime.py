@@ -7,9 +7,12 @@ import shutil
 from pathlib import Path
 from typing import Any
 
+from social_automation.platforms.x.auth import XAuthentication
+
 
 class XRuntime:
-    def __init__(self) -> None:
+    def __init__(self, authentication: XAuthentication | None = None) -> None:
+        self._authentication = authentication or XAuthentication()
         self._process: asyncio.subprocess.Process | None = None
         self._lock = asyncio.Lock()
         self._request_id = 0
@@ -17,7 +20,7 @@ class XRuntime:
     def status(self) -> dict[str, object]:
         return {
             "available": shutil.which("node") is not None and self._worker.is_file(),
-            "authenticated": bool(os.getenv("X_COOKIES") or os.getenv("XACTIONS_SESSION_COOKIE")),
+            "authenticated": bool(self._authentication.cookie_header()),
         }
 
     async def call(self, method: str, params: dict[str, object]) -> Any:
@@ -77,6 +80,7 @@ class XRuntime:
         if self._process and self._process.returncode is None:
             return self._process
         environment = {**os.environ, "XACTIONS_HOME": str(Path.home() / ".social-automation" / "x")}
+        environment["X_COOKIES"] = self._authentication.cookie_header()
         self._process = await asyncio.create_subprocess_exec(
             "node",
             str(self._worker),

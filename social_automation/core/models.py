@@ -107,34 +107,6 @@ class Profile(BaseModel):
     provider_metadata: dict[str, Any] = Field(default_factory=dict)
 
 
-class DraftVariant(BaseModel):
-    """One final platform-specific version of a source message."""
-
-    platform: Platform
-    account: str
-    text: str = Field(min_length=1, max_length=25_000)
-    target: str | None = Field(default=None, max_length=2_048)
-    title: str | None = Field(default=None, max_length=300)
-
-    @model_validator(mode="after")
-    def validate_platform_fields(self) -> DraftVariant:
-        if self.platform is Platform.REDDIT:
-            if not (self.target and self.target.strip() and self.title and self.title.strip()):
-                raise ValueError("Reddit drafts require a target community and title")
-        elif self.target is not None or self.title is not None:
-            raise ValueError("Only Reddit post drafts accept a target or title")
-        return self
-
-
-class Draft(BaseModel):
-    """One source message and all selected platform variants."""
-
-    draft_id: str
-    message: str = Field(min_length=1, max_length=25_000)
-    variants: list[DraftVariant] = Field(min_length=1)
-    created_at: datetime = Field(default_factory=lambda: datetime.now(UTC))
-
-
 class ThreadNode(BaseModel):
     """One post or comment in a discussion tree."""
 
@@ -217,7 +189,6 @@ class ActionPreview(BaseModel):
 
     operation_id: str
     preview_token: str
-    input_hash: str
     expires_at: datetime
     action: RenderedAction
     policy: str = "explicit_confirmation_only"

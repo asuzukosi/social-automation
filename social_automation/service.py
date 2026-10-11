@@ -6,13 +6,10 @@ from functools import cached_property
 from pathlib import Path
 
 from social_automation.core.models import (
-    ActionName,
     ActionPreview,
     ActionRequest,
     ActionResult,
     Completeness,
-    Draft,
-    DraftVariant,
     Platform,
     ReadResult,
     RenderedAction,
@@ -62,6 +59,30 @@ class SocialService:
             *(adapter.close() for adapter in self.adapters.values()), return_exceptions=True
         )
 
+    async def authenticate(self, platform: Platform, force: bool = False) -> dict[str, object]:
+        """Open the platform's interactive login flow."""
+        return await self._adapter(platform).authenticate(force)
+
+    async def authentication_status(self) -> dict[str, object]:
+        """Inspect every platform's saved session without opening browsers."""
+        calls = [adapter.authentication_status() for adapter in self.adapters.values()]
+        results = await asyncio.gather(*calls, return_exceptions=True)
+        platforms: dict[str, object] = {}
+        for platform, result in zip(self.adapters, results, strict=True):
+            platforms[platform.value] = (
+                {
+                    "authenticated": None,
+                    "error": redact_error(result),
+                }
+                if isinstance(result, BaseException)
+                else result
+            )
+        return {"platforms": platforms}
+
+    async def logout(self, platform: Platform) -> dict[str, object]:
+        """Clear the platform's local authentication state."""
+        return await self._adapter(platform).logout()
+
     def capabilities(self) -> dict[str, list[dict[str, object]]]:
         return {
             platform.value: [item.model_dump(mode="json") for item in adapter.capabilities()]
@@ -70,7 +91,7 @@ class SocialService:
 
     def accounts(self) -> list[dict[str, object]]:
         authentication = {
-            Platform.X: "session_cookie",
+            Platform.X: "browser_profile",
             Platform.REDDIT: "browser_profile",
             Platform.LINKEDIN: "browser_profile",
         }
@@ -83,42 +104,6 @@ class SocialService:
             }
             for platform in self.adapters
         ]
-
-    def create_draft(
-        self,
-        message: str,
-        platforms: list[Platform],
-        account: str,
-        targets: dict[str, str],
-        overrides: dict[str, str],
-        titles: dict[str, str],
-    ) -> Draft:
-        if account != "primary":
-            raise ValueError("Only the configured 'primary' account is available")
-        selected = list(dict.fromkeys(platforms))
-        if not selected:
-            raise ValueError("Select at least one platform")
-        self._validate_variant_keys(selected, targets, overrides, titles)
-        variants = [
-            self._draft_variant(platform, account, message, targets, overrides, titles)
-            for platform in selected
-        ]
-        return self.store.create_draft(message, variants)
-
-    async def preview_draft(self, draft_id: str) -> list[ActionPreview]:
-        draft = self.store.get_draft(draft_id)
-        previews: list[ActionPreview] = []
-        for variant in draft.variants:
-            request = ActionRequest(
-                platform=variant.platform,
-                action=ActionName.CREATE_POST,
-                account=variant.account,
-                target=variant.target,
-                text=variant.text,
-                title=variant.title,
-            )
-            previews.append(await self.preview_action(request))
-        return previews
 
     async def search(self, query: str, platforms: list[Platform], limit: int) -> dict[str, object]:
         selected = list(dict.fromkeys(platforms))
@@ -162,22 +147,18 @@ class SocialService:
         self,
         operation_id: str,
         preview_token: str,
-        input_hash: str,
-        idempotency_key: str,
         confirmed: bool,
     ) -> ActionResult:
         """Execute one exact preview once after explicit confirmation."""
         if not confirmed:
             raise ValueError("Explicit confirmation is required")
         async with self._write_lock:
-            consumed = self.store.consume_preview(
-                operation_id, preview_token, input_hash, idempotency_key
-            )
+            consumed = self.store.consume_preview(operation_id, preview_token)
             if isinstance(consumed, ActionResult):
                 return consumed
             adapter = self._adapter(consumed.request.platform)
             try:
-                result = await adapter.execute_action(consumed, idempotency_key)
+                result = await adapter.execute_action(consumed, operation_id)
                 result.operation_id = operation_id
             except Exception as error:
                 result = ActionResult(
@@ -189,15 +170,15 @@ class SocialService:
                     retry_safe=False,
                     detail=redact_error(error),
                 )
-            self.store.record_result(idempotency_key, result)
+            self.store.record_result(result)
             return result
 
     def list_actions(self, limit: int) -> list[dict[str, object]]:
-        """Return recent preview and execution audit events."""
+        """Return recent write operations."""
         return self.store.list_actions(limit)
 
-    def get_action(self, operation_id: str) -> list[dict[str, object]]:
-        """Return the audit trail for one operation."""
+    def get_action(self, operation_id: str) -> dict[str, object]:
+        """Return one write operation."""
         return self.store.get_action(operation_id)
 
     def cancel_action(self, operation_id: str) -> dict[str, object]:
@@ -216,34 +197,3 @@ class SocialService:
             return await call
         except Exception as error:
             return ReadResult(completeness=Completeness.BLOCKED, reason=redact_error(error))
-
-    def _draft_variant(
-        self,
-        platform: Platform,
-        account: str,
-        message: str,
-        targets: dict[str, str],
-        overrides: dict[str, str],
-        titles: dict[str, str],
-    ) -> DraftVariant:
-        text = overrides.get(platform.value, message).strip()
-        if not text:
-            raise ValueError(f"{platform.value} draft text cannot be empty")
-        if platform is Platform.X and len(text) > 280:
-            raise ValueError("X draft exceeds 280 characters; provide a shorter override")
-        target = targets.get(platform.value)
-        title = titles.get(platform.value)
-        return DraftVariant(
-            platform=platform,
-            account=account,
-            text=text,
-            target=target,
-            title=title,
-        )
-
-    @staticmethod
-    def _validate_variant_keys(platforms: list[Platform], *mappings: dict[str, str]) -> None:
-        selected = {platform.value for platform in platforms}
-        unknown = set().union(*(mapping.keys() for mapping in mappings)) - selected
-        if unknown:
-            raise ValueError(f"Variant data supplied for unselected platforms: {sorted(unknown)}")

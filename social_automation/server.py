@@ -63,32 +63,22 @@ def social_accounts() -> list[dict[str, object]]:
     return get_service().accounts()
 
 
-@mcp.tool(annotations={"readOnlyHint": False})
-def social_create_draft(
-    message: Annotated[str, Field(min_length=1, max_length=25_000)],
-    platforms: list[Platform],
-    account: str = "primary",
-    targets: dict[str, str] | None = None,
-    overrides: dict[str, str] | None = None,
-    titles: dict[str, str] | None = None,
-) -> dict[str, Any]:
-    """Store one source message and exact variants for selected platforms."""
-    draft = get_service().create_draft(
-        message,
-        platforms,
-        account,
-        targets or {},
-        overrides or {},
-        titles or {},
-    )
-    return draft.model_dump(mode="json")
+@mcp.tool(annotations={"readOnlyHint": False, "openWorldHint": True})
+async def social_authenticate(platform: Platform, force: bool = False) -> dict[str, object]:
+    """Open an interactive login window without accepting or returning credentials."""
+    return await get_service().authenticate(platform, force)
 
 
-@mcp.tool(annotations={"readOnlyHint": False})
-async def social_preview_draft(draft_id: str) -> list[dict[str, Any]]:
-    """Render every variant as a non-writing confirmation preview."""
-    previews = await get_service().preview_draft(draft_id)
-    return [preview.model_dump(mode="json") for preview in previews]
+@mcp.tool(annotations={"readOnlyHint": True})
+async def social_authentication_status() -> dict[str, object]:
+    """Inspect saved sessions for all platforms without opening a browser."""
+    return await get_service().authentication_status()
+
+
+@mcp.tool(annotations={"destructiveHint": True})
+async def social_logout(platform: Platform) -> dict[str, object]:
+    """Clear one platform's locally saved session."""
+    return await get_service().logout(platform)
 
 
 @mcp.tool(annotations={"readOnlyHint": True, "openWorldHint": True})
@@ -168,16 +158,12 @@ async def social_preview_action(
 async def social_confirm_action(
     operation_id: str,
     preview_token: str,
-    input_hash: str,
-    idempotency_key: Annotated[str, Field(min_length=8, max_length=200)],
     confirmed: bool,
 ) -> dict[str, Any]:
     """Execute one unchanged, unexpired preview after explicit confirmation."""
     result = await get_service().confirm_action(
         operation_id,
         preview_token,
-        input_hash,
-        idempotency_key,
         confirmed,
     )
     return result.model_dump(mode="json")
@@ -191,13 +177,13 @@ def social_cancel_action(operation_id: str) -> dict[str, object]:
 
 @mcp.tool(annotations={"readOnlyHint": True})
 def social_list_actions(limit: Annotated[int, Field(ge=1, le=200)] = 50) -> list[dict[str, object]]:
-    """List recent preview and execution audit events."""
+    """List recent write operations without preview tokens."""
     return get_service().list_actions(limit)
 
 
 @mcp.tool(annotations={"readOnlyHint": True})
-def social_get_action(operation_id: str) -> list[dict[str, object]]:
-    """Return the complete audit trail for one action."""
+def social_get_action(operation_id: str) -> dict[str, object]:
+    """Return one write operation without its preview token."""
     return get_service().get_action(operation_id)
 
 

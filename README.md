@@ -66,18 +66,27 @@ Codex configuration:
 ```
 
 No integration requires a developer API key or registered API application.
-Authentication remains outside the repository:
+Call `social_authenticate` with `x`, `reddit`, or `linkedin` to open that
+platform's visible login window. Pass `force=true` to discard that platform's
+existing local session first. Call `social_logout` to clear one saved session.
+Passwords, cookies, and verification codes never cross the MCP interface.
+Call `social_authentication_status` to see which platforms have a saved login.
+It reads local session state without opening a browser or making a network
+request. `false` means login is needed; `null` means the local state could not
+be inspected.
 
-- X: `X_COOKIES` containing the complete authenticated cookie string.
-- Reddit: public feeds use JSON or RSS without login. When Reddit blocks other
-  anonymous JSON reads, sign in once in the visible browser using the dedicated
-  `~/.social-automation/reddit-profile` profile; no OAuth application is needed.
-- LinkedIn: the installed package's dedicated browser profile and configuration.
+X stores its browser profile and worker session under `~/.social-automation/x`.
+Reddit uses `~/.social-automation/reddit-profile`; public JSON and RSS reads can
+still work without login. LinkedIn uses the installed package's profile under
+`~/.linkedin-mcp`. The legacy `X_COOKIES` environment variable remains
+supported when interactive login is not desired. If it is configured by the
+MCP host, `social_logout` clears it only for the running server; remove the host
+configuration to keep X logged out after a restart.
 
 Set `SOCIAL_BROWSER_CHANNEL` only when Chrome is exposed under a different
 Patchright channel name. It is browser configuration, not a credential.
-`social_status` does not open that browser; it reports Reddit authentication as
-unknown until a browser-backed operation has started the dedicated session.
+`social_status` reports adapter availability. Use
+`social_authentication_status` for the passive login inventory.
 
 Install the repository's Codex skills:
 
@@ -94,10 +103,10 @@ only the required XActions 3.5.0 HTTP modules; its provenance and licensing are
 retained under `third_party/xactions`. The installed LinkedIn package carries
 its own license and notice files.
 
-Single actions use `social_preview_action`; cross-platform publishing can start
-with `social_create_draft` and `social_preview_draft`. Every returned preview
-must then be passed to `social_confirm_action`. A failed or uncertain write is
-never automatically retried.
+Every platform variant is passed directly to `social_preview_action`, then to
+`social_confirm_action` after approval. Drafts stay in the active conversation
+instead of being copied into SQLite. A failed or uncertain write is never
+automatically retried.
 
 The server is deliberately unsuitable for mass scraping or bot campaigns.
 Search and feed reads return at most 25 items, thread reads at most 200, and

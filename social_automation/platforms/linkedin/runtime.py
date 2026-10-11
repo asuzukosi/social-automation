@@ -1,12 +1,14 @@
 """Direct Python integration with the imported LinkedIn browser runtime."""
 
 import asyncio
+import sys
 from dataclasses import asdict
 from typing import Any, cast
 
-from linkedin_mcp_server.authentication import get_authentication_source
+from linkedin_mcp_server.authentication import clear_auth_state, get_authentication_source
 from linkedin_mcp_server.dependencies import get_ready_extractor
 from linkedin_mcp_server.drivers.browser import close_browser, get_or_create_browser
+from linkedin_mcp_server.exceptions import CredentialsNotFoundError
 from linkedin_mcp_server.linkedin.navigation import PageNavigator
 from linkedin_mcp_server.linkedin.session import PageSession
 
@@ -30,6 +32,49 @@ class LinkedInRuntime:
     async def close(self) -> None:
         async with self._lock:
             await close_browser()
+
+    async def authenticate(self, force: bool = False) -> dict[str, object]:
+        """Run LinkedIn's supported interactive profile login."""
+        async with self._lock:
+            if not force:
+                try:
+                    get_authentication_source()
+                    return {"platform": "linkedin", "authenticated": True}
+                except CredentialsNotFoundError:
+                    pass
+            await close_browser()
+            if force:
+                await asyncio.to_thread(clear_auth_state)
+            process = await asyncio.create_subprocess_exec(
+                sys.executable,
+                "-m",
+                "linkedin_mcp_server",
+                "--login",
+                stdin=asyncio.subprocess.DEVNULL,
+                stdout=asyncio.subprocess.DEVNULL,
+                stderr=asyncio.subprocess.PIPE,
+            )
+            await process.communicate()
+            if process.returncode != 0:
+                raise RuntimeError("LinkedIn login did not complete")
+            get_authentication_source()
+            return {"platform": "linkedin", "authenticated": True}
+
+    async def authentication_status(self) -> dict[str, object]:
+        """Check whether LinkedIn has a saved local session."""
+        try:
+            get_authentication_source()
+            authenticated = True
+        except CredentialsNotFoundError:
+            authenticated = False
+        return {"authenticated": authenticated}
+
+    async def logout(self) -> dict[str, object]:
+        """Clear the LinkedIn package's saved browser session."""
+        async with self._lock:
+            await close_browser()
+            await asyncio.to_thread(clear_auth_state)
+        return {"platform": "linkedin", "authenticated": False}
 
     async def call(self, name: str, arguments: dict[str, object]) -> dict[str, Any]:
         async with self._lock:

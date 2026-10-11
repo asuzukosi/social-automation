@@ -15,11 +15,10 @@ Check `social_capabilities` before promising an operation. Account for X's
 short format, Reddit's required community and `title`, and LinkedIn's
 professional context. Present every final variant and target to the user.
 
-Call `social_create_draft` with the source message, selected platforms, exact
-overrides, targets, and Reddit titles. Then call `social_preview_draft`. A
-preview is not approval. Show every rendered text, target, side effect, expiry,
-operation ID, policy, and remaining-write budget, then obtain explicit user confirmation before calling
-`social_confirm_action` for each approved variant with a fresh idempotency key.
+Call `social_preview_action` once for each final platform variant. A preview is
+not approval. Show every rendered text, target, side effect, expiry, operation
+ID, policy, and remaining-write budget, then obtain explicit user confirmation
+before calling `social_confirm_action` for each approved variant.
 Confirmation is per platform; the set is not atomic.
 Respect `max_writes_per_confirmation`; publishing is never an autonomous
 capability even when several variants were reviewed together.

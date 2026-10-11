@@ -1,7 +1,3 @@
-"""Internal client for the imported LinkedIn browser runtime."""
-
-from __future__ import annotations
-
 import json
 from typing import Any
 
@@ -46,15 +42,20 @@ class LinkedInAdapter:
     async def close(self) -> None:
         await self._runtime.close()
 
+    async def authenticate(self, force: bool = False) -> dict[str, object]:
+        return await self._runtime.authenticate(force)
+
+    async def authentication_status(self) -> dict[str, object]:
+        return await self._runtime.authentication_status()
+
+    async def logout(self) -> dict[str, object]:
+        return await self._runtime.logout()
+
     def capabilities(self) -> list[Capability]:
         supported_reads = {"search", "get_feed", "get_profile", "get_post"}
-        capabilities = [
-            _capability(name, False, name in supported_reads) for name in READ_OPERATIONS
-        ]
-        capabilities += [
+        return [_capability(name, False, name in supported_reads) for name in READ_OPERATIONS] + [
             _capability(name.value, True, name in _SUPPORTED_WRITES) for name in ActionName
         ]
-        return capabilities
 
     async def search(self, query: str, limit: int) -> ReadResult:
         data = await self._call(
@@ -220,13 +221,15 @@ class LinkedInAdapter:
 
 def _capability(operation: str, write: bool, supported: bool) -> Capability:
     restrictions = [
-        "Browser automation may trigger restrictions and is not risk-free",
-        "Bulk automation is not supported" if write else "Reads are bounded",
+        "Browser automation may trigger restrictions",
+        "No bulk automation" if write else "Reads are bounded",
     ]
-    if operation == "get_profile":
-        restrictions.append("Company reads require a canonical /company/ URL")
-    if operation == "get_feed":
-        restrictions.append("The visible feed does not expose a stable resume cursor")
+    detail = {
+        "get_profile": "Company reads require a canonical /company/ URL",
+        "get_feed": "The visible feed does not expose a stable resume cursor",
+    }.get(operation)
+    if detail:
+        restrictions.append(detail)
     return Capability(
         operation=operation,
         supported=supported,

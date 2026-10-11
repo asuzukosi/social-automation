@@ -8,6 +8,9 @@ description: Read, publish, connect, react, and message on LinkedIn through the 
 Use the dedicated visible browser profile and only the unified `social_*`
 tools. LinkedIn browser automation carries account-restriction risk; safeguards
 do not make it risk-free or guarantee platform compliance.
+Check `social_authentication_status` first. Call `social_authenticate` for
+LinkedIn when no saved session is available. Force a fresh login only at the
+user's request or after LinkedIn rejects the saved session.
 
 Check capabilities first. Search, post creation, comments, default reactions,
 connections, and messages are available. Single-post reads are bounded and
