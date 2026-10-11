@@ -49,6 +49,8 @@ uv sync --group dev
 uv run social
 ```
 
+See [SETUP.md](SETUP.md) for the complete agent and account connection guide.
+
 Node 22 or newer is required only for the bundled X worker. No npm install is
 needed.
 
