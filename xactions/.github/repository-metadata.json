@@ -1,0 +1,13 @@
+{
+    "name": "XActions",
+    "description": "\u26a1 The Complete X/Twitter Automation Toolkit \u2014 Scrapers, MCP server for AI agents (Claude/GPT), CLI, browser scripts. No API fees. Open source. Unfollow people who don't follow back. Monitor real-time analytics. Auto follow, like, comment, scrape, without API.",
+    "version": "1.0.0",
+    "publisher": "nirholas",
+    "repository": "https://github.com/nirholas/XActions",
+    "language": "JavaScript",
+    "topics": [
+        "xactions",
+        "nirholas",
+        "open-source"
+    ]
+}

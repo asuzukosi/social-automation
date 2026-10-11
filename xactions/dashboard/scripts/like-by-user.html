@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Like By User - XActions — Free X/Twitter Script | XActions</title>
+  <meta name="description" content="Automatically like all tweets from a specific user's profile">
+  <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, like, user, engagement">
+  <meta name="author" content="nich (@nichxbt)">
+  <meta name="robots" content="index, follow">
+
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Like By User - XActions — XActions">
+  <meta property="og:description" content="Automatically like all tweets from a specific user's profile">
+  <meta property="og:url" content="https://xactions.app/scripts/like-by-user">
+  <meta property="og:site_name" content="XActions">
+  <meta property="og:image" content="https://xactions.app/og-image.png">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@nichxbt">
+  <meta name="twitter:title" content="Like By User - XActions — XActions">
+  <meta name="twitter:description" content="Automatically like all tweets from a specific user's profile">
+
+  <link rel="canonical" href="https://xactions.app/scripts/like-by-user">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "Like By User - XActions — Free X/Twitter Script | XActions",
+    "description": "Automatically like all tweets from a specific user's profile",
+    "url": "https://xactions.app/scripts/like-by-user",
+    "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
+    "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
+    "datePublished": "2026-03-30",
+    "dateModified": "2026-03-30",
+    "articleSection": "Engagement",
+    "keywords": "xactions, twitter automation, x automation, browser script, devtools console, free, open source, like, user, engagement"
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
+      { "@type": "ListItem", "position": 2, "name": "Scripts", "item": "https://xactions.app/scripts" },
+      { "@type": "ListItem", "position": 3, "name": "Engagement", "item": "https://xactions.app/scripts#engagement" },
+      { "@type": "ListItem", "position": 4, "name": "Like By User - XActions", "item": "https://xactions.app/scripts/like-by-user" }
+    ]
+  }
+  </script>
+
+  <link rel="stylesheet" href="/css/common.css">
+  <style>
+    .article { padding: 24px 20px; }
+    .article h1 { font-size: 1.75rem; font-weight: 800; margin-bottom: 8px; line-height: 1.2; }
+    .article h2 { font-size: 1.375rem; font-weight: 700; margin: 32px 0 12px; padding-top: 16px; border-top: 1px solid var(--border); }
+    .article h3 { font-size: 1.125rem; font-weight: 600; margin: 24px 0 8px; color: var(--accent); }
+    .article p { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 16px; }
+    .article a { color: var(--accent); text-decoration: none; }
+    .article a:hover { text-decoration: underline; }
+    .article strong { color: var(--text-primary); }
+    .article code { background: var(--bg-tertiary); padding: 2px 6px; border-radius: 4px; font-family: 'Monaco','Menlo','Consolas', monospace; font-size: 0.875rem; color: var(--accent); }
+    .article pre { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 16px; overflow-x: auto; margin: 16px 0; }
+    .article pre code { background: none; padding: 0; color: var(--text-primary); font-size: 0.8125rem; display: block; }
+    .article table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 0.875rem; }
+    .article th { background: var(--bg-secondary); padding: 10px 12px; text-align: left; border: 1px solid var(--border); font-weight: 600; }
+    .article td { padding: 10px 12px; border: 1px solid var(--border); color: var(--text-secondary); }
+    .cat-badge { display: inline-block; background: var(--accent-light); color: var(--accent); padding: 4px 12px; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; margin-bottom: 16px; }
+    .meta-row { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 16px; font-size: 0.8125rem; color: var(--text-secondary); }
+    .meta-row span { display: flex; align-items: center; gap: 4px; }
+    .usage-steps { margin-left: 24px; margin-bottom: 16px; }
+    .usage-steps li { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 8px; padding-left: 4px; }
+    .warning-box { background: rgba(244, 33, 46, 0.1); border: 1px solid var(--error); border-radius: 12px; padding: 16px; margin: 16px 0; }
+    .warning-box p { color: var(--error); margin: 0; font-size: 0.875rem; }
+    .controls-box { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 16px; margin: 16px 0; }
+    .controls-box h3 { margin: 0 0 8px; font-size: 1rem; }
+    .code-block { position: relative; }
+    .copy-btn { position: absolute; top: 8px; right: 8px; background: var(--bg-tertiary); color: var(--text-secondary); border: 1px solid var(--border); border-radius: 8px; padding: 6px 12px; cursor: pointer; font-size: 0.75rem; z-index: 10; transition: all .2s; }
+    .copy-btn:hover { background: var(--accent); color: #fff; }
+    .full-code { margin-top: 32px; }
+    .full-code pre { max-height: 600px; overflow-y: auto; }
+    .cta-box { background: linear-gradient(135deg, var(--bg-secondary), var(--bg-tertiary)); border: 1px solid var(--border); border-radius: 16px; padding: 24px; margin: 32px 0; text-align: center; }
+    .cta-box h3 { font-size: 1.25rem; margin-bottom: 8px; color: var(--text-primary); }
+    .cta-box p { color: var(--text-secondary); margin-bottom: 16px; }
+    .cta-box a { display: inline-block; padding: 12px 24px; background: var(--accent); color: #fff; border-radius: 9999px; text-decoration: none; font-weight: 700; transition: background .2s; }
+    .cta-box a:hover { background: var(--accent-hover); }
+    .sidebar-right { width: 350px; padding: 16px 24px; position: sticky; top: 0; height: 100vh; overflow-y: auto; }
+    .sidebar-card { background: var(--bg-secondary); border-radius: 16px; padding: 16px; margin-bottom: 16px; }
+    .sidebar-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 12px; }
+    .sidebar-card a { display: block; color: var(--text-secondary); text-decoration: none; font-size: 0.875rem; padding: 6px 0; border-bottom: 1px solid var(--border); transition: color .2s; }
+    .sidebar-card a:last-child { border-bottom: none; }
+    .sidebar-card a:hover { color: var(--accent); }
+    .breadcrumb { font-size: 0.8125rem; color: var(--text-secondary); margin-top: 4px; }
+    .breadcrumb a { color: var(--accent); text-decoration: none; }
+    .breadcrumb a:hover { text-decoration: underline; }
+    .source-badge { display: inline-block; background: var(--bg-tertiary); color: var(--text-secondary); padding: 2px 8px; border-radius: 6px; font-size: 0.6875rem; margin-left: 8px; }
+    @media (max-width: 1024px) { .sidebar-right { display: none; } }
+    @media (max-width: 768px) {
+      .article pre { font-size: 0.75rem; }
+      .meta-row { flex-direction: column; gap: 4px; }
+    }
+  </style>
+</head>
+<body>
+  <a href="#main-content" class="skip-nav">Skip to main content</a>
+  <div class="layout">
+    <aside class="sidebar-left" aria-label="Main navigation"></aside>
+    <script src="/js/sidebar.js"></script>
+
+    <main class="main-content" id="main-content">
+      <header class="main-header">
+        <h1>❤️ Like By User - XActions</h1>
+        <div class="breadcrumb">
+          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#engagement">Engagement</a> › Like By User - XActions
+        </div>
+      </header>
+
+      <article class="article">
+        <span class="cat-badge">Engagement</span>
+        <span class="source-badge">scripts/twitter</span>
+
+        <div class="meta-row">
+          <span>v1.0.0</span>
+          <span>Updated: 2026-01-26</span>
+          <span>354 lines</span>
+          <span>by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></span>
+        </div>
+
+        <p>Automatically like all tweets from a specific user's profile</p>
+
+        
+
+        <h2>How to Use</h2>
+        <ol class="usage-steps"><li>Go to the user's profile page (x.com/username)</li>
+<li>Configure the options below</li>
+<li>Open browser console (F12 or Cmd+Shift+J)</li>
+<li>Paste this entire script and press Enter</li></ol>
+        
+
+        
+        
+        <section class="config-code">
+        <h2>Default Configuration</h2>
+        <div class="code-block">
+          <button class="copy-btn" onclick="navigator.clipboard.writeText(this.nextElementSibling.querySelector('code').textContent).then(()=>{this.textContent='Copied!';setTimeout(()=>this.textContent='Copy',2000)})">Copy</button>
+          <pre><code>const CONFIG = {
+    // Maximum number of tweets to like
+    maxLikes: 50,
+    
+    // Skip replies by this user
+    skipReplies: false,
+    
+    // Skip retweets by this user
+    skipRetweets: true,
+    
+    // Skip quote tweets
+    skipQuoteTweets: false,
+    
+    // Only like tweets with images/videos
+    onlyWithMedia: false,
+    
+    // Only like tweets with minimum engagement
+    minLikes: 0,
+    minRetweets: 0,
+    
+    // Minimum delay between actions (ms)
+    minDelay: 1500,
+    
+    // Maximum delay between actions (ms)
+    maxDelay: 3500,
+    
+    // Maximum scroll attempts
+    maxScrollAttempts: 25,
+    
+    // Stop after this many consecutive already-liked tweets
+    stopAfterAlreadyLiked: 10
+  };</code></pre>
+        </div>
+      </section>
+
+        <section class="full-code">
+          <h2>Full Script</h2>
+          <p>Copy and paste this entire script into your browser DevTools console on <a href="https://x.com" rel="noopener">x.com</a>.</p>
+          <div class="code-block">
+            <button class="copy-btn" onclick="navigator.clipboard.writeText(this.nextElementSibling.querySelector('code').textContent).then(()=>{this.textContent='Copied!';setTimeout(()=>this.textContent='Copy Script',2000)})">Copy Script</button>
+            <pre><code>// Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
+/**
+ * ============================================
+ * 👤 Like By User - XActions
+ * ============================================
+ * 
+ * @name         like-by-user
+ * @description  Automatically like all tweets from a specific user's profile
+ * @author       nichxbt
+ * @version      1.0.0
+ * @date         2026-01-26
+ * @website      https://xactions.app
+ * 
+ * Usage:
+ *   1. Go to the user's profile page (x.com/username)
+ *   2. Configure the options below
+ *   3. Open browser console (F12 or Cmd+Shift+J)
+ *   4. Paste this entire script and press Enter
+ * 
+ * ============================================
+ */
+
+(async function likeByUser() {
+  'use strict';
+
+  // ============================================
+  // 📝 CONFIGURATION - Customize these options
+  // ============================================
+  const CONFIG = {
+    // Maximum number of tweets to like
+    maxLikes: 50,
+    
+    // Skip replies by this user
+    skipReplies: false,
+    
+    // Skip retweets by this user
+    skipRetweets: true,
+    
+    // Skip quote tweets
+    skipQuoteTweets: false,
+    
+    // Only like tweets with images/videos
+    onlyWithMedia: false,
+    
+    // Only like tweets with minimum engagement
+    minLikes: 0,
+    minRetweets: 0,
+    
+    // Minimum delay between actions (ms)
+    minDelay: 1500,
+    
+    // Maximum delay between actions (ms)
+    maxDelay: 3500,
+    
+    // Maximum scroll attempts
+    maxScrollAttempts: 25,
+    
+    // Stop after this many consecutive already-liked tweets
+    stopAfterAlreadyLiked: 10
+  };
+
+  // ============================================
+  // 🔧 SELECTORS
+  // ============================================
+  const SELECTORS = {
+    tweet: 'article[data-testid=&quot;tweet&quot;]',
+    likeButton: '[data-testid=&quot;like&quot;]',
+    unlikeButton: '[data-testid=&quot;unlike&quot;]',
+    tweetText: '[data-testid=&quot;tweetText&quot;]',
+    retweetIndicator: '[data-testid=&quot;socialContext&quot;]',
+    tweetMedia: '[data-testid=&quot;tweetPhoto&quot;], [data-testid=&quot;videoPlayer&quot;], [data-testid=&quot;videoComponent&quot;]',
+    userAvatar: '[data-testid=&quot;Tweet-User-Avatar&quot;]',
+    likeCount: '[data-testid=&quot;like&quot;] span, [data-testid=&quot;unlike&quot;] span',
+    retweetCount: '[data-testid=&quot;retweet&quot;] span'
+  };
+
+  // ============================================
+  // 🛠️ HELPERS
+  // ============================================
+  const sleep = (ms) =&gt; new Promise(r =&gt; setTimeout(r, ms));
+  
+  const randomDelay = () =&gt; {
+    const delay = Math.floor(Math.random() * (CONFIG.maxDelay - CONFIG.minDelay + 1)) + CONFIG.minDelay;
+    return sleep(delay);
+  };
+
+  const scrollDown = () =&gt; {
+    window.scrollBy(0, window.innerHeight * 0.7);
+  };
+
+  const log = {
+    info: (msg) =&gt; console.log(`ℹ️ ${msg}`),
+    success: (msg) =&gt; console.log(`✅ ${msg}`),
+    warning: (msg) =&gt; console.log(`⚠️ ${msg}`),
+    error: (msg) =&gt; console.log(`❌ ${msg}`),
+    progress: (current, total) =&gt; console.log(`📊 Progress: ${current}/${total} tweets liked`)
+  };
+
+  const parseCount = (text) =&gt; {
+    if (!text) return 0;
+    const cleaned = text.replace(/,/g, '').trim();
+    if (cleaned.endsWith('K')) {
+      return parseFloat(cleaned) * 1000;
+    }
+    if (cleaned.endsWith('M')) {
+      return parseFloat(cleaned) * 1000000;
+    }
+    if (cleaned.endsWith('B')) {
+      return parseFloat(cleaned) * 1000000000;
+    }
+    return parseInt(cleaned) || 0;
+  };
+
+  // ============================================
+  // 🎯 MAIN LOGIC
+  // ============================================
+  const stats = {
+    liked: 0,
+    skippedReplies: 0,
+    skippedRetweets: 0,
+    skippedQuotes: 0,
+    skippedNoMedia: 0,
+    skippedLowEngagement: 0,
+    alreadyLiked: 0,
+    errors: 0,
+    tweetsProcessed: 0
+  };
+
+  const processedTweets = new Set();
+
+  // Stop switch: run window.stopLikeByUser() from the console to abort
+  // the loop after the tweet currently being processed.
+  let stopped = false;
+  window.stopLikeByUser = () =&gt; {
+    stopped = true;
+    log.warning('Stop requested. Finishing the current tweet, then exiting.');
+  };
+
+  console.log(`
+╔══════════════════════════════════════════════════════════╗
+║  👤 LIKE BY USER - XActions                              ║
+║  👤 Author: nichxbt                                      ║
+║  🌐 https://xactions.app                                 ║
+╚══════════════════════════════════════════════════════════╝
+  `);
+
+  // Get current username from URL
+  const currentUrl = window.location.href;
+  const usernameMatch = currentUrl.match(/x\.com\/([^\/\?]+)|twitter\.com\/([^\/\?]+)/);
+  const username = usernameMatch ? (usernameMatch[1] || usernameMatch[2]) : 'Unknown';
+
+  // Verify we're on a profile page
+  if (username === 'home' || username === 'explore' || username === 'search' || username === 'notifications') {
+    log.error('Please navigate to a user profile page first (x.com/username)');
+    log.info('Example: Go to x.com/elonmusk to like their tweets');
+    return;
+  }
+
+  log.info(`Target user: @${username}`);
+  log.info(`Max likes: ${CONFIG.maxLikes}`);
+  log.info(`Skip replies: ${CONFIG.skipReplies}`);
+  log.info(`Skip retweets: ${CONFIG.skipRetweets}`);
+  log.info(`To stop early: window.stopLikeByUser()`);
+
+  const isReply = (tweet) =&gt; {
+    // Structural marker first (locale-independent), then the English UI text
+    if (tweet.querySelector('[data-testid=&quot;in-reply-to&quot;]') !== null) return true;
+    return Array.from(tweet.querySelectorAll('div[dir]')).some(el =&gt;
+      el.innerText.startsWith('Replying to'));
+  };
+
+  const isRetweet = (tweet) =&gt; {
+    // Reposts render socialContext inside an &lt;a&gt; linking to the reposter;
+    // pinned posts render it as a plain element. The structural check works
+    // on every UI language, unlike matching &quot;reposted&quot;/&quot;Retweeted&quot; text.
+    const socialContext = tweet.querySelector(SELECTORS.retweetIndicator);
+    return !!socialContext &amp;&amp; socialContext.closest('a') !== null;
+  };
+
+  const isQuoteTweet = (tweet) =&gt; {
+    // A quote tweet embeds the quoted post as a card inside a
+    // div[role=&quot;link&quot;] that itself contains a &lt;time&gt; element. The card does
+    // NOT carry a nested data-testid=&quot;tweet&quot;, so matching on that (as this
+    // used to) never found anything and skipQuoteTweets silently did nothing.
+    return tweet.querySelector('div[role=&quot;link&quot;] time') !== null;
+  };
+
+  const hasMedia = (tweet) =&gt; {
+    return tweet.querySelector(SELECTORS.tweetMedia) !== null;
+  };
+
+  const getEngagement = (tweet) =&gt; {
+    const likeSpan = tweet.querySelector(SELECTORS.likeCount);
+    const retweetSpan = tweet.querySelector(SELECTORS.retweetCount);
+    return {
+      likes: parseCount(likeSpan?.textContent),
+      retweets: parseCount(retweetSpan?.textContent)
+    };
+  };
+
+  const getTweetIdentifier = (tweet) =&gt; {
+    // Prefer the permalink around the timestamp: the first /status/ link in
+    // the article can belong to a quoted tweet and give the wrong ID
+    const timeAnchor = tweet.querySelector('time')?.closest('a[href*=&quot;/status/&quot;]');
+    if (timeAnchor) {
+      const match = timeAnchor.href.match(/\/status\/(\d+)/);
+      if (match) return match[1];
+    }
+    const links = tweet.querySelectorAll('a[href*=&quot;/status/&quot;]');
+    for (const link of links) {
+      const match = link.href.match(/\/status\/(\d+)/);
+      if (match) return match[1];
+    }
+    // Text fallback. Do NOT append Date.now(): a changing ID makes the same
+    // tweet look new on every pass, defeating deduplication entirely.
+    const text = tweet.querySelector(SELECTORS.tweetText)?.textContent || '';
+    return text.substring(0, 100);
+  };
+
+  let scrollAttempts = 0;
+  let noNewTweetsCount = 0;
+  let consecutiveAlreadyLiked = 0;
+
+  while (!stopped &amp;&amp; stats.liked &lt; CONFIG.maxLikes &amp;&amp;
+         scrollAttempts &lt; CONFIG.maxScrollAttempts &amp;&amp;
+         consecutiveAlreadyLiked &lt; CONFIG.stopAfterAlreadyLiked) {
+
+    const tweets = document.querySelectorAll(SELECTORS.tweet);
+    let foundNewTweet = false;
+
+    for (const tweet of tweets) {
+      if (stopped || stats.liked &gt;= CONFIG.maxLikes) break;
+      if (consecutiveAlreadyLiked &gt;= CONFIG.stopAfterAlreadyLiked) break;
+
+      const tweetId = getTweetIdentifier(tweet);
+      
+      if (processedTweets.has(tweetId)) continue;
+      processedTweets.add(tweetId);
+      foundNewTweet = true;
+      stats.tweetsProcessed++;
+
+      try {
+        // Skip replies if configured
+        if (CONFIG.skipReplies &amp;&amp; isReply(tweet)) {
+          stats.skippedReplies++;
+          log.info('Skipped reply');
+          continue;
+        }
+
+        // Skip retweets if configured
+        if (CONFIG.skipRetweets &amp;&amp; isRetweet(tweet)) {
+          stats.skippedRetweets++;
+          log.info('Skipped retweet');
+          continue;
+        }
+
+        // Skip quote tweets if configured
+        if (CONFIG.skipQuoteTweets &amp;&amp; isQuoteTweet(tweet)) {
+          stats.skippedQuotes++;
+          log.info('Skipped quote tweet');
+          continue;
+        }
+
+        // Only with media check
+        if (CONFIG.onlyWithMedia &amp;&amp; !hasMedia(tweet)) {
+          stats.skippedNoMedia++;
+          continue;
+        }
+
+        // Engagement check
+        if (CONFIG.minLikes &gt; 0 || CONFIG.minRetweets &gt; 0) {
+          const engagement = getEngagement(tweet);
+          if (engagement.likes &lt; CONFIG.minLikes || engagement.retweets &lt; CONFIG.minRetweets) {
+            stats.skippedLowEngagement++;
+            continue;
+          }
+        }
+
+        // Check if already liked
+        const unlikeButton = tweet.querySelector(SELECTORS.unlikeButton);
+        if (unlikeButton) {
+          stats.alreadyLiked++;
+          consecutiveAlreadyLiked++;
+          if (consecutiveAlreadyLiked &gt;= CONFIG.stopAfterAlreadyLiked) {
+            log.warning(`Found ${consecutiveAlreadyLiked} consecutive already-liked tweets. Stopping to avoid duplicates.`);
+          }
+          continue;
+        }
+
+        // Reset consecutive counter when we find an unliked tweet
+        consecutiveAlreadyLiked = 0;
+
+        // Find and click like button
+        const likeButton = tweet.querySelector(SELECTORS.likeButton);
+        if (likeButton) {
+          tweet.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          await sleep(400);
+
+          likeButton.click();
+          stats.liked++;
+
+          const preview = tweet.querySelector(SELECTORS.tweetText)?.textContent?.substring(0, 45) || 'Media/No text';
+          log.success(`Liked @${username}'s tweet #${stats.liked}: &quot;${preview}...&quot;`);
+          log.progress(stats.liked, CONFIG.maxLikes);
+
+          await randomDelay();
+        }
+      } catch (error) {
+        log.error(`Error processing tweet: ${error.message}`);
+        stats.errors++;
+      }
+    }
+
+    if (!foundNewTweet) {
+      noNewTweetsCount++;
+      if (noNewTweetsCount &gt;= 5) {
+        log.warning('No new tweets found. User may have limited content.');
+        break;
+      }
+    } else {
+      noNewTweetsCount = 0;
+    }
+
+    scrollDown();
+    scrollAttempts++;
+    log.info(`Scrolling... (${scrollAttempts}/${CONFIG.maxScrollAttempts})`);
+    await sleep(1500);
+  }
+
+  // ============================================
+  // 📊 SUMMARY
+  // ============================================
+  console.log(`
+╔══════════════════════════════════════════════════════════╗
+║  📊 LIKE BY USER - COMPLETE                              ║
+╠══════════════════════════════════════════════════════════╣
+║  👤 Target User:       @${String(username).padEnd(31)}║
+╠══════════════════════════════════════════════════════════╣
+║  ✅ Total Liked:       ${String(stats.liked).padEnd(32)}║
+║  📄 Tweets Processed:  ${String(stats.tweetsProcessed).padEnd(32)}║
+║  ⏭️  Skipped Replies:   ${String(stats.skippedReplies).padEnd(32)}║
+║  ⏭️  Skipped Retweets:  ${String(stats.skippedRetweets).padEnd(32)}║
+║  ⏭️  Skipped Quotes:    ${String(stats.skippedQuotes).padEnd(32)}║
+║  ⏭️  Low Engagement:    ${String(stats.skippedLowEngagement).padEnd(32)}║
+║  💗 Already Liked:     ${String(stats.alreadyLiked).padEnd(32)}║
+║  ❌ Errors:            ${String(stats.errors).padEnd(32)}║
+╚══════════════════════════════════════════════════════════╝
+  `);
+
+  log.success('Script completed! by nichxbt');
+  
+  return stats;
+})();
+</code></pre>
+          </div>
+        </section>
+
+        <div class="cta-box">
+          <h3>⚡ More XActions Scripts</h3>
+          <p>Browse 300+ free browser scripts for X/Twitter automation. No API keys, no fees.</p>
+          <a href="/scripts">Browse All Scripts</a>
+        </div>
+      </article>
+    </main>
+
+    <aside class="sidebar-right">
+      <div class="sidebar-card">
+        <h3>❤️ Engagement</h3>
+        <a href="/scripts/auto-commenter">💬 Auto Commenter</a>
+<a href="/scripts/auto-engage">⚡ Auto Engage</a>
+<a href="/scripts/auto-liker">❤️ Auto Liker</a>
+<a href="/scripts/auto-reply-mentions">📨 Auto Reply Mentions - XActions</a>
+<a href="/scripts/auto-repost">🔁 Auto Repost</a>
+<a href="/scripts/auto-plug-replies">🔌 Auto-Plug Replies</a>
+<a href="/scripts/auto-reply">💬 Auto-Reply / Auto-Respond</a>
+<a href="/scripts/engagement-booster">🚀 Engagement Booster v2</a>
+<a href="/scripts/engagement-leaderboard">🏆 Engagement Leaderboard</a>
+<a href="/scripts/engagement-manager">⚡ Engagement Manager - Likes</a>
+      </div>
+      <div class="sidebar-card">
+        <h3>🔗 Quick Links</h3>
+        <a href="/scripts">All Scripts</a>
+        <a href="/features">Features</a>
+        <a href="/docs">Documentation</a>
+        <a href="/tutorials">Tutorials</a>
+        <a href="/mcp">MCP Server</a>
+        <a href="https://github.com/nirholas/XActions" rel="noopener">GitHub</a>
+      </div>
+    </aside>
+  </div>
+</body>
+</html>

@@ -1,0 +1,444 @@
+{
+  "version": "3.4.4",
+  "generated": "2026-08-28",
+  "count": 50,
+  "skills": [
+    {
+      "id": "a2a-multi-agent",
+      "name": "A2A Multi-Agent",
+      "version": "1.0",
+      "path": "skills/a2a-multi-agent/SKILL.md",
+      "description": "Agent-to-Agent protocol integration for multi-agent workflows."
+    },
+    {
+      "id": "account-backup",
+      "name": "Account Backup",
+      "version": "1.0",
+      "path": "skills/account-backup/SKILL.md",
+      "description": "Export and backup X/Twitter account data — tweets, likes, bookmarks, followers, and following."
+    },
+    {
+      "id": "account-tools",
+      "name": "Account Tools",
+      "version": "1.0",
+      "path": "skills/account-tools/SKILL.md",
+      "description": "Miscellaneous account utilities — view join date, login history, connected accounts, appeal suspensions."
+    },
+    {
+      "id": "algorithm-cultivation",
+      "name": "Algorithm Cultivation",
+      "version": "4.0",
+      "path": "skills/algorithm-cultivation/SKILL.md",
+      "description": "Trains feed algorithm for niche content, runs 24/7 LLM-powered thought leader engagement.",
+      "tags": [
+        "growth",
+        "automation",
+        "ai"
+      ]
+    },
+    {
+      "id": "analytics-insights",
+      "name": "Analytics & Insights",
+      "version": "4.0",
+      "path": "skills/analytics-insights/SKILL.md",
+      "description": "Analyze engagement, hashtags, competitors, best posting times, follower demographics, tweet performance.",
+      "tags": [
+        "analytics"
+      ]
+    },
+    {
+      "id": "articles-longform",
+      "name": "Articles & Longform",
+      "version": "4.0",
+      "path": "skills/articles-longform/SKILL.md",
+      "description": "Compose, preview, publish, and manage long-form Articles on X/Twitter (Premium+ feature)."
+    },
+    {
+      "id": "billing-management",
+      "name": "Billing Management",
+      "version": "1.0",
+      "path": "skills/billing-management/SKILL.md",
+      "description": "Manage XActions subscriptions and billing via Stripe checkout."
+    },
+    {
+      "id": "blocking-muting-management",
+      "name": "Blocking & Muting",
+      "version": "4.0",
+      "path": "skills/blocking-muting-management/SKILL.md",
+      "description": "Mass block, unblock, mute, unmute with bot detection."
+    },
+    {
+      "id": "bookmarks-management",
+      "name": "Bookmarks Management",
+      "version": "3.0",
+      "path": "skills/bookmarks-management/SKILL.md",
+      "description": "Organize, export, and bulk-clear bookmarks with auto-tagging."
+    },
+    {
+      "id": "business-ads",
+      "name": "Business & Ads",
+      "version": "4.0",
+      "path": "skills/business-ads/SKILL.md",
+      "description": "Brand monitoring, audience insights, competitor analysis, and ad campaign management."
+    },
+    {
+      "id": "community-health-monitoring",
+      "name": "Community Health Monitoring",
+      "version": "4.0",
+      "path": "skills/community-health-monitoring/SKILL.md",
+      "description": "Audit follower quality, engagement authenticity, unfollower patterns, and network efficiency.",
+      "tags": [
+        "analytics"
+      ]
+    },
+    {
+      "id": "community-management",
+      "name": "Community Management",
+      "version": "3.0",
+      "path": "skills/community-management/SKILL.md",
+      "description": "Bulk-join/leave X communities, manage memberships."
+    },
+    {
+      "id": "community-notes",
+      "name": "Community Notes",
+      "version": "1.0",
+      "path": "skills/community-notes/SKILL.md",
+      "description": "View, write, rate, and browse Community Notes on posts."
+    },
+    {
+      "id": "competitor-intelligence",
+      "name": "Competitor Intelligence",
+      "version": "4.0",
+      "path": "skills/competitor-intelligence/SKILL.md",
+      "description": "Analyze competitor profiles, content strategy, audience, and engagement patterns.",
+      "tags": [
+        "analytics"
+      ]
+    },
+    {
+      "id": "content-cleanup",
+      "name": "Content Cleanup",
+      "version": "3.0",
+      "path": "skills/content-cleanup/SKILL.md",
+      "description": "Mass unlike, clear reposts/retweets, delete tweets, clear bookmarks and history."
+    },
+    {
+      "id": "content-posting",
+      "name": "Content Posting",
+      "version": "4.0",
+      "path": "skills/content-posting/SKILL.md",
+      "description": "Post tweets, threads, polls; schedule posts; create reposts programmatically."
+    },
+    {
+      "id": "content-repurposing",
+      "name": "Content Repurposing",
+      "version": "4.0",
+      "path": "skills/content-repurposing/SKILL.md",
+      "description": "Identify top tweets and generate repurposed threads, carousels, and variations.",
+      "tags": [
+        "ai"
+      ]
+    },
+    {
+      "id": "creator-monetization",
+      "name": "Creator Monetization",
+      "version": "4.0",
+      "path": "skills/creator-monetization/SKILL.md",
+      "description": "Ad revenue analytics, subscription management, and creator monetization features."
+    },
+    {
+      "id": "crm-management",
+      "name": "CRM Management",
+      "version": "1.0",
+      "path": "skills/crm-management/SKILL.md",
+      "description": "Tag, segment, and track followers and contacts with a built-in CRM."
+    },
+    {
+      "id": "delegate-access",
+      "name": "Delegate Access",
+      "version": "1.0",
+      "path": "skills/delegate-access/SKILL.md",
+      "description": "Add, remove, and manage delegate accounts that can post/like on your behalf."
+    },
+    {
+      "id": "direct-messages",
+      "name": "Direct Messages",
+      "version": "3.0",
+      "path": "skills/direct-messages/SKILL.md",
+      "description": "Send, manage, and automate DMs with personalized bulk messaging and templates."
+    },
+    {
+      "id": "discovery-explore",
+      "name": "Discovery & Explore",
+      "version": "4.0",
+      "path": "skills/discovery-explore/SKILL.md",
+      "description": "Trending topics, content search, account discovery, and explore page automation."
+    },
+    {
+      "id": "engagement-interaction",
+      "name": "Engagement & Interaction",
+      "version": "3.0",
+      "path": "skills/engagement-interaction/SKILL.md",
+      "description": "Auto-like, unlike, reply, bookmark, hide replies, and bulk engagement actions."
+    },
+    {
+      "id": "follower-monitoring",
+      "name": "Follower Monitoring",
+      "version": "4.0",
+      "path": "skills/follower-monitoring/SKILL.md",
+      "description": "Detect unfollowers, track follower changes, and set up continuous monitoring."
+    },
+    {
+      "id": "graph-analysis",
+      "name": "Graph Analysis",
+      "version": "1.0",
+      "path": "skills/graph-analysis/SKILL.md",
+      "description": "Analyze follower/following network graphs — clusters, influencers, bridges, audience segments.",
+      "tags": [
+        "analytics"
+      ]
+    },
+    {
+      "id": "grok-ai",
+      "name": "Grok AI",
+      "version": "4.0",
+      "path": "skills/grok-ai/SKILL.md",
+      "description": "Grok AI chat, image generation, tweet analysis, and content creation.",
+      "tags": [
+        "ai"
+      ]
+    },
+    {
+      "id": "growth-automation",
+      "name": "Growth Automation",
+      "version": "4.0",
+      "path": "skills/growth-automation/SKILL.md",
+      "description": "Auto-like by keyword/user, auto-follow engagers, keyword-based following for organic growth.",
+      "tags": [
+        "growth",
+        "automation"
+      ]
+    },
+    {
+      "id": "lead-generation",
+      "name": "Lead Generation",
+      "version": "4.0",
+      "path": "skills/lead-generation/SKILL.md",
+      "description": "Find and qualify B2B leads from X conversations using keyword search and profile analysis.",
+      "tags": [
+        "automation"
+      ]
+    },
+    {
+      "id": "lists-management",
+      "name": "Lists Management",
+      "version": "3.0",
+      "path": "skills/lists-management/SKILL.md",
+      "description": "Create, populate, and export X/Twitter lists with bulk member management."
+    },
+    {
+      "id": "media-studio",
+      "name": "Media Studio",
+      "version": "1.0",
+      "path": "skills/media-studio/SKILL.md",
+      "description": "Navigate X Media Studio, upload media, manage library, view media analytics."
+    },
+    {
+      "id": "notifications-management",
+      "name": "Notifications Management",
+      "version": "4.0",
+      "path": "skills/notifications-management/SKILL.md",
+      "description": "Filter, bulk-manage, and scrape notifications; auto-respond to mentions."
+    },
+    {
+      "id": "post-editing",
+      "name": "Post Editing",
+      "version": "1.0",
+      "path": "skills/post-editing/SKILL.md",
+      "description": "Edit existing posts or undo a recently posted tweet (Premium feature)."
+    },
+    {
+      "id": "premium-subscriptions",
+      "name": "Premium & Subscriptions",
+      "version": "4.0",
+      "path": "skills/premium-subscriptions/SKILL.md",
+      "description": "Detect Premium plan, verify feature access, and manage subscription features."
+    },
+    {
+      "id": "profile-management",
+      "name": "Profile Management",
+      "version": "4.0",
+      "path": "skills/profile-management/SKILL.md",
+      "description": "Update bio, avatar, header image, display name, location, website, and pinned tweet."
+    },
+    {
+      "id": "reputation-audit",
+      "name": "Reputation Audit",
+      "version": "1.0",
+      "path": "skills/reputation-audit/SKILL.md",
+      "description": "AI risk-scores your own posts (professional, hostile, legal, spam), produces a 0-100 reputation score with a shareable card, and offers one-click cleanup of what it flags.",
+      "tags": [
+        "ai",
+        "cleanup",
+        "analytics"
+      ]
+    },
+    {
+      "id": "saved-searches",
+      "name": "Saved Searches",
+      "version": "1.0",
+      "path": "skills/saved-searches/SKILL.md",
+      "description": "Create, manage, and run saved searches on X/Twitter."
+    },
+    {
+      "id": "settings-privacy",
+      "name": "Settings & Privacy",
+      "version": "4.0",
+      "path": "skills/settings-privacy/SKILL.md",
+      "description": "Manage protected tweets, muted words, connected apps, and notification preferences."
+    },
+    {
+      "id": "spaces-live",
+      "name": "Spaces & Live",
+      "version": "4.0",
+      "path": "skills/spaces-live/SKILL.md",
+      "description": "Join X Spaces, scrape metadata, discover live rooms, and schedule Spaces."
+    },
+    {
+      "id": "teams-management",
+      "name": "Teams Management",
+      "version": "1.0",
+      "path": "skills/teams-management/SKILL.md",
+      "description": "Create teams, invite members, assign roles, and collaborate on automation."
+    },
+    {
+      "id": "timeline-viewing",
+      "name": "Timeline Viewing",
+      "version": "1.0",
+      "path": "skills/timeline-viewing/SKILL.md",
+      "description": "Switch timelines (For You/Following), auto-scroll, and scrape timeline data."
+    },
+    {
+      "id": "topic-management",
+      "name": "Topic Management",
+      "version": "1.0",
+      "path": "skills/topic-management/SKILL.md",
+      "description": "Browse, follow, and unfollow X Topics; manage followed topics."
+    },
+    {
+      "id": "twitter-scraping",
+      "name": "Twitter Scraping",
+      "version": "4.0",
+      "path": "skills/twitter-scraping/SKILL.md",
+      "description": "Scrape profiles, followers, tweets, media, and bookmarks without API access.",
+      "tags": [
+        "scraping"
+      ]
+    },
+    {
+      "id": "unfollow-management",
+      "name": "Unfollow Management",
+      "version": "3.0",
+      "path": "skills/unfollow-management/SKILL.md",
+      "description": "Mass unfollow everyone, only non-followers, with smart time-based rules and whitelists."
+    },
+    {
+      "id": "video-downloading",
+      "name": "Video Downloading",
+      "version": "1.0",
+      "path": "skills/video-downloading/SKILL.md",
+      "description": "Download videos and GIFs from X/Twitter posts — single video, batch, or via CLI.",
+      "tags": [
+        "scraping"
+      ]
+    },
+    {
+      "id": "viral-thread-generation",
+      "name": "Viral Thread Generation",
+      "version": "3.0",
+      "path": "skills/viral-thread-generation/SKILL.md",
+      "description": "Research trending topics and generate high-engagement thread content.",
+      "tags": [
+        "ai",
+        "growth"
+      ]
+    },
+    {
+      "id": "webhooks",
+      "name": "Webhooks",
+      "version": "1.0",
+      "path": "skills/webhooks/SKILL.md",
+      "description": "Create, manage, and test webhooks for automation job notifications."
+    },
+    {
+      "id": "x-pro-management",
+      "name": "X Pro Management",
+      "version": "1.0",
+      "path": "skills/x-pro-management/SKILL.md",
+      "description": "Navigate X Pro (TweetDeck), set up monitoring columns, manage multi-column view."
+    },
+    {
+      "id": "x402-payments",
+      "name": "x402 Payments",
+      "version": "1.0",
+      "path": "skills/x402-payments/SKILL.md",
+      "description": "Enable x402 crypto payment protocol for XActions API access — multi-chain, multi-currency."
+    },
+    {
+      "id": "xactions-cli",
+      "name": "XActions CLI",
+      "version": "4.0",
+      "path": "skills/xactions-cli/SKILL.md",
+      "description": "Command-line interface for scraping, MCP server config, and automation — `npm install -g xactions`.",
+      "tags": [
+        "cli"
+      ]
+    },
+    {
+      "id": "xactions-mcp-server",
+      "name": "XActions MCP Server",
+      "version": "4.0",
+      "path": "skills/xactions-mcp-server/SKILL.md",
+      "description": "154 MCP tools for AI agents to automate X/Twitter (scrape, post, engage, analyze).",
+      "tags": [
+        "mcp"
+      ]
+    }
+  ],
+  "categories": {
+    "growth": [
+      "algorithm-cultivation",
+      "growth-automation",
+      "viral-thread-generation"
+    ],
+    "automation": [
+      "algorithm-cultivation",
+      "growth-automation",
+      "engagement-interaction",
+      "direct-messages",
+      "lead-generation"
+    ],
+    "analytics": [
+      "analytics-insights",
+      "community-health-monitoring",
+      "competitor-intelligence",
+      "graph-analysis"
+    ],
+    "scraping": [
+      "twitter-scraping",
+      "video-downloading"
+    ],
+    "ai": [
+      "algorithm-cultivation",
+      "content-repurposing",
+      "grok-ai",
+      "viral-thread-generation"
+    ],
+    "mcp": [
+      "xactions-mcp-server"
+    ],
+    "cli": [
+      "xactions-cli"
+    ]
+  }
+}

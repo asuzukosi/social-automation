@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Growth Suite — Free X/Twitter Script | XActions</title>
+  <meta name="description" content="XActions Automation - Growth Automation Suite">
+  <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, growth, suite, growth">
+  <meta name="author" content="nich (@nichxbt)">
+  <meta name="robots" content="index, follow">
+
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Growth Suite — XActions">
+  <meta property="og:description" content="XActions Automation - Growth Automation Suite">
+  <meta property="og:url" content="https://xactions.app/scripts/growth-suite">
+  <meta property="og:site_name" content="XActions">
+  <meta property="og:image" content="https://xactions.app/og-image.png">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@nichxbt">
+  <meta name="twitter:title" content="Growth Suite — XActions">
+  <meta name="twitter:description" content="XActions Automation - Growth Automation Suite">
+
+  <link rel="canonical" href="https://xactions.app/scripts/growth-suite">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "Growth Suite — Free X/Twitter Script | XActions",
+    "description": "XActions Automation - Growth Automation Suite",
+    "url": "https://xactions.app/scripts/growth-suite",
+    "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
+    "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
+    "datePublished": "2026-03-30",
+    "dateModified": "2026-03-30",
+    "articleSection": "Growth",
+    "keywords": "xactions, twitter automation, x automation, browser script, devtools console, free, open source, growth, suite, growth"
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
+      { "@type": "ListItem", "position": 2, "name": "Scripts", "item": "https://xactions.app/scripts" },
+      { "@type": "ListItem", "position": 3, "name": "Growth", "item": "https://xactions.app/scripts#growth" },
+      { "@type": "ListItem", "position": 4, "name": "Growth Suite", "item": "https://xactions.app/scripts/growth-suite" }
+    ]
+  }
+  </script>
+
+  <link rel="stylesheet" href="/css/common.css">
+  <style>
+    .article { padding: 24px 20px; }
+    .article h1 { font-size: 1.75rem; font-weight: 800; margin-bottom: 8px; line-height: 1.2; }
+    .article h2 { font-size: 1.375rem; font-weight: 700; margin: 32px 0 12px; padding-top: 16px; border-top: 1px solid var(--border); }
+    .article h3 { font-size: 1.125rem; font-weight: 600; margin: 24px 0 8px; color: var(--accent); }
+    .article p { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 16px; }
+    .article a { color: var(--accent); text-decoration: none; }
+    .article a:hover { text-decoration: underline; }
+    .article strong { color: var(--text-primary); }
+    .article code { background: var(--bg-tertiary); padding: 2px 6px; border-radius: 4px; font-family: 'Monaco','Menlo','Consolas', monospace; font-size: 0.875rem; color: var(--accent); }
+    .article pre { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 16px; overflow-x: auto; margin: 16px 0; }
+    .article pre code { background: none; padding: 0; color: var(--text-primary); font-size: 0.8125rem; display: block; }
+    .article table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 0.875rem; }
+    .article th { background: var(--bg-secondary); padding: 10px 12px; text-align: left; border: 1px solid var(--border); font-weight: 600; }
+    .article td { padding: 10px 12px; border: 1px solid var(--border); color: var(--text-secondary); }
+    .cat-badge { display: inline-block; background: var(--accent-light); color: var(--accent); padding: 4px 12px; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; margin-bottom: 16px; }
+    .meta-row { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 16px; font-size: 0.8125rem; color: var(--text-secondary); }
+    .meta-row span { display: flex; align-items: center; gap: 4px; }
+    .usage-steps { margin-left: 24px; margin-bottom: 16px; }
+    .usage-steps li { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 8px; padding-left: 4px; }
+    .warning-box { background: rgba(244, 33, 46, 0.1); border: 1px solid var(--error); border-radius: 12px; padding: 16px; margin: 16px 0; }
+    .warning-box p { color: var(--error); margin: 0; font-size: 0.875rem; }
+    .controls-box { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 16px; margin: 16px 0; }
+    .controls-box h3 { margin: 0 0 8px; font-size: 1rem; }
+    .code-block { position: relative; }
+    .copy-btn { position: absolute; top: 8px; right: 8px; background: var(--bg-tertiary); color: var(--text-secondary); border: 1px solid var(--border); border-radius: 8px; padding: 6px 12px; cursor: pointer; font-size: 0.75rem; z-index: 10; transition: all .2s; }
+    .copy-btn:hover { background: var(--accent); color: #fff; }
+    .full-code { margin-top: 32px; }
+    .full-code pre { max-height: 600px; overflow-y: auto; }
+    .cta-box { background: linear-gradient(135deg, var(--bg-secondary), var(--bg-tertiary)); border: 1px solid var(--border); border-radius: 16px; padding: 24px; margin: 32px 0; text-align: center; }
+    .cta-box h3 { font-size: 1.25rem; margin-bottom: 8px; color: var(--text-primary); }
+    .cta-box p { color: var(--text-secondary); margin-bottom: 16px; }
+    .cta-box a { display: inline-block; padding: 12px 24px; background: var(--accent); color: #fff; border-radius: 9999px; text-decoration: none; font-weight: 700; transition: background .2s; }
+    .cta-box a:hover { background: var(--accent-hover); }
+    .sidebar-right { width: 350px; padding: 16px 24px; position: sticky; top: 0; height: 100vh; overflow-y: auto; }
+    .sidebar-card { background: var(--bg-secondary); border-radius: 16px; padding: 16px; margin-bottom: 16px; }
+    .sidebar-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 12px; }
+    .sidebar-card a { display: block; color: var(--text-secondary); text-decoration: none; font-size: 0.875rem; padding: 6px 0; border-bottom: 1px solid var(--border); transition: color .2s; }
+    .sidebar-card a:last-child { border-bottom: none; }
+    .sidebar-card a:hover { color: var(--accent); }
+    .breadcrumb { font-size: 0.8125rem; color: var(--text-secondary); margin-top: 4px; }
+    .breadcrumb a { color: var(--accent); text-decoration: none; }
+    .breadcrumb a:hover { text-decoration: underline; }
+    .source-badge { display: inline-block; background: var(--bg-tertiary); color: var(--text-secondary); padding: 2px 8px; border-radius: 6px; font-size: 0.6875rem; margin-left: 8px; }
+    @media (max-width: 1024px) { .sidebar-right { display: none; } }
+    @media (max-width: 768px) {
+      .article pre { font-size: 0.75rem; }
+      .meta-row { flex-direction: column; gap: 4px; }
+    }
+  </style>
+</head>
+<body>
+  <a href="#main-content" class="skip-nav">Skip to main content</a>
+  <div class="layout">
+    <aside class="sidebar-left" aria-label="Main navigation"></aside>
+    <script src="/js/sidebar.js"></script>
+
+    <main class="main-content" id="main-content">
+      <header class="main-header">
+        <h1>🚀 Growth Suite</h1>
+        <div class="breadcrumb">
+          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#growth">Growth</a> › Growth Suite
+        </div>
+      </header>
+
+      <article class="article">
+        <span class="cat-badge">Growth</span>
+        <span class="source-badge">src/automation</span>
+
+        <div class="meta-row">
+          
+          
+          <span>369 lines</span>
+          <span>by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></span>
+        </div>
+
+        <p>XActions Automation - Growth Automation Suite</p>
+
+        
+
+        <h2>How to Use</h2>
+        <ol class="usage-steps"><li>Open X home page</li>
+<li>Paste core.js, then paste this script</li>
+<li>Configure your growth strategy below</li>
+<li>Run and let it work!</li></ol>
+        <p><strong>Note:</strong> This script requires pasting <code>src/automation/core.js</code> first for shared utilities.</p>
+
+        
+        
+        
+
+        <section class="full-code">
+          <h2>Full Script</h2>
+          <p>Copy and paste this entire script into your browser DevTools console on <a href="https://x.com" rel="noopener">x.com</a>.</p>
+          <div class="code-block">
+            <button class="copy-btn" onclick="navigator.clipboard.writeText(this.nextElementSibling.querySelector('code').textContent).then(()=>{this.textContent='Copied!';setTimeout(()=>this.textContent='Copy Script',2000)})">Copy Script</button>
+            <pre><code>// Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
+// XActions Automation - Growth Automation Suite
+// https://github.com/nirholas/XActions
+//
+// REQUIRES: Paste core.js first!
+//
+// All-in-one growth automation combining:
+// - Keyword-based following
+// - Auto-liking relevant content
+// - Smart unfollowing after X days
+// - Engagement on target accounts
+//
+// HOW TO USE:
+// 1. Open X home page
+// 2. Paste core.js, then paste this script
+// 3. Configure your growth strategy below
+// 4. Run and let it work!
+
+(() =&gt; {
+  if (!window.XActions?.Core) {
+    console.error('❌ Core module not loaded! Paste core.js first.');
+    return;
+  }
+
+  const { log, sleep, randomDelay, scrollBy, clickElement, waitForElement, storage, rateLimit, SELECTORS } = window.XActions.Core;
+
+  // ============================================
+  // GROWTH STRATEGY CONFIGURATION
+  // ============================================
+  const STRATEGY = {
+    // -------- TARGETING --------
+    // Keywords to search for (niche targeting)
+    KEYWORDS: [
+      'web3 developer',
+      'solidity engineer', 
+      'defi builder',
+    ],
+    
+    // Accounts to engage with (their followers are your targets)
+    TARGET_ACCOUNTS: [
+      // 'vitalikbuterin',
+      // 'elonmusk',
+    ],
+    
+    // -------- ACTIONS --------
+    ACTIONS: {
+      FOLLOW: true,              // Follow users from keyword search
+      LIKE: true,                // Like posts in your feed
+      UNFOLLOW: true,            // Unfollow non-followers after grace period
+    },
+    
+    // -------- LIMITS (per session) --------
+    LIMITS: {
+      FOLLOWS: 20,
+      LIKES: 30,
+      UNFOLLOWS: 15,
+    },
+    
+    // -------- TIMING --------
+    TIMING: {
+      UNFOLLOW_AFTER_DAYS: 3,    // Days to wait before unfollowing
+      DELAY_BETWEEN_ACTIONS: 3000,
+      SESSION_DURATION_MINUTES: 30,
+    },
+    
+    // -------- FILTERS --------
+    FILTERS: {
+      MIN_FOLLOWERS: 50,
+      MAX_FOLLOWERS: 50000,
+      MUST_HAVE_BIO: true,
+      SKIP_PRIVATE: true,
+      LANGUAGE: null,            // null = any, or 'en', 'es', etc.
+    },
+  };
+
+  // ============================================
+  // STATE
+  // ============================================
+  const state = {
+    follows: 0,
+    likes: 0,
+    unfollows: 0,
+    startTime: Date.now(),
+    isRunning: true,
+  };
+
+  const tracked = {
+    followed: new Map(Object.entries(storage.get('growth_followed') || {})),
+    liked: new Set(storage.get('growth_liked') || []),
+  };
+
+  // ============================================
+  // SAVE STATE
+  // ============================================
+  const saveTracked = () =&gt; {
+    storage.set('growth_followed', Object.fromEntries(tracked.followed));
+    storage.set('growth_liked', Array.from(tracked.liked));
+  };
+
+  // ============================================
+  // SESSION CHECK
+  // ============================================
+  const isSessionExpired = () =&gt; {
+    const elapsed = (Date.now() - state.startTime) / 1000 / 60;
+    return elapsed &gt;= STRATEGY.TIMING.SESSION_DURATION_MINUTES;
+  };
+
+  const checkLimits = () =&gt; {
+    return {
+      canFollow: state.follows &lt; STRATEGY.LIMITS.FOLLOWS,
+      canLike: state.likes &lt; STRATEGY.LIMITS.LIKES,
+      canUnfollow: state.unfollows &lt; STRATEGY.LIMITS.UNFOLLOWS,
+    };
+  };
+
+  // ============================================
+  // FOLLOW ACTION
+  // ============================================
+  const doFollow = async (userCell) =&gt; {
+    if (!STRATEGY.ACTIONS.FOLLOW) return false;
+    if (!checkLimits().canFollow) return false;
+
+    const followBtn = userCell.querySelector(SELECTORS.followButton);
+    if (!followBtn) return false;
+
+    const link = userCell.querySelector('a[href^=&quot;/&quot;]');
+    const username = link?.getAttribute('href')?.replace('/', '').toLowerCase();
+    if (!username || tracked.followed.has(username)) return false;
+
+    await clickElement(followBtn);
+    state.follows++;
+    tracked.followed.set(username, { at: Date.now(), source: 'growth' });
+    saveTracked();
+    
+    log(`Followed @${username} (${state.follows}/${STRATEGY.LIMITS.FOLLOWS})`, 'success');
+    return true;
+  };
+
+  // ============================================
+  // LIKE ACTION
+  // ============================================
+  const doLike = async (tweet) =&gt; {
+    if (!STRATEGY.ACTIONS.LIKE) return false;
+    if (!checkLimits().canLike) return false;
+
+    const likeBtn = tweet.querySelector(SELECTORS.likeButton);
+    if (!likeBtn) return false;
+
+    const tweetLink = tweet.querySelector('a[href*=&quot;/status/&quot;]');
+    const tweetId = tweetLink?.href?.match(/status\/(\d+)/)?.[1];
+    if (!tweetId || tracked.liked.has(tweetId)) return false;
+
+    await clickElement(likeBtn);
+    state.likes++;
+    tracked.liked.add(tweetId);
+    saveTracked();
+    
+    log(`Liked tweet (${state.likes}/${STRATEGY.LIMITS.LIKES})`, 'success');
+    return true;
+  };
+
+  // ============================================
+  // SMART UNFOLLOW
+  // ============================================
+  const findExpiredFollows = () =&gt; {
+    const expired = [];
+    const now = Date.now();
+    const threshold = STRATEGY.TIMING.UNFOLLOW_AFTER_DAYS * 24 * 60 * 60 * 1000;
+
+    for (const [username, data] of tracked.followed) {
+      if (now - data.at &gt; threshold &amp;&amp; !data.followedBack) {
+        expired.push(username);
+      }
+    }
+
+    return expired;
+  };
+
+  const doUnfollow = async (userCell, username) =&gt; {
+    if (!STRATEGY.ACTIONS.UNFOLLOW) return false;
+    if (!checkLimits().canUnfollow) return false;
+
+    const unfollowBtn = userCell.querySelector(SELECTORS.unfollowButton);
+    if (!unfollowBtn) return false;
+
+    await clickElement(unfollowBtn);
+    await sleep(500);
+    
+    const confirmBtn = await waitForElement(SELECTORS.confirmButton, 2000);
+    if (confirmBtn) await clickElement(confirmBtn);
+    
+    state.unfollows++;
+    tracked.followed.delete(username);
+    saveTracked();
+    
+    log(`Unfollowed @${username} (${state.unfollows}/${STRATEGY.LIMITS.UNFOLLOWS})`, 'action');
+    return true;
+  };
+
+  // ============================================
+  // PHASES
+  // ============================================
+  
+  // Phase 1: Search and Follow
+  const phaseFollow = async () =&gt; {
+    if (!STRATEGY.ACTIONS.FOLLOW) return;
+    log('📍 Phase 1: Keyword Follow', 'info');
+
+    for (const keyword of STRATEGY.KEYWORDS) {
+      if (!state.isRunning || !checkLimits().canFollow) break;
+
+      log(`Searching: &quot;${keyword}&quot;`, 'action');
+      window.location.href = `https://x.com/search?q=${encodeURIComponent(keyword)}&amp;src=typed_query&amp;f=user`;
+      await sleep(3000);
+      await waitForElement(SELECTORS.userCell, 10000);
+
+      let scrolls = 0;
+      while (scrolls &lt; 10 &amp;&amp; checkLimits().canFollow &amp;&amp; state.isRunning) {
+        const cells = document.querySelectorAll(SELECTORS.userCell);
+        
+        for (const cell of cells) {
+          if (!checkLimits().canFollow) break;
+          
+          // Check if already following
+          if (cell.querySelector(SELECTORS.unfollowButton)) continue;
+          
+          await doFollow(cell);
+          await randomDelay(STRATEGY.TIMING.DELAY_BETWEEN_ACTIONS, STRATEGY.TIMING.DELAY_BETWEEN_ACTIONS * 1.5);
+        }
+
+        scrollBy(600);
+        scrolls++;
+        await sleep(2000);
+      }
+    }
+  };
+
+  // Phase 2: Like Timeline
+  const phaseLike = async () =&gt; {
+    if (!STRATEGY.ACTIONS.LIKE) return;
+    log('📍 Phase 2: Timeline Engagement', 'info');
+
+    window.location.href = 'https://x.com/home';
+    await sleep(3000);
+
+    let scrolls = 0;
+    while (scrolls &lt; 20 &amp;&amp; checkLimits().canLike &amp;&amp; state.isRunning) {
+      const tweets = document.querySelectorAll(SELECTORS.tweet);
+      
+      for (const tweet of tweets) {
+        if (!checkLimits().canLike) break;
+        if (tweet.querySelector(SELECTORS.unlikeButton)) continue; // Already liked
+        
+        await doLike(tweet);
+        await randomDelay(STRATEGY.TIMING.DELAY_BETWEEN_ACTIONS, STRATEGY.TIMING.DELAY_BETWEEN_ACTIONS * 1.5);
+      }
+
+      scrollBy(600);
+      scrolls++;
+      await sleep(2000);
+    }
+  };
+
+  // Phase 3: Smart Unfollow
+  const phaseUnfollow = async () =&gt; {
+    if (!STRATEGY.ACTIONS.UNFOLLOW) return;
+    log('📍 Phase 3: Smart Unfollow', 'info');
+
+    const expired = findExpiredFollows();
+    if (expired.length === 0) {
+      log('No expired follows to clean up', 'info');
+      return;
+    }
+
+    log(`Found ${expired.length} users past ${STRATEGY.TIMING.UNFOLLOW_AFTER_DAYS}-day threshold`, 'info');
+
+    // Go to following page
+    const username = document.querySelector('[data-testid=&quot;SideNav_AccountSwitcher_Button&quot;]')
+      ?.textContent?.match(/@(\w+)/)?.[1];
+    
+    if (username) {
+      window.location.href = `https://x.com/${username}/following`;
+      await sleep(3000);
+
+      const expiredSet = new Set(expired);
+      let scrolls = 0;
+
+      while (scrolls &lt; 50 &amp;&amp; checkLimits().canUnfollow &amp;&amp; state.isRunning) {
+        const cells = document.querySelectorAll(SELECTORS.userCell);
+        
+        for (const cell of cells) {
+          if (!checkLimits().canUnfollow) break;
+          
+          const link = cell.querySelector('a[href^=&quot;/&quot;]');
+          const cellUser = link?.getAttribute('href')?.replace('/', '').toLowerCase();
+          
+          if (cellUser &amp;&amp; expiredSet.has(cellUser)) {
+            await doUnfollow(cell, cellUser);
+            await randomDelay(STRATEGY.TIMING.DELAY_BETWEEN_ACTIONS, STRATEGY.TIMING.DELAY_BETWEEN_ACTIONS * 1.5);
+          }
+        }
+
+        scrollBy(600);
+        scrolls++;
+        await sleep(2000);
+      }
+    }
+  };
+
+  // ============================================
+  // MAIN RUN
+  // ============================================
+  const run = async () =&gt; {
+    console.log(`
+╔═══════════════════════════════════════════════════════════╗
+║  🚀 XActions Growth Automation                           ║
+╠═══════════════════════════════════════════════════════════╣
+║  Keywords: ${STRATEGY.KEYWORDS.slice(0, 3).join(', ').substring(0, 30).padEnd(30)}  ║
+║  Session: ${STRATEGY.TIMING.SESSION_DURATION_MINUTES} minutes                                 ║
+║                                                           ║
+║  Limits:                                                  ║
+║    Follows:   ${String(STRATEGY.LIMITS.FOLLOWS).padEnd(5)} | Likes:    ${String(STRATEGY.LIMITS.LIKES).padEnd(5)}       ║
+║    Unfollows: ${String(STRATEGY.LIMITS.UNFOLLOWS).padEnd(5)} | After:    ${STRATEGY.TIMING.UNFOLLOW_AFTER_DAYS} days       ║
+║                                                           ║
+║  Run stopGrowth() to stop early.                          ║
+╚═══════════════════════════════════════════════════════════╝
+    `);
+
+    log(`Tracking ${tracked.followed.size} followed users`, 'info');
+
+    // Run phases
+    await phaseFollow();
+    
+    if (state.isRunning &amp;&amp; !isSessionExpired()) {
+      await phaseLike();
+    }
+    
+    if (state.isRunning &amp;&amp; !isSessionExpired()) {
+      await phaseUnfollow();
+    }
+
+    // Summary
+    console.log(`
+╔═══════════════════════════════════════════════════════════╗
+║  ✅ SESSION COMPLETE                                      ║
+╠═══════════════════════════════════════════════════════════╣
+║  Follows:   ${String(state.follows).padEnd(5)}                                      ║
+║  Likes:     ${String(state.likes).padEnd(5)}                                      ║
+║  Unfollows: ${String(state.unfollows).padEnd(5)}                                      ║
+║                                                           ║
+║  Total tracked: ${String(tracked.followed.size).padEnd(5)} users                        ║
+╚═══════════════════════════════════════════════════════════╝
+    `);
+  };
+
+  run();
+
+  window.stopGrowth = () =&gt; {
+    state.isRunning = false;
+    log('Stopping growth automation...', 'warning');
+  };
+
+  window.XActions.Growth = {
+    state: () =&gt; state,
+    tracked: () =&gt; tracked,
+    strategy: STRATEGY,
+  };
+})();
+</code></pre>
+          </div>
+        </section>
+
+        <div class="cta-box">
+          <h3>⚡ More XActions Scripts</h3>
+          <p>Browse 300+ free browser scripts for X/Twitter automation. No API keys, no fees.</p>
+          <a href="/scripts">Browse All Scripts</a>
+        </div>
+      </article>
+    </main>
+
+    <aside class="sidebar-right">
+      <div class="sidebar-card">
+        <h3>🚀 Growth</h3>
+        <a href="/scripts/follow-list">📋 Follow &amp; Manage Lists</a>
+<a href="/scripts/follow-account">➕ Follow Account</a>
+<a href="/scripts/follow-back">🔗 Follow Back - XActions</a>
+<a href="/scripts/follow-engagers">🎯 Follow Engagers</a>
+<a href="/scripts/follow-target-users">🎯 Follow Target Users</a>
+<a href="/scripts/keyword-follow">🔑 Keyword Follow</a>
+<a href="/scripts/natural-flow">🌊 Natural Flow</a>
+<a href="/scripts/algorithm-trainer">🧠 Phase 1</a>
+<a href="/scripts/thought-leader-cultivator">🧠 Thought Leader Cultivator</a>
+<a href="/scripts/algorithm-builder">🧠 XActions Algorithm Builder</a>
+      </div>
+      <div class="sidebar-card">
+        <h3>🔗 Quick Links</h3>
+        <a href="/scripts">All Scripts</a>
+        <a href="/features">Features</a>
+        <a href="/docs">Documentation</a>
+        <a href="/tutorials">Tutorials</a>
+        <a href="/mcp">MCP Server</a>
+        <a href="https://github.com/nirholas/XActions" rel="noopener">GitHub</a>
+      </div>
+    </aside>
+  </div>
+</body>
+</html>

@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Interact With Likers — Free X/Twitter Script | XActions</title>
+  <meta name="description" content="Interact with users who liked specific posts">
+  <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, interact, with, likers, engagement">
+  <meta name="author" content="nich (@nichxbt)">
+  <meta name="robots" content="index, follow">
+
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Interact With Likers — XActions">
+  <meta property="og:description" content="Interact with users who liked specific posts">
+  <meta property="og:url" content="https://xactions.app/scripts/interact-with-likers">
+  <meta property="og:site_name" content="XActions">
+  <meta property="og:image" content="https://xactions.app/og-image.png">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@nichxbt">
+  <meta name="twitter:title" content="Interact With Likers — XActions">
+  <meta name="twitter:description" content="Interact with users who liked specific posts">
+
+  <link rel="canonical" href="https://xactions.app/scripts/interact-with-likers">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "Interact With Likers — Free X/Twitter Script | XActions",
+    "description": "Interact with users who liked specific posts",
+    "url": "https://xactions.app/scripts/interact-with-likers",
+    "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
+    "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
+    "datePublished": "2026-03-30",
+    "dateModified": "2026-03-30",
+    "articleSection": "Engagement",
+    "keywords": "xactions, twitter automation, x automation, browser script, devtools console, free, open source, interact, with, likers, engagement"
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
+      { "@type": "ListItem", "position": 2, "name": "Scripts", "item": "https://xactions.app/scripts" },
+      { "@type": "ListItem", "position": 3, "name": "Engagement", "item": "https://xactions.app/scripts#engagement" },
+      { "@type": "ListItem", "position": 4, "name": "Interact With Likers", "item": "https://xactions.app/scripts/interact-with-likers" }
+    ]
+  }
+  </script>
+
+  <link rel="stylesheet" href="/css/common.css">
+  <style>
+    .article { padding: 24px 20px; }
+    .article h1 { font-size: 1.75rem; font-weight: 800; margin-bottom: 8px; line-height: 1.2; }
+    .article h2 { font-size: 1.375rem; font-weight: 700; margin: 32px 0 12px; padding-top: 16px; border-top: 1px solid var(--border); }
+    .article h3 { font-size: 1.125rem; font-weight: 600; margin: 24px 0 8px; color: var(--accent); }
+    .article p { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 16px; }
+    .article a { color: var(--accent); text-decoration: none; }
+    .article a:hover { text-decoration: underline; }
+    .article strong { color: var(--text-primary); }
+    .article code { background: var(--bg-tertiary); padding: 2px 6px; border-radius: 4px; font-family: 'Monaco','Menlo','Consolas', monospace; font-size: 0.875rem; color: var(--accent); }
+    .article pre { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 16px; overflow-x: auto; margin: 16px 0; }
+    .article pre code { background: none; padding: 0; color: var(--text-primary); font-size: 0.8125rem; display: block; }
+    .article table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 0.875rem; }
+    .article th { background: var(--bg-secondary); padding: 10px 12px; text-align: left; border: 1px solid var(--border); font-weight: 600; }
+    .article td { padding: 10px 12px; border: 1px solid var(--border); color: var(--text-secondary); }
+    .cat-badge { display: inline-block; background: var(--accent-light); color: var(--accent); padding: 4px 12px; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; margin-bottom: 16px; }
+    .meta-row { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 16px; font-size: 0.8125rem; color: var(--text-secondary); }
+    .meta-row span { display: flex; align-items: center; gap: 4px; }
+    .usage-steps { margin-left: 24px; margin-bottom: 16px; }
+    .usage-steps li { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 8px; padding-left: 4px; }
+    .warning-box { background: rgba(244, 33, 46, 0.1); border: 1px solid var(--error); border-radius: 12px; padding: 16px; margin: 16px 0; }
+    .warning-box p { color: var(--error); margin: 0; font-size: 0.875rem; }
+    .controls-box { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 16px; margin: 16px 0; }
+    .controls-box h3 { margin: 0 0 8px; font-size: 1rem; }
+    .code-block { position: relative; }
+    .copy-btn { position: absolute; top: 8px; right: 8px; background: var(--bg-tertiary); color: var(--text-secondary); border: 1px solid var(--border); border-radius: 8px; padding: 6px 12px; cursor: pointer; font-size: 0.75rem; z-index: 10; transition: all .2s; }
+    .copy-btn:hover { background: var(--accent); color: #fff; }
+    .full-code { margin-top: 32px; }
+    .full-code pre { max-height: 600px; overflow-y: auto; }
+    .cta-box { background: linear-gradient(135deg, var(--bg-secondary), var(--bg-tertiary)); border: 1px solid var(--border); border-radius: 16px; padding: 24px; margin: 32px 0; text-align: center; }
+    .cta-box h3 { font-size: 1.25rem; margin-bottom: 8px; color: var(--text-primary); }
+    .cta-box p { color: var(--text-secondary); margin-bottom: 16px; }
+    .cta-box a { display: inline-block; padding: 12px 24px; background: var(--accent); color: #fff; border-radius: 9999px; text-decoration: none; font-weight: 700; transition: background .2s; }
+    .cta-box a:hover { background: var(--accent-hover); }
+    .sidebar-right { width: 350px; padding: 16px 24px; position: sticky; top: 0; height: 100vh; overflow-y: auto; }
+    .sidebar-card { background: var(--bg-secondary); border-radius: 16px; padding: 16px; margin-bottom: 16px; }
+    .sidebar-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 12px; }
+    .sidebar-card a { display: block; color: var(--text-secondary); text-decoration: none; font-size: 0.875rem; padding: 6px 0; border-bottom: 1px solid var(--border); transition: color .2s; }
+    .sidebar-card a:last-child { border-bottom: none; }
+    .sidebar-card a:hover { color: var(--accent); }
+    .breadcrumb { font-size: 0.8125rem; color: var(--text-secondary); margin-top: 4px; }
+    .breadcrumb a { color: var(--accent); text-decoration: none; }
+    .breadcrumb a:hover { text-decoration: underline; }
+    .source-badge { display: inline-block; background: var(--bg-tertiary); color: var(--text-secondary); padding: 2px 8px; border-radius: 6px; font-size: 0.6875rem; margin-left: 8px; }
+    @media (max-width: 1024px) { .sidebar-right { display: none; } }
+    @media (max-width: 768px) {
+      .article pre { font-size: 0.75rem; }
+      .meta-row { flex-direction: column; gap: 4px; }
+    }
+  </style>
+</head>
+<body>
+  <a href="#main-content" class="skip-nav">Skip to main content</a>
+  <div class="layout">
+    <aside class="sidebar-left" aria-label="Main navigation"></aside>
+    <script src="/js/sidebar.js"></script>
+
+    <main class="main-content" id="main-content">
+      <header class="main-header">
+        <h1>💬 Interact With Likers</h1>
+        <div class="breadcrumb">
+          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#engagement">Engagement</a> › Interact With Likers
+        </div>
+      </header>
+
+      <article class="article">
+        <span class="cat-badge">Engagement</span>
+        <span class="source-badge">scripts/twitter</span>
+
+        <div class="meta-row">
+          <span>v1.0.0</span>
+          <span>Updated: 2026-01-26</span>
+          <span>286 lines</span>
+          <span>by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></span>
+        </div>
+
+        <p>Interact with users who liked specific posts</p>
+
+        
+
+        <h2>How to Use</h2>
+        <ol class="usage-steps"><li>Go to a tweet's likes page (click on &quot;X likes&quot;)</li>
+<li>Open Chrome DevTools (F12)</li>
+<li>Paste this script and press Enter</li>
+<li>Run XActions.Likers.follow()</li></ol>
+        
+
+        
+        
+        
+
+        <section class="full-code">
+          <h2>Full Script</h2>
+          <p>Copy and paste this entire script into your browser DevTools console on <a href="https://x.com" rel="noopener">x.com</a>.</p>
+          <div class="code-block">
+            <button class="copy-btn" onclick="navigator.clipboard.writeText(this.nextElementSibling.querySelector('code').textContent).then(()=>{this.textContent='Copied!';setTimeout(()=>this.textContent='Copy Script',2000)})">Copy Script</button>
+            <pre><code>// Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
+/**
+ * ============================================================
+ * ❤️ Interact With Likers
+ * ============================================================
+ * 
+ * @name        interact-with-likers.js
+ * @description Interact with users who liked specific posts
+ * @author      nichxbt (https://x.com/nichxbt)
+ * @version     1.0.0
+ * @date        2026-01-26
+ * @repository  https://github.com/nirholas/XActions
+ * 
+ * ============================================================
+ * 📋 FEATURES:
+ * ============================================================
+ * 
+ * • View likers of a specific tweet
+ * • Follow engaged users
+ * • Great for competitor analysis
+ * • Build targeted audience
+ * 
+ * ============================================================
+ * 📋 USAGE INSTRUCTIONS:
+ * ============================================================
+ * 
+ * 1. Go to a tweet's likes page (click on &quot;X likes&quot;)
+ *    URL format: https://x.com/USER/status/ID/likes
+ * 2. Open Chrome DevTools (F12)
+ * 3. Paste this script and press Enter
+ * 4. Run XActions.Likers.follow()
+ * 
+ * ============================================================
+ * ⚙️ CONFIGURATION
+ * ============================================================
+ */
+
+// `var` (not `const`): a repeated top-level `const` paste in the same
+// DevTools tab throws &quot;already been declared&quot; instead of re-running.
+var CONFIG = {
+  // Actions
+  actions: {
+    follow: true,
+  },
+  
+  // Limits
+  limits: {
+    follows: 20,
+  },
+  
+  // Filters
+  filters: {
+    skipPrivate: true,
+    skipVerified: false,  // Skip verified accounts
+    skipNoPhoto: false,   // Skip accounts with default photo
+  },
+  
+  // Timing
+  delayBetweenActions: 2000,
+  scrollDelay: 2000,
+};
+
+/**
+ * ============================================================
+ * 🚀 SCRIPT START - by nichxbt
+ * ============================================================
+ */
+
+(async function interactWithLikers() {
+  const sleep = (ms) =&gt; new Promise(r =&gt; setTimeout(r, ms));
+  const randomDelay = (min, max) =&gt; sleep(Math.random() * (max - min) + min);
+  
+  // DOM Selectors
+  const SELECTORS = {
+    userCell: '[data-testid=&quot;UserCell&quot;]',
+    followButton: '[data-testid$=&quot;-follow&quot;]',
+    unfollowButton: '[data-testid$=&quot;-unfollow&quot;]',
+    verifiedBadge: '[data-testid=&quot;icon-verified&quot;]',
+    userName: '[data-testid=&quot;User-Name&quot;]',
+    protectedIcon: '[data-testid=&quot;icon-lock&quot;]',
+    defaultAvatar: 'img[src*=&quot;default_profile&quot;]',
+  };
+  
+  console.log('╔════════════════════════════════════════════════════════════╗');
+  console.log('║  ❤️ INTERACT WITH LIKERS                                   ║');
+  console.log('║  by nichxbt - https://github.com/nirholas/XActions         ║');
+  console.log('╚════════════════════════════════════════════════════════════╝');
+  console.log('');
+  
+  // Verify we're on a likes page
+  if (!window.location.href.includes('/likes')) {
+    console.error('❌ ERROR: You must be on a tweet\'s Likes page!');
+    console.log('');
+    console.log('📋 How to get there:');
+    console.log('   1. Go to any tweet');
+    console.log('   2. Click on &quot;X likes&quot; below the tweet');
+    console.log('   3. URL should be: x.com/USER/status/ID/likes');
+    console.log('');
+    return;
+  }
+  
+  // State
+  const state = {
+    isRunning: false,
+    stats: { followed: 0, skipped: 0 },
+    processedUsers: new Set(),
+  };
+  
+  // Check if user passes filters
+  const passesFilters = (userCell) =&gt; {
+    // Skip if already following
+    if (userCell.querySelector(SELECTORS.unfollowButton)) return false;
+
+    // Skip verified if configured
+    if (CONFIG.filters.skipVerified &amp;&amp; userCell.querySelector(SELECTORS.verifiedBadge)) {
+      return false;
+    }
+
+    // Skip protected/private accounts if configured (was declared but never checked)
+    if (CONFIG.filters.skipPrivate &amp;&amp; userCell.querySelector(SELECTORS.protectedIcon)) {
+      return false;
+    }
+
+    // Skip accounts still on the default avatar if configured (was declared but never checked)
+    if (CONFIG.filters.skipNoPhoto &amp;&amp; userCell.querySelector(SELECTORS.defaultAvatar)) {
+      return false;
+    }
+
+    return true;
+  };
+  
+  // Get username from cell
+  const getUsername = (userCell) =&gt; {
+    const link = userCell.querySelector('a[href^=&quot;/&quot;]');
+    return link?.getAttribute('href')?.replace('/', '');
+  };
+  
+  // Create XActions interface
+  window.XActions = window.XActions || {};
+  window.XActions.Likers = {
+    config: CONFIG,
+    state,
+    
+    // Follow likers
+    follow: async () =&gt; {
+      console.log('🚀 Starting to follow likers...');
+      state.isRunning = true;
+      state.stats = { followed: 0, skipped: 0 };
+
+      let emptyScrolls = 0;
+
+      while (state.isRunning &amp;&amp; state.stats.followed &lt; CONFIG.limits.follows) {
+        const userCells = document.querySelectorAll(SELECTORS.userCell);
+        
+        for (const cell of userCells) {
+          if (!state.isRunning) break;
+          if (state.stats.followed &gt;= CONFIG.limits.follows) break;
+          
+          const username = getUsername(cell);
+          if (!username || state.processedUsers.has(username)) continue;
+          
+          state.processedUsers.add(username);
+          
+          if (!passesFilters(cell)) {
+            state.stats.skipped++;
+            continue;
+          }
+          
+          const followBtn = cell.querySelector(SELECTORS.followButton);
+          if (followBtn) {
+            try {
+              followBtn.click();
+              state.stats.followed++;
+              console.log(`👥 Followed @${username} (${state.stats.followed}/${CONFIG.limits.follows})`);
+              await randomDelay(CONFIG.delayBetweenActions, CONFIG.delayBetweenActions * 1.5);
+            } catch (e) {
+              console.warn(`⚠️ Failed to follow @${username}`);
+            }
+          }
+        }
+        
+        // Scroll for more
+        window.scrollBy(0, window.innerHeight);
+        await sleep(CONFIG.scrollDelay);
+        
+        // Check if we've reached the end
+        const newCells = document.querySelectorAll(SELECTORS.userCell);
+        const allProcessed = [...newCells].every(cell =&gt; {
+          const username = getUsername(cell);
+          return state.processedUsers.has(username);
+        });
+        
+        if (allProcessed &amp;&amp; newCells.length &gt; 0) {
+          console.log('📄 Reached end of likers list.');
+          break;
+        }
+
+        // Nothing rendered at all: stop after a few tries instead of looping forever
+        if (newCells.length === 0) {
+          emptyScrolls++;
+          if (emptyScrolls &gt;= 5) {
+            console.log('⚠️ No likers found after 5 scrolls. Stopping.');
+            break;
+          }
+        } else {
+          emptyScrolls = 0;
+        }
+      }
+      
+      console.log('');
+      console.log('╔════════════════════════════════════════════════════════════╗');
+      console.log('║  🎉 FINISHED FOLLOWING LIKERS!                             ║');
+      console.log('╚════════════════════════════════════════════════════════════╝');
+      window.XActions.Likers.stats();
+    },
+    
+    // Collect likers (just get usernames)
+    collect: async () =&gt; {
+      console.log('📥 Collecting likers...');
+      const likers = [];
+      
+      let scrollCount = 0;
+      const maxScrolls = 20;
+      
+      while (scrollCount &lt; maxScrolls) {
+        const userCells = document.querySelectorAll(SELECTORS.userCell);
+        
+        userCells.forEach(cell =&gt; {
+          const username = getUsername(cell);
+          if (username &amp;&amp; !likers.includes(username)) {
+            likers.push(username);
+          }
+        });
+        
+        console.log(`   📊 Collected ${likers.length} likers...`);
+        
+        window.scrollBy(0, window.innerHeight);
+        await sleep(CONFIG.scrollDelay);
+        scrollCount++;
+      }
+      
+      console.log('');
+      console.log(`✅ Collected ${likers.length} likers!`);
+      console.log('📋 Likers:', likers.join(', '));
+      
+      return likers;
+    },
+    
+    // Stop
+    stop: () =&gt; {
+      state.isRunning = false;
+      console.log('🛑 Stopped.');
+    },
+    
+    // Stats
+    stats: () =&gt; {
+      console.log('');
+      console.log('📊 LIKERS INTERACTION STATS:');
+      console.log(`   👥 Followed: ${state.stats.followed}`);
+      console.log(`   ⏭️ Skipped: ${state.stats.skipped}`);
+      console.log(`   📝 Total processed: ${state.processedUsers.size}`);
+      console.log('');
+    },
+    
+    // Help
+    help: () =&gt; {
+      console.log('');
+      console.log('📋 LIKERS INTERACTION COMMANDS:');
+      console.log('');
+      console.log('   XActions.Likers.follow()   - Follow likers');
+      console.log('   XActions.Likers.collect()  - Just collect usernames');
+      console.log('   XActions.Likers.stop()     - Stop following');
+      console.log('   XActions.Likers.stats()    - Show statistics');
+      console.log('');
+      console.log('📍 Make sure you\'re on a likes page first!');
+      console.log('   URL: x.com/USER/status/ID/likes');
+      console.log('');
+    }
+  };
+  
+  console.log('✅ Interact With Likers loaded!');
+  console.log('   Run XActions.Likers.follow() to start following.');
+  console.log('   Run XActions.Likers.help() for all commands.');
+  console.log('');
+})();
+</code></pre>
+          </div>
+        </section>
+
+        <div class="cta-box">
+          <h3>⚡ More XActions Scripts</h3>
+          <p>Browse 300+ free browser scripts for X/Twitter automation. No API keys, no fees.</p>
+          <a href="/scripts">Browse All Scripts</a>
+        </div>
+      </article>
+    </main>
+
+    <aside class="sidebar-right">
+      <div class="sidebar-card">
+        <h3>💬 Engagement</h3>
+        <a href="/scripts/auto-commenter">💬 Auto Commenter</a>
+<a href="/scripts/auto-engage">⚡ Auto Engage</a>
+<a href="/scripts/auto-liker">❤️ Auto Liker</a>
+<a href="/scripts/auto-reply-mentions">📨 Auto Reply Mentions - XActions</a>
+<a href="/scripts/auto-repost">🔁 Auto Repost</a>
+<a href="/scripts/auto-plug-replies">🔌 Auto-Plug Replies</a>
+<a href="/scripts/auto-reply">💬 Auto-Reply / Auto-Respond</a>
+<a href="/scripts/engagement-booster">🚀 Engagement Booster v2</a>
+<a href="/scripts/engagement-leaderboard">🏆 Engagement Leaderboard</a>
+<a href="/scripts/engagement-manager">⚡ Engagement Manager - Likes</a>
+      </div>
+      <div class="sidebar-card">
+        <h3>🔗 Quick Links</h3>
+        <a href="/scripts">All Scripts</a>
+        <a href="/features">Features</a>
+        <a href="/docs">Documentation</a>
+        <a href="/tutorials">Tutorials</a>
+        <a href="/mcp">MCP Server</a>
+        <a href="https://github.com/nirholas/XActions" rel="noopener">GitHub</a>
+      </div>
+    </aside>
+  </div>
+</body>
+</html>

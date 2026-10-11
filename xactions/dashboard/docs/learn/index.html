@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Learn — XActions</title>
+<meta name="description" content="Start here if you have not run XActions before. 7 pages in the XActions documentation.">
+<meta name="keywords" content="xactions, twitter automation, x automation, open source, free">
+<meta name="author" content="nich (@nichxbt)">
+<meta name="robots" content="index, follow, max-image-preview:large">
+<meta name="color-scheme" content="light dark">
+
+<meta property="og:type" content="website">
+<meta property="og:title" content="Learn — XActions">
+<meta property="og:description" content="Start here if you have not run XActions before. 7 pages in the XActions documentation.">
+<meta property="og:url" content="https://xactions.app/docs/learn">
+<meta property="og:image" content="https://xactions.app/og-docs.png">
+<meta property="og:site_name" content="XActions">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@nichxbt">
+<meta name="twitter:title" content="Learn — XActions">
+<meta name="twitter:description" content="Start here if you have not run XActions before. 7 pages in the XActions documentation.">
+<meta name="twitter:image" content="https://xactions.app/og-docs.png">
+
+<link rel="canonical" href="https://xactions.app/docs/learn">
+<link rel="manifest" href="/manifest.json">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+<link rel="stylesheet" href="/docs/assets/docs.css">
+
+<script>
+/* Applied before first paint so a dark-theme reader never sees a white flash. */
+(function(){try{var t=localStorage.getItem('xactions-theme');if(t==='light'||t==='dark'){document.documentElement.setAttribute('data-theme',t);}}catch(e){}})();
+</script>
+
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header class="topbar">
+  <button class="icon-btn menu-toggle" data-menu-toggle aria-expanded="false" aria-label="Open navigation">☰</button>
+  <a class="topbar__brand" href="/">⚡ XActions</a>
+  <div class="topbar__spacer"></div>
+  <button class="search-trigger" data-search-trigger aria-label="Search documentation">
+    <span aria-hidden="true">🔍</span><span class="search-trigger__label">Search docs</span><kbd>⌘K</kbd>
+  </button>
+  <nav class="topbar__nav" aria-label="Main">
+    <a class="topbar__link" href="/docs" aria-current="page">Docs</a>
+    <a class="topbar__link" href="/tutorials">Tutorials</a>
+    <a class="topbar__link" href="/examples">Examples</a>
+    <a class="topbar__link" href="https://github.com/nirholas/XActions" target="_blank" rel="noopener">GitHub</a>
+  </nav>
+  <button class="icon-btn" data-theme-toggle aria-label="Switch theme">☾</button>
+</header>
+
+<div class="scrim" data-scrim></div>
+
+<main class="content content--wide" id="main">
+  <div class="prose">
+    <span class="eyebrow">🎓 Documentation</span>
+    <h1>Learn</h1>
+    <p class="hero__lede">Start here if you have not run XActions before. 7 pages.</p>
+
+    <div class="quick-links">
+      <a class="btn btn--ghost" href="/docs">← All documentation</a>
+    </div>
+
+    <div class="card-grid">
+      <a class="card" href="/docs/learn/build-a-brand-monitor">
+        
+        <span class="card__title">Tutorial 04 — Build a brand monitor — XActions Docs</span>
+        <span class="card__desc">Build a service that watches X for mentions of a term, scores each one for sentiment, and posts an alert when something negative appears.</span>
+        <span class="card__meta">3 min read</span>
+      </a>
+      <a class="card" href="/docs/learn/clean-up-your-following">
+        
+        <span class="card__title">Tutorial 03 — Clean up your following list — XActions Docs</span>
+        <span class="card__desc">The job XActions is best known for: find the accounts you follow that do not follow you back, and unfollow the ones you actually want gone.</span>
+        <span class="card__meta">3 min read</span>
+      </a>
+      <a class="card" href="/docs/learn/competitive-intelligence">
+        
+        <span class="card__title">05: Read any account like an analyst — XActions Docs</span>
+        <span class="card__desc">Everything in this tutorial runs on the guest tier. You never log in.</span>
+        <span class="card__meta">4 min read</span>
+      </a>
+      <a class="card" href="/docs/learn/everything-is-json">
+        
+        <span class="card__title">06: Everything is JSON — XActions Docs</span>
+        <span class="card__desc">XActions prints a formatted report because that is what you want when you are looking at it. Add --json and it prints data instead, and stdout carries nothing</span>
+        <span class="card__meta">3 min read</span>
+      </a>
+      <a class="card" href="/docs/learn/mcp-with-claude">
+        
+        <span class="card__title">Tutorial 02 — Claude that can use X — XActions Docs</span>
+        <span class="card__desc">MCP (Model Context Protocol) is how AI assistants call external tools.</span>
+        <span class="card__meta">4 min read</span>
+      </a>
+      <a class="card" href="/docs/learn/readme">
+        
+        <span class="card__title">Tutorials — XActions Docs</span>
+        <span class="card__desc">Guided walkthroughs. Each one starts from nothing and ends with something working, and every command in them has been run.</span>
+        <span class="card__meta">2 min read</span>
+      </a>
+      <a class="card" href="/docs/learn/your-first-scrape">
+        
+        <span class="card__title">Tutorial 01 — Your first scrape — XActions Docs</span>
+        <span class="card__desc">By the end of this you will have pulled real data off X from a terminal and from a Node.js program, and you will understand the one distinction that explains</span>
+        <span class="card__meta">3 min read</span>
+      </a>
+    </div>
+  </div>
+</main>
+
+<dialog class="search-dialog" data-search-dialog aria-label="Search documentation">
+  <input class="search-dialog__input" data-search-input type="search" placeholder="Search the documentation…" aria-label="Search query" autocomplete="off" spellcheck="false">
+  <div class="search-dialog__results" data-search-results role="listbox" aria-label="Search results"></div>
+  <div class="search-dialog__footer">
+    <span><kbd>↑</kbd><kbd>↓</kbd> navigate</span>
+    <span><kbd>↵</kbd> open</span>
+    <span><kbd>esc</kbd> close</span>
+  </div>
+</dialog>
+
+<footer class="site-footer">
+  <div class="site-footer__inner">
+    <div>
+      <h4>XActions</h4>
+      <p>Free, open-source X/Twitter automation.</p>
+      <p>Built by <a href="https://x.com/nichxbt" target="_blank" rel="noopener">@nichxbt</a></p>
+    </div>
+    <div>
+      <h4>Learn</h4>
+      <a href="/docs/learn/your-first-scrape">Your first scrape</a>
+      <a href="/docs/learn/mcp-with-claude">MCP with Claude</a>
+      <a href="/examples">Examples</a>
+      <a href="/docs/guides/troubleshooting">Troubleshooting</a>
+    </div>
+    <div>
+      <h4>Reference</h4>
+      <a href="/docs/guides/cli-reference">CLI</a>
+      <a href="/docs/guides/api-reference">API</a>
+      <a href="/docs/guides/mcp-setup">MCP server</a>
+      <a href="/docs/guides/browser-scripts">Browser scripts</a>
+    </div>
+    <div>
+      <h4>Project</h4>
+      <a href="https://github.com/nirholas/XActions" target="_blank" rel="noopener">GitHub</a>
+      <a href="/docs/project/contributing">Contributing</a>
+      <a href="/docs/project/changelog">Changelog</a>
+      <a href="/docs/project/security">Security</a>
+    </div>
+  </div>
+  <div class="site-footer__bottom">
+    <p>© 2024–2026 XActions. Apache-2.0 licensed. No API fees.</p>
+  </div>
+</footer>
+
+<script src="/docs/assets/docs.js" defer></script>
+</body>
+</html>

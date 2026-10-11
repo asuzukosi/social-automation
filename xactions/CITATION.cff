@@ -1,0 +1,16 @@
+cff-version: 1.2.0
+message: "If you use XActions, please cite it as below."
+type: software
+title: "XActions"
+abstract: "⚡ The Complete X/Twitter Automation Toolkit — Scrapers, MCP server for AI agents (Claude/GPT), CLI, browser scripts. No API fees. Open source. Unfollow people who don't follow back. Monitor real-time analytics. Auto follow, like, comment, scrape, without API."
+authors:
+  - alias: nirholas
+    name: nirholas
+repository-code: "https://github.com/nirholas/XActions"
+url: "https://github.com/nirholas/XActions"
+license: MIT
+version: "1.0.0"
+date-released: "2026-02-11"
+keywords:
+  - open-source
+  - nirholas

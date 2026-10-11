@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tweet Price Correlation — Free X/Twitter Script | XActions</title>
+  <meta name="description" content="scripts/tweetPriceCorrelation.js">
+  <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, tweet, price, correlation, analytics">
+  <meta name="author" content="nich (@nichxbt)">
+  <meta name="robots" content="index, follow">
+
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Tweet Price Correlation — XActions">
+  <meta property="og:description" content="scripts/tweetPriceCorrelation.js">
+  <meta property="og:url" content="https://xactions.app/scripts/tweet-price-correlation">
+  <meta property="og:site_name" content="XActions">
+  <meta property="og:image" content="https://xactions.app/og-image.png">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@nichxbt">
+  <meta name="twitter:title" content="Tweet Price Correlation — XActions">
+  <meta name="twitter:description" content="scripts/tweetPriceCorrelation.js">
+
+  <link rel="canonical" href="https://xactions.app/scripts/tweet-price-correlation">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "Tweet Price Correlation — Free X/Twitter Script | XActions",
+    "description": "scripts/tweetPriceCorrelation.js",
+    "url": "https://xactions.app/scripts/tweet-price-correlation",
+    "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
+    "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
+    "datePublished": "2026-03-30",
+    "dateModified": "2026-03-30",
+    "articleSection": "Analytics",
+    "keywords": "xactions, twitter automation, x automation, browser script, devtools console, free, open source, tweet, price, correlation, analytics"
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
+      { "@type": "ListItem", "position": 2, "name": "Scripts", "item": "https://xactions.app/scripts" },
+      { "@type": "ListItem", "position": 3, "name": "Analytics", "item": "https://xactions.app/scripts#analytics" },
+      { "@type": "ListItem", "position": 4, "name": "Tweet Price Correlation", "item": "https://xactions.app/scripts/tweet-price-correlation" }
+    ]
+  }
+  </script>
+
+  <link rel="stylesheet" href="/css/common.css">
+  <style>
+    .article { padding: 24px 20px; }
+    .article h1 { font-size: 1.75rem; font-weight: 800; margin-bottom: 8px; line-height: 1.2; }
+    .article h2 { font-size: 1.375rem; font-weight: 700; margin: 32px 0 12px; padding-top: 16px; border-top: 1px solid var(--border); }
+    .article h3 { font-size: 1.125rem; font-weight: 600; margin: 24px 0 8px; color: var(--accent); }
+    .article p { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 16px; }
+    .article a { color: var(--accent); text-decoration: none; }
+    .article a:hover { text-decoration: underline; }
+    .article strong { color: var(--text-primary); }
+    .article code { background: var(--bg-tertiary); padding: 2px 6px; border-radius: 4px; font-family: 'Monaco','Menlo','Consolas', monospace; font-size: 0.875rem; color: var(--accent); }
+    .article pre { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 16px; overflow-x: auto; margin: 16px 0; }
+    .article pre code { background: none; padding: 0; color: var(--text-primary); font-size: 0.8125rem; display: block; }
+    .article table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 0.875rem; }
+    .article th { background: var(--bg-secondary); padding: 10px 12px; text-align: left; border: 1px solid var(--border); font-weight: 600; }
+    .article td { padding: 10px 12px; border: 1px solid var(--border); color: var(--text-secondary); }
+    .cat-badge { display: inline-block; background: var(--accent-light); color: var(--accent); padding: 4px 12px; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; margin-bottom: 16px; }
+    .meta-row { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 16px; font-size: 0.8125rem; color: var(--text-secondary); }
+    .meta-row span { display: flex; align-items: center; gap: 4px; }
+    .usage-steps { margin-left: 24px; margin-bottom: 16px; }
+    .usage-steps li { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 8px; padding-left: 4px; }
+    .warning-box { background: rgba(244, 33, 46, 0.1); border: 1px solid var(--error); border-radius: 12px; padding: 16px; margin: 16px 0; }
+    .warning-box p { color: var(--error); margin: 0; font-size: 0.875rem; }
+    .controls-box { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 16px; margin: 16px 0; }
+    .controls-box h3 { margin: 0 0 8px; font-size: 1rem; }
+    .code-block { position: relative; }
+    .copy-btn { position: absolute; top: 8px; right: 8px; background: var(--bg-tertiary); color: var(--text-secondary); border: 1px solid var(--border); border-radius: 8px; padding: 6px 12px; cursor: pointer; font-size: 0.75rem; z-index: 10; transition: all .2s; }
+    .copy-btn:hover { background: var(--accent); color: #fff; }
+    .full-code { margin-top: 32px; }
+    .full-code pre { max-height: 600px; overflow-y: auto; }
+    .cta-box { background: linear-gradient(135deg, var(--bg-secondary), var(--bg-tertiary)); border: 1px solid var(--border); border-radius: 16px; padding: 24px; margin: 32px 0; text-align: center; }
+    .cta-box h3 { font-size: 1.25rem; margin-bottom: 8px; color: var(--text-primary); }
+    .cta-box p { color: var(--text-secondary); margin-bottom: 16px; }
+    .cta-box a { display: inline-block; padding: 12px 24px; background: var(--accent); color: #fff; border-radius: 9999px; text-decoration: none; font-weight: 700; transition: background .2s; }
+    .cta-box a:hover { background: var(--accent-hover); }
+    .sidebar-right { width: 350px; padding: 16px 24px; position: sticky; top: 0; height: 100vh; overflow-y: auto; }
+    .sidebar-card { background: var(--bg-secondary); border-radius: 16px; padding: 16px; margin-bottom: 16px; }
+    .sidebar-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 12px; }
+    .sidebar-card a { display: block; color: var(--text-secondary); text-decoration: none; font-size: 0.875rem; padding: 6px 0; border-bottom: 1px solid var(--border); transition: color .2s; }
+    .sidebar-card a:last-child { border-bottom: none; }
+    .sidebar-card a:hover { color: var(--accent); }
+    .breadcrumb { font-size: 0.8125rem; color: var(--text-secondary); margin-top: 4px; }
+    .breadcrumb a { color: var(--accent); text-decoration: none; }
+    .breadcrumb a:hover { text-decoration: underline; }
+    .source-badge { display: inline-block; background: var(--bg-tertiary); color: var(--text-secondary); padding: 2px 8px; border-radius: 6px; font-size: 0.6875rem; margin-left: 8px; }
+    @media (max-width: 1024px) { .sidebar-right { display: none; } }
+    @media (max-width: 768px) {
+      .article pre { font-size: 0.75rem; }
+      .meta-row { flex-direction: column; gap: 4px; }
+    }
+  </style>
+</head>
+<body>
+  <a href="#main-content" class="skip-nav">Skip to main content</a>
+  <div class="layout">
+    <aside class="sidebar-left" aria-label="Main navigation"></aside>
+    <script src="/js/sidebar.js"></script>
+
+    <main class="main-content" id="main-content">
+      <header class="main-header">
+        <h1>💹 Tweet Price Correlation</h1>
+        <div class="breadcrumb">
+          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#analytics">Analytics</a> › Tweet Price Correlation
+        </div>
+      </header>
+
+      <article class="article">
+        <span class="cat-badge">Analytics</span>
+        <span class="source-badge">scripts</span>
+
+        <div class="meta-row">
+          
+          
+          <span>374 lines</span>
+          <span>by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></span>
+        </div>
+
+        <p>scripts/tweetPriceCorrelation.js</p>
+
+        
+
+        <h2>How to Use</h2>
+        <ol class="usage-steps">
+        <li>Navigate to <a href="https://x.com" rel="noopener">x.com</a> and log in</li>
+        <li>Open DevTools Console (F12 or Cmd+Option+I)</li>
+        
+        <li>Paste the script below and press Enter</li>
+      </ol>
+        
+
+        
+        <section class="config-section">
+        <h2>Configuration Options</h2>
+        <table>
+          <thead><tr><th>Option</th><th>Default</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td><code>network</code></td><td><code>null</code></td><td>e.g. 'solana', 'eth', 'bsc'</td></tr>
+<tr><td><code>poolAddress</code></td><td><code>null</code></td><td>e.g. '0x...'</td></tr>
+          </tbody>
+        </table>
+      </section>
+        <section class="config-code">
+        <h2>Default Configuration</h2>
+        <div class="code-block">
+          <button class="copy-btn" onclick="navigator.clipboard.writeText(this.nextElementSibling.querySelector('code').textContent).then(()=>{this.textContent='Copied!';setTimeout(()=>this.textContent='Copy',2000)})">Copy</button>
+          <pre><code>const CONFIG = {
+    // Token to track (CoinGecko ID — find at coingecko.com/en/coins/TOKEN)
+    tokenId: 'solana',
+
+    // Alternative: GeckoTerminal pool address (for unlisted tokens)
+    // Set network + poolAddress to use GeckoTerminal instead of CoinGecko
+    network: null,        // e.g. 'solana', 'eth', 'bsc'
+    poolAddress: null,    // e.g. '0x...'
+
+    // How many tweets to scrape from the profile (scrolls timeline)
+    maxTweets: 100,
+
+    // Price windows to measure impact after each tweet
+    impactWindows: [1, 24], // hours
+
+    // Scroll settings
+    scrollDelay: 1500,
+    maxScrollAttempts: 50,
+  };</code></pre>
+        </div>
+      </section>
+
+        <section class="full-code">
+          <h2>Full Script</h2>
+          <p>Copy and paste this entire script into your browser DevTools console on <a href="https://x.com" rel="noopener">x.com</a>.</p>
+          <div class="code-block">
+            <button class="copy-btn" onclick="navigator.clipboard.writeText(this.nextElementSibling.querySelector('code').textContent).then(()=>{this.textContent='Copied!';setTimeout(()=>this.textContent='Copy Script',2000)})">Copy Script</button>
+            <pre><code>// Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
+// scripts/tweetPriceCorrelation.js
+// Browser console script — correlate a founder's tweet frequency with token price movements
+// Paste in DevTools console on x.com/USERNAME (any crypto founder's profile)
+// Inspired by https://github.com/rohunvora/tweet-price-charts
+// by nichxbt
+
+(() =&gt; {
+  const sleep = (ms) =&gt; new Promise(r =&gt; setTimeout(r, ms));
+
+  // =============================================
+  // CONFIG — edit these before running
+  // =============================================
+  const CONFIG = {
+    // Token to track (CoinGecko ID — find at coingecko.com/en/coins/TOKEN)
+    tokenId: 'solana',
+
+    // Alternative: GeckoTerminal pool address (for unlisted tokens)
+    // Set network + poolAddress to use GeckoTerminal instead of CoinGecko
+    network: null,        // e.g. 'solana', 'eth', 'bsc'
+    poolAddress: null,    // e.g. '0x...'
+
+    // How many tweets to scrape from the profile (scrolls timeline)
+    maxTweets: 100,
+
+    // Price windows to measure impact after each tweet
+    impactWindows: [1, 24], // hours
+
+    // Scroll settings
+    scrollDelay: 1500,
+    maxScrollAttempts: 50,
+  };
+
+  // =============================================
+  // Helpers
+  // =============================================
+
+  const download = (data, filename) =&gt; {
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' }));
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    console.log(`📥 Downloaded: ${filename}`);
+  };
+
+  const downloadCSV = (rows, filename) =&gt; {
+    if (!rows.length) return;
+    const headers = Object.keys(rows[0]);
+    const csv = [headers.join(','), ...rows.map(r =&gt; headers.map(h =&gt; {
+      const v = r[h] ?? '';
+      return typeof v === 'string' &amp;&amp; (v.includes(',') || v.includes('&quot;') || v.includes('\n'))
+        ? `&quot;${v.replace(/&quot;/g, '&quot;&quot;')}&quot;` : v;
+    }).join(','))].join('\n');
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv' }));
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    console.log(`📥 Downloaded: ${filename}`);
+  };
+
+  const parseCount = (str) =&gt; {
+    if (!str) return 0;
+    if (typeof str === 'number') return str;
+    str = str.replace(/,/g, '').trim();
+    const m = str.match(/([\d.]+)\s*([KMBkmb])?/);
+    if (!m) return 0;
+    let n = parseFloat(m[1]);
+    if (m[2]) n *= { k: 1e3, m: 1e6, b: 1e9 }[m[2].toLowerCase()] || 1;
+    return Math.round(n);
+  };
+
+  const pct = (v) =&gt; v &gt; 0 ? `+${v.toFixed(2)}%` : `${v.toFixed(2)}%`;
+
+  // =============================================
+  // Price Fetching
+  // =============================================
+
+  const fetchCoinGeckoPrices = async (tokenId, startTs, endTs) =&gt; {
+    const url = `https://api.coingecko.com/api/v3/coins/${tokenId}/market_chart/range?vs_currency=usd&amp;from=${startTs}&amp;to=${endTs}`;
+    console.log(`💰 Fetching CoinGecko prices for ${tokenId}...`);
+    const resp = await fetch(url);
+    if (!resp.ok) throw new Error(`CoinGecko API ${resp.status}: ${resp.statusText}`);
+    const data = await resp.json();
+    // data.prices = [[timestamp_ms, price], ...]
+    return data.prices.map(([ts, price]) =&gt; ({ ts, price }));
+  };
+
+  const fetchGeckoTerminalPrices = async (network, poolAddress, startTs, endTs) =&gt; {
+    // GeckoTerminal OHLCV — 1h candles
+    const url = `https://api.geckoterminal.com/api/v2/networks/${network}/pools/${poolAddress}/ohlcv/hour?aggregate=1&amp;limit=1000`;
+    console.log(`💰 Fetching GeckoTerminal prices for ${network}/${poolAddress}...`);
+    const resp = await fetch(url);
+    if (!resp.ok) throw new Error(`GeckoTerminal API ${resp.status}: ${resp.statusText}`);
+    const data = await resp.json();
+    const candles = data?.data?.attributes?.ohlcv_list || [];
+    return candles
+      .map(([ts, o, h, l, c]) =&gt; ({ ts: ts * 1000, price: parseFloat(c) }))
+      .filter(p =&gt; p.ts &gt;= startTs * 1000 &amp;&amp; p.ts &lt;= endTs * 1000)
+      .sort((a, b) =&gt; a.ts - b.ts);
+  };
+
+  const fetchPrices = async (startTs, endTs) =&gt; {
+    if (CONFIG.network &amp;&amp; CONFIG.poolAddress) {
+      return fetchGeckoTerminalPrices(CONFIG.network, CONFIG.poolAddress, startTs, endTs);
+    }
+    return fetchCoinGeckoPrices(CONFIG.tokenId, startTs, endTs);
+  };
+
+  // =============================================
+  // Tweet Scraping (from current profile page)
+  // =============================================
+
+  const scrapeTweets = async () =&gt; {
+    const tweets = [];
+    let scrollAttempts = 0;
+    let lastCount = 0;
+    let staleRounds = 0;
+
+    while (tweets.length &lt; CONFIG.maxTweets &amp;&amp; scrollAttempts &lt; CONFIG.maxScrollAttempts) {
+      document.querySelectorAll('article[data-testid=&quot;tweet&quot;]').forEach(tweet =&gt; {
+        const link = tweet.querySelector('a[href*=&quot;/status/&quot;]')?.href || '';
+        if (!link || tweets.find(t =&gt; t.url === link)) return;
+
+        const timeEl = tweet.querySelector('time');
+        const datetime = timeEl?.getAttribute('datetime');
+        if (!datetime) return;
+
+        const text = (tweet.querySelector('[data-testid=&quot;tweetText&quot;]')?.textContent || '').substring(0, 280);
+        const likes = parseCount(tweet.querySelector('[data-testid=&quot;like&quot;] span, [data-testid=&quot;unlike&quot;] span')?.textContent);
+        const reposts = parseCount(tweet.querySelector('[data-testid=&quot;retweet&quot;] span')?.textContent);
+        const replies = parseCount(tweet.querySelector('[data-testid=&quot;reply&quot;] span')?.textContent);
+        const views = parseCount(tweet.querySelector('[data-testid=&quot;analyticsButton&quot;] span, a[href*=&quot;/analytics&quot;] span')?.textContent);
+
+        tweets.push({
+          url: link,
+          datetime,
+          timestamp: new Date(datetime).getTime(),
+          text,
+          likes,
+          reposts,
+          replies,
+          views,
+        });
+      });
+
+      if (tweets.length === lastCount) {
+        staleRounds++;
+        if (staleRounds &gt;= 5) break;
+      } else {
+        staleRounds = 0;
+        lastCount = tweets.length;
+      }
+
+      window.scrollTo(0, document.body.scrollHeight);
+      await sleep(CONFIG.scrollDelay);
+      scrollAttempts++;
+      if (scrollAttempts % 5 === 0) console.log(`📜 Scrolled ${scrollAttempts}x — ${tweets.length} tweets found`);
+    }
+
+    return tweets.sort((a, b) =&gt; a.timestamp - b.timestamp);
+  };
+
+  // =============================================
+  // Price-Tweet Alignment &amp; Impact Calculation
+  // =============================================
+
+  const findClosestPrice = (prices, targetTs) =&gt; {
+    let best = null;
+    let bestDiff = Infinity;
+    for (const p of prices) {
+      const diff = Math.abs(p.ts - targetTs);
+      if (diff &lt; bestDiff) {
+        bestDiff = diff;
+        best = p;
+      }
+    }
+    return best;
+  };
+
+  const computeImpact = (tweets, prices) =&gt; {
+    return tweets.map(tweet =&gt; {
+      const atTweet = findClosestPrice(prices, tweet.timestamp);
+      if (!atTweet) return { ...tweet, priceAtTweet: null, impact: {} };
+
+      const impact = {};
+      for (const hours of CONFIG.impactWindows) {
+        const futureTs = tweet.timestamp + hours * 3600 * 1000;
+        const futurePrice = findClosestPrice(prices, futureTs);
+        if (futurePrice &amp;&amp; Math.abs(futurePrice.ts - futureTs) &lt; hours * 3600 * 1000 * 0.5) {
+          const change = ((futurePrice.price - atTweet.price) / atTweet.price) * 100;
+          impact[`${hours}h`] = { price: futurePrice.price, change: Math.round(change * 100) / 100 };
+        }
+      }
+
+      return {
+        ...tweet,
+        priceAtTweet: atTweet.price,
+        impact,
+      };
+    });
+  };
+
+  // =============================================
+  // Statistics (inspired by tweet-price-charts)
+  // =============================================
+
+  const computeStats = (results) =&gt; {
+    const withImpact = results.filter(r =&gt; r.impact?.['24h']);
+    if (!withImpact.length) return null;
+
+    const changes24h = withImpact.map(r =&gt; r.impact['24h'].change);
+    const positiveCount = changes24h.filter(c =&gt; c &gt; 0).length;
+    const bigMoves = changes24h.filter(c =&gt; Math.abs(c) &gt;= 15);
+
+    const avg = (arr) =&gt; arr.reduce((a, b) =&gt; a + b, 0) / arr.length;
+    const median = (arr) =&gt; {
+      const s = [...arr].sort((a, b) =&gt; a - b);
+      const mid = Math.floor(s.length / 2);
+      return s.length % 2 ? s[mid] : (s[mid - 1] + s[mid]) / 2;
+    };
+
+    // Tweet frequency
+    const timestamps = results.map(r =&gt; r.timestamp).sort();
+    const gaps = [];
+    for (let i = 1; i &lt; timestamps.length; i++) {
+      gaps.push((timestamps[i] - timestamps[i - 1]) / (1000 * 3600));
+    }
+
+    return {
+      totalTweets: results.length,
+      tweetsWithPriceData: withImpact.length,
+      avgChange24h: Math.round(avg(changes24h) * 100) / 100,
+      medianChange24h: Math.round(median(changes24h) * 100) / 100,
+      winRate: Math.round((positiveCount / changes24h.length) * 10000) / 100,
+      bigMoves: bigMoves.length,
+      bigMovePct: Math.round((bigMoves.length / changes24h.length) * 10000) / 100,
+      avgHoursBetweenTweets: gaps.length ? Math.round(avg(gaps) * 10) / 10 : null,
+      bestTweet: withImpact.reduce((best, r) =&gt; r.impact['24h'].change &gt; (best?.impact?.['24h']?.change ?? -Infinity) ? r : best, null),
+      worstTweet: withImpact.reduce((worst, r) =&gt; r.impact['24h'].change &lt; (worst?.impact?.['24h']?.change ?? Infinity) ? r : worst, null),
+    };
+  };
+
+  // =============================================
+  // Main
+  // =============================================
+
+  const run = async () =&gt; {
+    console.log('📊 TWEET-PRICE CORRELATION ANALYZER — by nichxbt');
+    console.log('💡 Inspired by https://github.com/rohunvora/tweet-price-charts');
+    console.log('');
+
+    // Detect profile
+    const pathMatch = window.location.pathname.match(/^\/([A-Za-z0-9_]+)/);
+    if (!pathMatch || ['home', 'explore', 'notifications', 'messages', 'i', 'settings'].includes(pathMatch[1])) {
+      console.error('❌ Navigate to a profile page first! (x.com/USERNAME)');
+      return;
+    }
+    const username = pathMatch[1];
+    console.log(`👤 Analyzing @${username}'s tweets vs ${CONFIG.tokenId || `${CONFIG.network}/${CONFIG.poolAddress}`} price`);
+    console.log('');
+
+    // Step 1: Scrape tweets
+    console.log('🔍 Step 1/3: Scraping tweets from timeline...');
+    const tweets = await scrapeTweets();
+    if (!tweets.length) {
+      console.error('❌ No tweets found. Make sure you\'re on a profile page with visible tweets.');
+      return;
+    }
+    console.log(`✅ Found ${tweets.length} tweets (${new Date(tweets[0].datetime).toLocaleDateString()} — ${new Date(tweets[tweets.length - 1].datetime).toLocaleDateString()})`);
+    console.log('');
+
+    // Step 2: Fetch prices
+    console.log('💰 Step 2/3: Fetching token prices...');
+    const startTs = Math.floor(tweets[0].timestamp / 1000) - 86400; // 1 day before first tweet
+    const endTs = Math.floor(tweets[tweets.length - 1].timestamp / 1000) + 86400 * 2; // 2 days after last
+    let prices;
+    try {
+      prices = await fetchPrices(startTs, endTs);
+    } catch (err) {
+      console.error(`❌ Price fetch failed: ${err.message}`);
+      console.log('💡 Tip: Check CONFIG.tokenId (CoinGecko ID) or set network + poolAddress for GeckoTerminal');
+      return;
+    }
+    console.log(`✅ Got ${prices.length} price points`);
+    console.log('');
+
+    // Step 3: Compute correlation
+    console.log('🧮 Step 3/3: Computing price impact...');
+    const results = computeImpact(tweets, prices);
+    const stats = computeStats(results);
+
+    // Display results
+    console.log('');
+    console.log('═══════════════════════════════════════════════════');
+    console.log(`📊 TWEET-PRICE CORRELATION: @${username} × ${CONFIG.tokenId || CONFIG.poolAddress}`);
+    console.log('═══════════════════════════════════════════════════');
+
+    if (stats) {
+      console.log(`📈 Tweets analyzed:     ${stats.tweetsWithPriceData} / ${stats.totalTweets}`);
+      console.log(`📊 Avg 24h change:      ${pct(stats.avgChange24h)}`);
+      console.log(`📊 Median 24h change:   ${pct(stats.medianChange24h)}`);
+      console.log(`🎯 Win rate (24h):      ${stats.winRate}%`);
+      console.log(`🔥 Big moves (±15%):    ${stats.bigMoves} (${stats.bigMovePct}%)`);
+      console.log(`⏱️  Avg tweet gap:       ${stats.avgHoursBetweenTweets}h`);
+      console.log('');
+
+      if (stats.bestTweet) {
+        console.log(`🏆 Best tweet:  ${pct(stats.bestTweet.impact['24h'].change)} — &quot;${stats.bestTweet.text.substring(0, 80)}...&quot;`);
+      }
+      if (stats.worstTweet) {
+        console.log(`💀 Worst tweet: ${pct(stats.worstTweet.impact['24h'].change)} — &quot;${stats.worstTweet.text.substring(0, 80)}...&quot;`);
+      }
+
+      // Top 5 movers
+      const sorted = results.filter(r =&gt; r.impact?.['24h']).sort((a, b) =&gt; Math.abs(b.impact['24h'].change) - Math.abs(a.impact['24h'].change));
+      if (sorted.length) {
+        console.log('');
+        console.log('📋 Top 5 price-moving tweets (by |24h change|):');
+        sorted.slice(0, 5).forEach((r, i) =&gt; {
+          console.log(`  ${i + 1}. ${pct(r.impact['24h'].change)} | $${r.priceAtTweet.toFixed(4)} → $${r.impact['24h'].price.toFixed(4)} | &quot;${r.text.substring(0, 60)}...&quot;`);
+        });
+      }
+    } else {
+      console.log('⚠️ Not enough price data to compute stats. Try a different token or broader date range.');
+    }
+
+    console.log('');
+    console.log('═══════════════════════════════════════════════════');
+
+    // Prepare export data
+    const exportData = {
+      meta: {
+        username,
+        token: CONFIG.tokenId || `${CONFIG.network}/${CONFIG.poolAddress}`,
+        generatedAt: new Date().toISOString(),
+        source: 'XActions tweet-price correlation (inspired by tweet-price-charts)',
+        credit: 'https://github.com/rohunvora/tweet-price-charts',
+      },
+      stats,
+      tweets: results.map(r =&gt; ({
+        url: r.url,
+        datetime: r.datetime,
+        text: r.text,
+        likes: r.likes,
+        reposts: r.reposts,
+        replies: r.replies,
+        views: r.views,
+        priceAtTweet: r.priceAtTweet,
+        ...Object.fromEntries(
+          Object.entries(r.impact || {}).flatMap(([k, v]) =&gt; [
+            [`price_${k}`, v.price],
+            [`change_${k}`, v.change],
+          ])
+        ),
+      })),
+    };
+
+    // Download JSON + CSV
+    const ts = new Date().toISOString().slice(0, 10);
+    download(exportData, `tweet-price-${username}-${CONFIG.tokenId || 'pool'}-${ts}.json`);
+    downloadCSV(exportData.tweets, `tweet-price-${username}-${CONFIG.tokenId || 'pool'}-${ts}.csv`);
+
+    console.log('');
+    console.log('✅ Done! JSON + CSV downloaded.');
+    console.log('💡 Tip: Open the CSV in a spreadsheet to chart tweet dates vs price impact');
+  };
+
+  run();
+})();
+</code></pre>
+          </div>
+        </section>
+
+        <div class="cta-box">
+          <h3>⚡ More XActions Scripts</h3>
+          <p>Browse 300+ free browser scripts for X/Twitter automation. No API keys, no fees.</p>
+          <a href="/scripts">Browse All Scripts</a>
+        </div>
+      </article>
+    </main>
+
+    <aside class="sidebar-right">
+      <div class="sidebar-card">
+        <h3>💹 Analytics</h3>
+        <a href="/scripts/account-health-monitor">🏥 Account Health Monitor</a>
+<a href="/scripts/audience-demographics">📊 Audience Demographics Analyzer</a>
+<a href="/scripts/audience-overlap">🔗 Audience Overlap Analyzer</a>
+<a href="/scripts/best-time-to-post">⏰ Best Time To Post</a>
+<a href="/scripts/competitor-analysis">🔍 Competitor Analysis</a>
+<a href="/scripts/engagement-analytics">📈 Engagement Analytics</a>
+<a href="/scripts/hashtag-analytics">#️⃣ Hashtag Analytics</a>
+<a href="/scripts/keyword-monitor">🔑 Keyword Monitor &amp; Alerts</a>
+<a href="/scripts/manage-notifications">🔔 Manage Notifications</a>
+<a href="/scripts/notification-manager">🔔 Notification Manager - Scrape</a>
+      </div>
+      <div class="sidebar-card">
+        <h3>🔗 Quick Links</h3>
+        <a href="/scripts">All Scripts</a>
+        <a href="/features">Features</a>
+        <a href="/docs">Documentation</a>
+        <a href="/tutorials">Tutorials</a>
+        <a href="/mcp">MCP Server</a>
+        <a href="https://github.com/nirholas/XActions" rel="noopener">GitHub</a>
+      </div>
+    </aside>
+  </div>
+</body>
+</html>

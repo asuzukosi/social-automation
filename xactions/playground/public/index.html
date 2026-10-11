@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Playground — XActions</title>
+<meta name="description" content="Run a real X/Twitter query in your browser. No login, no API key, no install. Then copy the exact CLI command, Node.js code, HTTP request or AI agent prompt that produces the same answer.">
+<meta name="keywords" content="twitter api playground, x api without key, free twitter scraper, xactions, x account analytics">
+<meta name="author" content="nich (@nichxbt)">
+<meta name="robots" content="index, follow, max-image-preview:large">
+<meta name="color-scheme" content="light dark">
+
+<meta property="og:type" content="website">
+<meta property="og:title" content="XActions Playground">
+<meta property="og:description" content="Run a real X query in your browser. No login, no API key, no install.">
+<meta property="og:url" content="https://xactions.app/playground">
+<meta property="og:image" content="https://xactions.app/og-docs.png">
+<meta property="og:site_name" content="XActions">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@nichxbt">
+<meta name="twitter:title" content="XActions Playground">
+<meta name="twitter:description" content="Run a real X query in your browser. No login, no API key, no install.">
+<meta name="twitter:image" content="https://xactions.app/og-docs.png">
+
+<link rel="canonical" href="https://xactions.app/playground">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+<meta name="playground-api" content="">
+<link rel="stylesheet" href="/assets/docs.css">
+<link rel="stylesheet" href="/assets/playground.css">
+
+<script>
+/* Applied before first paint so a dark-theme reader never sees a white flash. */
+(function(){try{var t=localStorage.getItem('xactions-theme');if(t==='light'||t==='dark'){document.documentElement.setAttribute('data-theme',t);}}catch(e){}})();
+</script>
+
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"XActions Playground","url":"https://xactions.app/playground","applicationCategory":"DeveloperApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"description":"Run real X/Twitter queries in the browser with no login, no API key and no install."}
+</script>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header class="topbar">
+  <a class="topbar__brand" href="/">⚡ XActions</a>
+  <div class="topbar__spacer"></div>
+  <nav class="topbar__nav" aria-label="Main">
+    <a class="topbar__link" href="/playground" aria-current="page">Playground</a>
+    <a class="topbar__link" href="/docs">Docs</a>
+    <a class="topbar__link" href="/examples">Examples</a>
+    <a class="topbar__link" href="https://github.com/nirholas/XActions" target="_blank" rel="noopener">GitHub</a>
+  </nav>
+  <button class="icon-btn" data-theme-toggle aria-label="Switch theme">☾</button>
+</header>
+
+<main id="main" class="pg">
+
+  <section class="pg-hero">
+    <h1>Run a real X query, right now</h1>
+    <p class="pg-hero__sub">
+      No login. No API key. No install. This page is talking to X's public
+      endpoints live, and every answer comes with the exact command, code,
+      HTTP request and agent prompt that produces it.
+    </p>
+    <div class="pg-hero__badges">
+      <span class="pg-badge pg-badge--live">Live data</span>
+      <span class="pg-badge">No account needed</span>
+      <span class="pg-badge">Apache-2.0</span>
+      <span class="pg-badge" id="pg-health-badge" hidden></span>
+    </div>
+  </section>
+
+  <section class="pg-console" aria-label="Query builder">
+    <div class="pg-tabs" role="tablist" aria-label="Query type" id="pg-tabs"></div>
+
+    <form class="pg-form" id="pg-form" autocomplete="off">
+      <div class="pg-field">
+        <label class="pg-label" for="pg-target">
+          <span id="pg-target-label">Username</span>
+          <button type="button" class="pg-tip-mark" data-tip="Paste a handle, an @handle, or a full x.com profile URL. The playground cleans it up for you." aria-label="What can I type here?">?</button>
+        </label>
+        <input class="pg-input" id="pg-target" name="target" placeholder="nasa" spellcheck="false" autocapitalize="off" required>
+      </div>
+
+      <div class="pg-field pg-field--narrow" id="pg-limit-field">
+        <label class="pg-label" for="pg-limit">
+          <span id="pg-limit-label">Posts</span>
+          <button type="button" class="pg-tip-mark" data-tip="How many recent posts to pull. A bigger sample gives steadier averages and takes a little longer." aria-label="What does sample size do?">?</button>
+        </label>
+        <input class="pg-input" id="pg-limit" name="limit" type="number" inputmode="numeric" value="20" min="1" max="100">
+      </div>
+
+      <button class="pg-run" id="pg-run" type="submit">
+        <span class="pg-run__icon" aria-hidden="true">▶</span>
+        <span class="pg-run__spinner" aria-hidden="true"></span>
+        <span id="pg-run-text">Run</span>
+      </button>
+    </form>
+
+    <p class="pg-hint" id="pg-hint"></p>
+
+    <div class="pg-chips">
+      <span class="pg-chips__label">Try:</span>
+      <button type="button" class="pg-chip" data-sample="nasa">@nasa</button>
+      <button type="button" class="pg-chip" data-sample="spacex">@spacex</button>
+      <button type="button" class="pg-chip" data-sample="github">@github</button>
+      <button type="button" class="pg-chip" data-sample="vercel">@vercel</button>
+      <button type="button" class="pg-chip" data-sample="nichxbt">@nichxbt</button>
+    </div>
+  </section>
+
+  <div class="pg-grid">
+    <section class="pg-panel" aria-labelledby="pg-result-title">
+      <div class="pg-panel__head">
+        <h2 class="pg-panel__title" id="pg-result-title">Result</h2>
+        <div class="pg-panel__spacer"></div>
+        <button type="button" class="pg-share" id="pg-share" hidden>
+          <span aria-hidden="true">🔗</span><span id="pg-share-text">Copy link</span>
+        </button>
+      </div>
+      <div class="pg-panel__body" id="pg-result" aria-live="polite" aria-busy="false"></div>
+    </section>
+
+    <section class="pg-panel" aria-labelledby="pg-code-title">
+      <div class="pg-panel__head">
+        <h2 class="pg-panel__title" id="pg-code-title">Same query, every interface</h2>
+      </div>
+      <div class="pg-panel__body">
+        <div class="pg-lanes" role="tablist" aria-label="Interface" id="pg-lanes"></div>
+        <div class="pg-code">
+          <pre><code id="pg-code-block"></code></pre>
+          <button type="button" class="pg-copy" id="pg-copy">Copy</button>
+        </div>
+        <p class="pg-lane-note" id="pg-lane-note"></p>
+      </div>
+    </section>
+  </div>
+
+  <p class="pg-tier">
+    <strong>What runs here and what does not.</strong>
+    X serves profiles and public timelines to a logged-out client, so
+    everything on this page works with no account at all. Search, followers,
+    likes, bookmarks and DMs need a session, and X answers a logged-out request
+    to those with a bare <code>404</code>. Those work locally once you connect
+    your own session with <code>npx xactions connect</code>, which never leaves
+    your machine.
+  </p>
+
+  <section class="pg-next" aria-label="Next steps">
+    <a class="pg-next__card" href="/docs/learn/your-first-scrape">
+      <span class="pg-next__step">Step 1</span>
+      <h3>Run it on your machine</h3>
+      <p>Same query, no rate limit, results you can pipe into a file.</p>
+      <code>npx xactions profile nasa</code>
+    </a>
+    <a class="pg-next__card" href="/docs/guides/configuration">
+      <span class="pg-next__step">Step 2</span>
+      <h3>Unlock the session tier</h3>
+      <p>One command opens a browser, you log in as normal, and it captures the session. No DevTools.</p>
+      <code>npx xactions connect</code>
+    </a>
+    <a class="pg-next__card" href="/docs/learn/mcp-with-claude">
+      <span class="pg-next__step">Step 3</span>
+      <h3>Give it to your agent</h3>
+      <p>144 tools over MCP, so Claude, Cursor or Windsurf can do this in plain language.</p>
+      <code>npx -y xactions-mcp</code>
+    </a>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="site-footer__inner">
+    <div>
+      <h4>XActions</h4>
+      <p>Free, open-source X/Twitter automation.</p>
+      <p>Built by <a href="https://x.com/nichxbt" target="_blank" rel="noopener">@nichxbt</a></p>
+    </div>
+    <div>
+      <h4>Learn</h4>
+      <a href="/docs/learn/your-first-scrape">Your first scrape</a>
+      <a href="/docs/learn/mcp-with-claude">MCP with Claude</a>
+      <a href="/examples">Examples</a>
+      <a href="/docs/guides/troubleshooting">Troubleshooting</a>
+    </div>
+    <div>
+      <h4>Reference</h4>
+      <a href="/docs/guides/cli-reference">CLI</a>
+      <a href="/docs/guides/api-reference">API</a>
+      <a href="/docs/guides/mcp-setup">MCP server</a>
+      <a href="/docs/guides/playground-api">Playground API</a>
+    </div>
+    <div>
+      <h4>Project</h4>
+      <a href="https://github.com/nirholas/XActions" target="_blank" rel="noopener">GitHub</a>
+      <a href="/docs/project/contributing">Contributing</a>
+      <a href="/docs/project/changelog">Changelog</a>
+      <a href="/docs/project/security">Security</a>
+    </div>
+  </div>
+  <div class="site-footer__bottom">
+    <p>© 2024–2026 XActions. Apache-2.0 licensed. No API fees.</p>
+  </div>
+</footer>
+
+<div id="pg-tooltip" role="tooltip"></div>
+<div class="pg-sr" id="pg-announcer" role="status" aria-live="polite"></div>
+
+<script type="module" src="/assets/playground.js"></script>
+</body>
+</html>

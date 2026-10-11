@@ -1,0 +1,181 @@
+// Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
+/**
+ * XActions Twitter HTTP Scraper
+ * Direct HTTP-based scraping via Twitter's internal GraphQL API
+ * No browser required. 10x faster. Works in serverless/edge.
+ * 
+ * @author nich (@nichxbt)
+ * @license Apache-2.0
+ */
+
+// Core client & auth
+export { TwitterHttpClient, WaitingRateLimitStrategy, ErrorRateLimitStrategy } from './client.js';
+export { TwitterAuth } from './auth.js';
+export { GuestTokenManager } from './guest.js';
+
+// Multi-account rotation (SQLite-backed) and resumable pagination
+export { createAccountPool, createPooledClient, AccountPoolError, normalizeCookies, operationFromUrl } from './accountPool.js';
+export { createCheckpoint, bindCheckpoint } from './checkpoint.js';
+
+// Zero-credential session harvesting via Playwright (no API key required)
+export { harvestSession, SessionPool, createClientFromSession, DEFAULT_SESSION_TTL } from './playwright-session.js';
+
+// Scraping functions
+export { scrapeProfile, scrapeProfileById, parseUserData } from './profile.js';
+export { scrapeTweets, scrapeTweetsAndReplies, scrapeTweetById, parseTweetData, parseTimelineInstructions } from './tweets.js';
+export { scrapeThread, scrapeFullThread, scrapeConversation, parseConversationModule, reconstructThread } from './thread.js';
+export { scrapeFollowers, scrapeFollowing, scrapeNonFollowers, scrapeLikers, scrapeRetweeters, scrapeListMembers } from './relationships.js';
+export { scrapeCommunity, scrapeCommunityTweets, scrapeCommunityMedia, searchCommunityTweets, scrapeMyCommunities, scrapeCommunityDiscovery, joinCommunity, leaveCommunity, requestToJoinCommunity, parseCommunity, parseCommunityList, parseCommunityTweets } from './communities.js';
+export { scrapeNotifications, scrapeMentions, scrapeVerifiedNotifications, parseNotificationEntry, parseNotificationsTimeline } from './notifications.js';
+export { scrapeTrends, scrapeTrendsByWoeid, scrapeTrendLocations, scrapeExplorePage, scrapeHighlights, scrapeArticles, scrapeVerifiedFollowers, scrapeFollowersYouKnow, scrapeAudioSpace, parseTrend, parseTrendTimeline, parseGuideTrends, parseAudioSpace } from './explore.js';
+
+// Action functions (mutations)
+export { postTweet, postThread, deleteTweet, replyToTweet, quoteTweet, schedulePost } from './actions.js';
+export { likeTweet, unlikeTweet, retweet, unretweet, followUser, unfollowUser, followByUsername, blockUser, unblockUser, muteUser, unmuteUser, bookmarkTweet, unbookmarkTweet, pinTweet, unpinTweet, bulkUnfollow, bulkLike, bulkBlock } from './engagement.js';
+export { uploadMedia, uploadImage, uploadVideo, uploadGif, setAltText, scrapeMedia, downloadMedia, getVideoUrl } from './media.js';
+
+// Endpoint constants
+export { BEARER_TOKEN, GRAPHQL, REST, DEFAULT_FEATURES, DEFAULT_FIELD_TOGGLES, RATE_LIMITS, USER_AGENTS, buildGraphQLUrl, buildGraphQLVariables } from './endpoints.js';
+
+// Error classes
+export { TwitterApiError, RateLimitError, AuthError, NotFoundError, NetworkError, parseTwitterErrors } from './errors.js';
+
+// ---------------------------------------------------------------------------
+// Convenience Factory
+// ---------------------------------------------------------------------------
+
+/**
+ * Create an HTTP scraper instance ready to use.
+ * 
+ * @param {Object} options
+ * @param {string} [options.cookies] - Browser cookie string for authentication
+ * @param {string} [options.proxy] - HTTP/SOCKS5 proxy URL
+ * @param {'wait'|'error'} [options.rateLimitStrategy] - How to handle rate limits
+ * @returns {Promise<Object>} Scraper with all methods bound to the client
+ * 
+ * @example
+ * import { createHttpScraper } from 'xactions/scrapers/twitter/http';
+ * const scraper = await createHttpScraper({ cookies: 'auth_token=xxx; ct0=yyy' });
+ * const profile = await scraper.scrapeProfile('elonmusk');
+ * const tweets = await scraper.scrapeTweets('elonmusk', { limit: 50 });
+ */
+export async function createHttpScraper(options = {}) {
+  const { TwitterHttpClient } = await import('./client.js');
+  const { TwitterAuth } = await import('./auth.js');
+
+  const client = new TwitterHttpClient(options);
+
+  if (options.cookies) {
+    const auth = new TwitterAuth(client);
+    await auth.loginWithCookies(options.cookies);
+  }
+
+  const [profileMod, relationshipsMod, tweetsMod, threadMod, actionsMod, engagementMod, mediaMod, communitiesMod, notificationsMod, exploreMod] = await Promise.all([
+    import('./profile.js'),
+    import('./relationships.js'),
+    import('./tweets.js'),
+    import('./thread.js'),
+    import('./actions.js'),
+    import('./engagement.js'),
+    import('./media.js'),
+    import('./communities.js'),
+    import('./notifications.js'),
+    import('./explore.js'),
+  ]);
+
+  return {
+    client,
+
+    // Profile
+    scrapeProfile: (username) => profileMod.scrapeProfile(client, username),
+    scrapeProfileById: (userId) => profileMod.scrapeProfileById(client, userId),
+    parseUserData: profileMod.parseUserData,
+
+    // Relationships
+    scrapeFollowers: (username, opts) => relationshipsMod.scrapeFollowers(client, username, opts),
+    scrapeFollowing: (username, opts) => relationshipsMod.scrapeFollowing(client, username, opts),
+    scrapeNonFollowers: (username, opts) => relationshipsMod.scrapeNonFollowers(client, username, opts),
+    scrapeLikers: (tweetId, opts) => relationshipsMod.scrapeLikers(client, tweetId, opts),
+    scrapeRetweeters: (tweetId, opts) => relationshipsMod.scrapeRetweeters(client, tweetId, opts),
+    scrapeListMembers: (listId, opts) => relationshipsMod.scrapeListMembers(client, listId, opts),
+
+    // Tweets
+    scrapeTweets: (username, opts) => tweetsMod.scrapeTweets(client, username, opts),
+    scrapeTweetsAndReplies: (username, opts) => tweetsMod.scrapeTweetsAndReplies(client, username, opts),
+    scrapeTweetById: (tweetId) => tweetsMod.scrapeTweetById(client, tweetId),
+    parseTweetData: tweetsMod.parseTweetData,
+    parseTimelineInstructions: tweetsMod.parseTimelineInstructions,
+
+    // Thread
+    scrapeThread: (tweetId, opts) => threadMod.scrapeThread(client, tweetId, opts),
+    scrapeFullThread: (tweetId, opts) => threadMod.scrapeFullThread(client, tweetId, opts),
+    scrapeConversation: (tweetId, opts) => threadMod.scrapeConversation(client, tweetId, opts),
+    reconstructThread: threadMod.reconstructThread,
+    parseConversationModule: threadMod.parseConversationModule,
+
+    // Actions (mutations)
+    postTweet: (text, opts) => actionsMod.postTweet(client, text, opts),
+    postThread: (tweets, opts) => actionsMod.postThread(client, tweets, opts),
+    deleteTweet: (tweetId) => actionsMod.deleteTweet(client, tweetId),
+    replyToTweet: (tweetId, text, opts) => actionsMod.replyToTweet(client, tweetId, text, opts),
+    quoteTweet: (tweetId, text, opts) => actionsMod.quoteTweet(client, tweetId, text, opts),
+    schedulePost: (text, scheduledAt, opts) => actionsMod.schedulePost(client, text, scheduledAt, opts),
+
+    // Engagement
+    likeTweet: (tweetId) => engagementMod.likeTweet(client, tweetId),
+    unlikeTweet: (tweetId) => engagementMod.unlikeTweet(client, tweetId),
+    retweet: (tweetId) => engagementMod.retweet(client, tweetId),
+    unretweet: (tweetId) => engagementMod.unretweet(client, tweetId),
+    followUser: (userId) => engagementMod.followUser(client, userId),
+    unfollowUser: (userId) => engagementMod.unfollowUser(client, userId),
+    followByUsername: (username) => engagementMod.followByUsername(client, username),
+    blockUser: (userId) => engagementMod.blockUser(client, userId),
+    unblockUser: (userId) => engagementMod.unblockUser(client, userId),
+    muteUser: (userId) => engagementMod.muteUser(client, userId),
+    unmuteUser: (userId) => engagementMod.unmuteUser(client, userId),
+    bookmarkTweet: (tweetId) => engagementMod.bookmarkTweet(client, tweetId),
+    unbookmarkTweet: (tweetId) => engagementMod.unbookmarkTweet(client, tweetId),
+    pinTweet: (tweetId) => engagementMod.pinTweet(client, tweetId),
+    unpinTweet: (tweetId) => engagementMod.unpinTweet(client, tweetId),
+    bulkUnfollow: (userIds, opts) => engagementMod.bulkUnfollow(client, userIds, opts),
+    bulkLike: (tweetIds, opts) => engagementMod.bulkLike(client, tweetIds, opts),
+    bulkBlock: (userIds, opts) => engagementMod.bulkBlock(client, userIds, opts),
+
+    // Media
+    uploadMedia: (input, opts) => mediaMod.uploadMedia(client, input, opts),
+    uploadImage: (input, opts) => mediaMod.uploadImage(client, input, opts),
+    uploadVideo: (input, opts) => mediaMod.uploadVideo(client, input, opts),
+    uploadGif: (input, opts) => mediaMod.uploadGif(client, input, opts),
+    setAltText: (mediaId, altText) => mediaMod.setAltText(client, mediaId, altText),
+    scrapeMedia: (username, opts) => mediaMod.scrapeMedia(client, username, opts),
+    downloadMedia: (url, opts) => mediaMod.downloadMedia(client, url, opts),
+    getVideoUrl: (tweetId) => mediaMod.getVideoUrl(client, tweetId),
+
+    // Communities
+    scrapeCommunity: (communityId) => communitiesMod.scrapeCommunity(client, communityId),
+    scrapeCommunityTweets: (communityId, opts) => communitiesMod.scrapeCommunityTweets(client, communityId, opts),
+    scrapeCommunityMedia: (communityId, opts) => communitiesMod.scrapeCommunityMedia(client, communityId, opts),
+    searchCommunityTweets: (query, opts) => communitiesMod.searchCommunityTweets(client, query, opts),
+    scrapeMyCommunities: (opts) => communitiesMod.scrapeMyCommunities(client, opts),
+    scrapeCommunityDiscovery: (opts) => communitiesMod.scrapeCommunityDiscovery(client, opts),
+    joinCommunity: (communityId) => communitiesMod.joinCommunity(client, communityId),
+    leaveCommunity: (communityId) => communitiesMod.leaveCommunity(client, communityId),
+    requestToJoinCommunity: (communityId, opts) => communitiesMod.requestToJoinCommunity(client, communityId, opts),
+
+    // Notifications
+    scrapeNotifications: (opts) => notificationsMod.scrapeNotifications(client, opts),
+    scrapeMentions: (opts) => notificationsMod.scrapeMentions(client, opts),
+    scrapeVerifiedNotifications: (opts) => notificationsMod.scrapeVerifiedNotifications(client, opts),
+
+    // Explore, trends, Spaces, profile side-timelines
+    scrapeTrends: (opts) => exploreMod.scrapeTrends(client, opts),
+    scrapeTrendsByWoeid: (woeid) => exploreMod.scrapeTrendsByWoeid(client, woeid),
+    scrapeTrendLocations: () => exploreMod.scrapeTrendLocations(client),
+    scrapeExplorePage: (opts) => exploreMod.scrapeExplorePage(client, opts),
+    scrapeHighlights: (user, opts) => exploreMod.scrapeHighlights(client, user, opts),
+    scrapeArticles: (user, opts) => exploreMod.scrapeArticles(client, user, opts),
+    scrapeVerifiedFollowers: (user, opts) => exploreMod.scrapeVerifiedFollowers(client, user, opts),
+    scrapeFollowersYouKnow: (user, opts) => exploreMod.scrapeFollowersYouKnow(client, user, opts),
+    scrapeAudioSpace: (spaceId) => exploreMod.scrapeAudioSpace(client, spaceId),
+  };
+}

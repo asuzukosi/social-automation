@@ -1,0 +1,205 @@
+// Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
+/**
+ * Draft store for the MCP approval gate.
+ *
+ * When XACTIONS_MCP_REQUIRE_APPROVAL is set, a write tool call is not run.
+ * It is recorded here as a draft `{id, tool, args, createdAt}` and the
+ * caller gets the id back. A human (or a second, trusted agent) then lists,
+ * approves, or discards the draft. Approval replays the stored call through
+ * the executor the server hands in, so an approved draft runs exactly the
+ * code path the original call would have.
+ *
+ * Storage is a single JSON file, `mcp-drafts.json`, under XACTIONS_HOME
+ * (default `~/.xactions`). The path is resolved on every call rather than at
+ * import time so a process can point XACTIONS_HOME somewhere else after the
+ * module has loaded (tests do this with a temp directory).
+ *
+ * The module has no MCP dependency on purpose: the CLI can import
+ * list/approve/discard directly to offer `xactions drafts ...` later.
+ */
+
+import { randomUUID } from 'node:crypto';
+import { existsSync, mkdirSync, readFileSync, renameSync, writeFileSync } from 'node:fs';
+import { homedir } from 'node:os';
+import { join } from 'node:path';
+
+export const DRAFTS_FILENAME = 'mcp-drafts.json';
+
+/** @typedef {'pending' | 'executed' | 'failed'} DraftStatus */
+
+/**
+ * @typedef {object} Draft
+ * @property {string} id
+ * @property {string} tool
+ * @property {object} args
+ * @property {string} createdAt ISO timestamp
+ * @property {DraftStatus} status
+ * @property {string} [executedAt]
+ * @property {unknown} [result] set when status is "executed"
+ * @property {string} [error] set when status is "failed"
+ */
+
+/**
+ * Directory that holds XActions state. Honours XACTIONS_HOME.
+ * @returns {string}
+ */
+export function getXactionsHome() {
+  return process.env.XACTIONS_HOME || join(homedir(), '.xactions');
+}
+
+/**
+ * Absolute path of the drafts file.
+ * @returns {string}
+ */
+export function getDraftsPath() {
+  return join(getXactionsHome(), DRAFTS_FILENAME);
+}
+
+/**
+ * Read every draft from disk. A missing file is an empty store; a corrupt
+ * file is an error the caller should see rather than silently losing drafts.
+ * @returns {Draft[]}
+ */
+function readStore() {
+  const file = getDraftsPath();
+  if (!existsSync(file)) return [];
+  const raw = readFileSync(file, 'utf8');
+  if (!raw.trim()) return [];
+  const parsed = JSON.parse(raw);
+  if (!Array.isArray(parsed)) {
+    throw new Error(`Draft store at ${file} is not a JSON array`);
+  }
+  return parsed;
+}
+
+/**
+ * Write the store atomically (write to a sibling temp file, then rename) so
+ * a crash mid-write cannot leave a half-written file behind.
+ * @param {Draft[]} drafts
+ */
+function writeStore(drafts) {
+  const file = getDraftsPath();
+  mkdirSync(getXactionsHome(), { recursive: true });
+  const tmp = `${file}.${process.pid}.${Date.now()}.tmp`;
+  writeFileSync(tmp, JSON.stringify(drafts, null, 2) + '\n', 'utf8');
+  renameSync(tmp, file);
+}
+
+/**
+ * Store a new pending draft.
+ * @param {string} tool
+ * @param {object} [args]
+ * @returns {Draft}
+ */
+export function createDraft(tool, args = {}) {
+  if (typeof tool !== 'string' || !tool) {
+    throw new Error('createDraft: tool name is required');
+  }
+  const draft = {
+    id: randomUUID().slice(0, 8),
+    tool,
+    args: args ?? {},
+    createdAt: new Date().toISOString(),
+    status: 'pending',
+  };
+  const drafts = readStore();
+  drafts.push(draft);
+  writeStore(drafts);
+  return draft;
+}
+
+/**
+ * List drafts, newest first. Filter by status when given.
+ * @param {{ status?: DraftStatus | 'all' }} [options]
+ * @returns {Draft[]}
+ */
+export function listDrafts({ status = 'all' } = {}) {
+  const drafts = readStore();
+  const selected = status === 'all' ? drafts : drafts.filter((d) => d.status === status);
+  return selected.sort((a, b) => (a.createdAt < b.createdAt ? 1 : -1));
+}
+
+/**
+ * Fetch one draft by id.
+ * @param {string} id
+ * @returns {Draft | null}
+ */
+export function getDraft(id) {
+  return readStore().find((d) => d.id === id) || null;
+}
+
+/**
+ * Remove a draft from the store. Works on any status.
+ * @param {string} id
+ * @returns {Draft} the removed draft
+ */
+export function discardDraft(id) {
+  const drafts = readStore();
+  const idx = drafts.findIndex((d) => d.id === id);
+  if (idx === -1) throw new Error(`No draft with id "${id}"`);
+  const [removed] = drafts.splice(idx, 1);
+  writeStore(drafts);
+  return removed;
+}
+
+/**
+ * Execute a pending draft through the supplied executor and record the
+ * outcome on the draft. The executor receives `(tool, args)` and is the
+ * same dispatch the live tool call would have used.
+ *
+ * A draft that already ran is refused so a double-approve cannot post twice.
+ *
+ * @param {string} id
+ * @param {(tool: string, args: object) => Promise<unknown>} execute
+ * @returns {Promise<Draft>} the updated draft
+ */
+export async function approveDraft(id, execute) {
+  if (typeof execute !== 'function') {
+    throw new Error('approveDraft: an executor function is required');
+  }
+  const drafts = readStore();
+  const draft = drafts.find((d) => d.id === id);
+  if (!draft) throw new Error(`No draft with id "${id}"`);
+  if (draft.status !== 'pending') {
+    throw new Error(`Draft "${id}" is ${draft.status}; only pending drafts can be approved`);
+  }
+
+  try {
+    const result = await execute(draft.tool, draft.args);
+    draft.status = 'executed';
+    draft.executedAt = new Date().toISOString();
+    draft.result = result === undefined ? null : result;
+    delete draft.error;
+  } catch (error) {
+    draft.status = 'failed';
+    draft.executedAt = new Date().toISOString();
+    draft.error = error?.message || String(error);
+    delete draft.result;
+  }
+
+  writeStore(drafts);
+  return draft;
+}
+
+/**
+ * Remove every draft that is not pending. Returns how many were dropped.
+ * @returns {number}
+ */
+export function pruneDrafts() {
+  const drafts = readStore();
+  const keep = drafts.filter((d) => d.status === 'pending');
+  writeStore(keep);
+  return drafts.length - keep.length;
+}
+
+export default {
+  DRAFTS_FILENAME,
+  getXactionsHome,
+  getDraftsPath,
+  createDraft,
+  listDrafts,
+  getDraft,
+  discardDraft,
+  approveDraft,
+  pruneDrafts,
+};

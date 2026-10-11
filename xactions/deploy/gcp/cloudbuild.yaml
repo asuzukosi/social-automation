@@ -1,0 +1,37 @@
+# Build + deploy the static XActions site (dashboard/) to Cloud Run.
+# Submit from the repo root:
+#   gcloud builds submit --config deploy/gcp/cloudbuild.yaml --region us-central1 \
+#     --project aerial-vehicle-466722-p5
+serviceAccount: projects/aerial-vehicle-466722-p5/serviceAccounts/three-ws-build@aerial-vehicle-466722-p5.iam.gserviceaccount.com
+options:
+  logging: CLOUD_LOGGING_ONLY
+steps:
+  - name: gcr.io/cloud-builders/docker
+    args:
+      - build
+      - -t
+      - us-central1-docker.pkg.dev/aerial-vehicle-466722-p5/containers/xactions-web:latest
+      - -f
+      - deploy/gcp/Dockerfile
+      - .
+  - name: gcr.io/cloud-builders/docker
+    args:
+      - push
+      - us-central1-docker.pkg.dev/aerial-vehicle-466722-p5/containers/xactions-web:latest
+  - name: gcr.io/google.com/cloudsdktool/cloud-sdk:slim
+    entrypoint: gcloud
+    args:
+      - run
+      - deploy
+      - xactions-web
+      - --image=us-central1-docker.pkg.dev/aerial-vehicle-466722-p5/containers/xactions-web:latest
+      - --region=us-central1
+      - --platform=managed
+      - --allow-unauthenticated
+      - --port=8080
+      - --memory=256Mi
+      - --min-instances=0
+      - --max-instances=4
+      - --service-account=three-ws@aerial-vehicle-466722-p5.iam.gserviceaccount.com
+images:
+  - us-central1-docker.pkg.dev/aerial-vehicle-466722-p5/containers/xactions-web:latest

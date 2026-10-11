@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Link Scraper — Free X/Twitter Script | XActions</title>
+  <meta name="description" content="XActions Automation - Link Scraper">
+  <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, link, scraper, scrapers">
+  <meta name="author" content="nich (@nichxbt)">
+  <meta name="robots" content="index, follow">
+
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Link Scraper — XActions">
+  <meta property="og:description" content="XActions Automation - Link Scraper">
+  <meta property="og:url" content="https://xactions.app/scripts/link-scraper">
+  <meta property="og:site_name" content="XActions">
+  <meta property="og:image" content="https://xactions.app/og-image.png">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@nichxbt">
+  <meta name="twitter:title" content="Link Scraper — XActions">
+  <meta name="twitter:description" content="XActions Automation - Link Scraper">
+
+  <link rel="canonical" href="https://xactions.app/scripts/link-scraper">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "Link Scraper — Free X/Twitter Script | XActions",
+    "description": "XActions Automation - Link Scraper",
+    "url": "https://xactions.app/scripts/link-scraper",
+    "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
+    "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
+    "datePublished": "2026-03-30",
+    "dateModified": "2026-03-30",
+    "articleSection": "Scrapers",
+    "keywords": "xactions, twitter automation, x automation, browser script, devtools console, free, open source, link, scraper, scrapers"
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
+      { "@type": "ListItem", "position": 2, "name": "Scripts", "item": "https://xactions.app/scripts" },
+      { "@type": "ListItem", "position": 3, "name": "Scrapers", "item": "https://xactions.app/scripts#scrapers" },
+      { "@type": "ListItem", "position": 4, "name": "Link Scraper", "item": "https://xactions.app/scripts/link-scraper" }
+    ]
+  }
+  </script>
+
+  <link rel="stylesheet" href="/css/common.css">
+  <style>
+    .article { padding: 24px 20px; }
+    .article h1 { font-size: 1.75rem; font-weight: 800; margin-bottom: 8px; line-height: 1.2; }
+    .article h2 { font-size: 1.375rem; font-weight: 700; margin: 32px 0 12px; padding-top: 16px; border-top: 1px solid var(--border); }
+    .article h3 { font-size: 1.125rem; font-weight: 600; margin: 24px 0 8px; color: var(--accent); }
+    .article p { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 16px; }
+    .article a { color: var(--accent); text-decoration: none; }
+    .article a:hover { text-decoration: underline; }
+    .article strong { color: var(--text-primary); }
+    .article code { background: var(--bg-tertiary); padding: 2px 6px; border-radius: 4px; font-family: 'Monaco','Menlo','Consolas', monospace; font-size: 0.875rem; color: var(--accent); }
+    .article pre { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 16px; overflow-x: auto; margin: 16px 0; }
+    .article pre code { background: none; padding: 0; color: var(--text-primary); font-size: 0.8125rem; display: block; }
+    .article table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 0.875rem; }
+    .article th { background: var(--bg-secondary); padding: 10px 12px; text-align: left; border: 1px solid var(--border); font-weight: 600; }
+    .article td { padding: 10px 12px; border: 1px solid var(--border); color: var(--text-secondary); }
+    .cat-badge { display: inline-block; background: var(--accent-light); color: var(--accent); padding: 4px 12px; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; margin-bottom: 16px; }
+    .meta-row { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 16px; font-size: 0.8125rem; color: var(--text-secondary); }
+    .meta-row span { display: flex; align-items: center; gap: 4px; }
+    .usage-steps { margin-left: 24px; margin-bottom: 16px; }
+    .usage-steps li { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 8px; padding-left: 4px; }
+    .warning-box { background: rgba(244, 33, 46, 0.1); border: 1px solid var(--error); border-radius: 12px; padding: 16px; margin: 16px 0; }
+    .warning-box p { color: var(--error); margin: 0; font-size: 0.875rem; }
+    .controls-box { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 16px; margin: 16px 0; }
+    .controls-box h3 { margin: 0 0 8px; font-size: 1rem; }
+    .code-block { position: relative; }
+    .copy-btn { position: absolute; top: 8px; right: 8px; background: var(--bg-tertiary); color: var(--text-secondary); border: 1px solid var(--border); border-radius: 8px; padding: 6px 12px; cursor: pointer; font-size: 0.75rem; z-index: 10; transition: all .2s; }
+    .copy-btn:hover { background: var(--accent); color: #fff; }
+    .full-code { margin-top: 32px; }
+    .full-code pre { max-height: 600px; overflow-y: auto; }
+    .cta-box { background: linear-gradient(135deg, var(--bg-secondary), var(--bg-tertiary)); border: 1px solid var(--border); border-radius: 16px; padding: 24px; margin: 32px 0; text-align: center; }
+    .cta-box h3 { font-size: 1.25rem; margin-bottom: 8px; color: var(--text-primary); }
+    .cta-box p { color: var(--text-secondary); margin-bottom: 16px; }
+    .cta-box a { display: inline-block; padding: 12px 24px; background: var(--accent); color: #fff; border-radius: 9999px; text-decoration: none; font-weight: 700; transition: background .2s; }
+    .cta-box a:hover { background: var(--accent-hover); }
+    .sidebar-right { width: 350px; padding: 16px 24px; position: sticky; top: 0; height: 100vh; overflow-y: auto; }
+    .sidebar-card { background: var(--bg-secondary); border-radius: 16px; padding: 16px; margin-bottom: 16px; }
+    .sidebar-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 12px; }
+    .sidebar-card a { display: block; color: var(--text-secondary); text-decoration: none; font-size: 0.875rem; padding: 6px 0; border-bottom: 1px solid var(--border); transition: color .2s; }
+    .sidebar-card a:last-child { border-bottom: none; }
+    .sidebar-card a:hover { color: var(--accent); }
+    .breadcrumb { font-size: 0.8125rem; color: var(--text-secondary); margin-top: 4px; }
+    .breadcrumb a { color: var(--accent); text-decoration: none; }
+    .breadcrumb a:hover { text-decoration: underline; }
+    .source-badge { display: inline-block; background: var(--bg-tertiary); color: var(--text-secondary); padding: 2px 8px; border-radius: 6px; font-size: 0.6875rem; margin-left: 8px; }
+    @media (max-width: 1024px) { .sidebar-right { display: none; } }
+    @media (max-width: 768px) {
+      .article pre { font-size: 0.75rem; }
+      .meta-row { flex-direction: column; gap: 4px; }
+    }
+  </style>
+</head>
+<body>
+  <a href="#main-content" class="skip-nav">Skip to main content</a>
+  <div class="layout">
+    <aside class="sidebar-left" aria-label="Main navigation"></aside>
+    <script src="/js/sidebar.js"></script>
+
+    <main class="main-content" id="main-content">
+      <header class="main-header">
+        <h1>🔗 Link Scraper</h1>
+        <div class="breadcrumb">
+          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#scrapers">Scrapers</a> › Link Scraper
+        </div>
+      </header>
+
+      <article class="article">
+        <span class="cat-badge">Scrapers</span>
+        <span class="source-badge">src/automation</span>
+
+        <div class="meta-row">
+          
+          
+          <span>292 lines</span>
+          <span>by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></span>
+        </div>
+
+        <p>XActions Automation - Link Scraper</p>
+
+        
+
+        <h2>How to Use</h2>
+        <ol class="usage-steps"><li>Go to a user's profile: x.com/USERNAME</li>
+<li>Paste core.js, then paste this script</li>
+<li>Let it scroll and collect all links!</li></ol>
+        <p><strong>Note:</strong> This script requires pasting <code>src/automation/core.js</code> first for shared utilities.</p>
+
+        
+        <section class="config-section">
+        <h2>Configuration Options</h2>
+        <table>
+          <thead><tr><th>Option</th><th>Default</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td><code>MAX_SCROLLS</code></td><td><code>100</code></td><td>How far to scroll</td></tr>
+<tr><td><code>MAX_TWEETS</code></td><td><code>500</code></td><td>Max tweets to process</td></tr>
+<tr><td><code>INCLUDE_TWITTER_LINKS</code></td><td><code>false</code></td><td>Include links to other tweets/profiles</td></tr>
+<tr><td><code>INCLUDE_MEDIA</code></td><td><code>false</code></td><td>Include pic.x.com links</td></tr>
+<tr><td><code>DOMAINS_ONLY</code></td><td><code>[]</code></td><td>Only these domains (empty = all)</td></tr>
+<tr><td><code>EXCLUDE_DOMAINS</code></td><td><code>[</code></td><td>Skip these domains</td></tr>
+<tr><td><code>AUTO_DOWNLOAD</code></td><td><code>true</code></td><td>Auto-download results as file</td></tr>
+          </tbody>
+        </table>
+      </section>
+        <section class="config-code">
+        <h2>Default Configuration</h2>
+        <div class="code-block">
+          <button class="copy-btn" onclick="navigator.clipboard.writeText(this.nextElementSibling.querySelector('code').textContent).then(()=>{this.textContent='Copied!';setTimeout(()=>this.textContent='Copy',2000)})">Copy</button>
+          <pre><code>const OPTIONS = {
+    // Scraping limits
+    MAX_SCROLLS: 100,            // How far to scroll
+    MAX_TWEETS: 500,             // Max tweets to process
+    
+    // Filter options
+    INCLUDE_TWITTER_LINKS: false, // Include links to other tweets/profiles
+    INCLUDE_MEDIA: false,         // Include pic.x.com links
+    DOMAINS_ONLY: [],             // Only these domains (empty = all)
+    EXCLUDE_DOMAINS: [            // Skip these domains
+      't.co',                     // Twitter's shortener (we expand these)
+    ],
+    
+    // Output
+    AUTO_DOWNLOAD: true,          // Auto-download results as file
+  };</code></pre>
+        </div>
+      </section>
+
+        <section class="full-code">
+          <h2>Full Script</h2>
+          <p>Copy and paste this entire script into your browser DevTools console on <a href="https://x.com" rel="noopener">x.com</a>.</p>
+          <div class="code-block">
+            <button class="copy-btn" onclick="navigator.clipboard.writeText(this.nextElementSibling.querySelector('code').textContent).then(()=>{this.textContent='Copied!';setTimeout(()=>this.textContent='Copy Script',2000)})">Copy Script</button>
+            <pre><code>// Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
+// XActions Automation - Link Scraper
+// https://github.com/nirholas/XActions
+//
+// REQUIRES: Paste core.js first!
+//
+// Extracts all links shared by a specific user.
+// Great for research, finding resources, tracking promotions.
+//
+// HOW TO USE:
+// 1. Go to a user's profile: x.com/USERNAME
+// 2. Paste core.js, then paste this script
+// 3. Let it scroll and collect all links!
+
+(() =&gt; {
+  if (!window.XActions?.Core) {
+    console.error('❌ Core module not loaded! Paste core.js first.');
+    return;
+  }
+
+  const { log, sleep, scrollBy, storage, SELECTORS } = window.XActions.Core;
+
+  // ============================================
+  // CONFIGURATION
+  // ============================================
+  const OPTIONS = {
+    // Scraping limits
+    MAX_SCROLLS: 100,            // How far to scroll
+    MAX_TWEETS: 500,             // Max tweets to process
+    
+    // Filter options
+    INCLUDE_TWITTER_LINKS: false, // Include links to other tweets/profiles
+    INCLUDE_MEDIA: false,         // Include pic.x.com links
+    DOMAINS_ONLY: [],             // Only these domains (empty = all)
+    EXCLUDE_DOMAINS: [            // Skip these domains
+      't.co',                     // Twitter's shortener (we expand these)
+    ],
+    
+    // Output
+    AUTO_DOWNLOAD: true,          // Auto-download results as file
+  };
+
+  // ============================================
+  // STATE
+  // ============================================
+  const links = new Map(); // url -&gt; { count, tweets, firstSeen }
+  let tweetsProcessed = 0;
+  let scrollCount = 0;
+  const processedTweetIds = new Set();
+
+  // ============================================
+  // HELPERS
+  // ============================================
+  const getUsername = () =&gt; {
+    const match = window.location.pathname.match(/^\/([^/]+)/);
+    return match ? match[1] : 'unknown';
+  };
+
+  const getTweetId = (tweetElement) =&gt; {
+    const link = tweetElement.querySelector('a[href*=&quot;/status/&quot;]');
+    if (link) {
+      const match = link.href.match(/status\/(\d+)/);
+      return match ? match[1] : null;
+    }
+    return null;
+  };
+
+  const isValidLink = (url) =&gt; {
+    try {
+      const parsed = new URL(url);
+      const domain = parsed.hostname.replace('www.', '');
+
+      // Skip Twitter internal links unless opted in
+      if (!OPTIONS.INCLUDE_TWITTER_LINKS) {
+        if (['x.com', 'x.com'].includes(domain)) return false;
+      }
+
+      // Skip media links unless opted in
+      if (!OPTIONS.INCLUDE_MEDIA) {
+        if (['pic.x.com', 'pbs.twimg.com', 'video.twimg.com'].includes(domain)) return false;
+      }
+
+      // Domain whitelist
+      if (OPTIONS.DOMAINS_ONLY.length &gt; 0) {
+        if (!OPTIONS.DOMAINS_ONLY.some(d =&gt; domain.includes(d))) return false;
+      }
+
+      // Domain blacklist
+      if (OPTIONS.EXCLUDE_DOMAINS.some(d =&gt; domain.includes(d))) return false;
+
+      return true;
+    } catch (e) {
+      return false;
+    }
+  };
+
+  const extractLinks = (tweetElement) =&gt; {
+    const tweetLinks = [];
+    
+    // Get all anchor tags
+    const anchors = tweetElement.querySelectorAll('a[href]');
+    
+    for (const anchor of anchors) {
+      let url = anchor.href;
+      
+      // Try to get expanded URL from title attribute (Twitter often puts it there)
+      const title = anchor.getAttribute('title');
+      if (title &amp;&amp; title.startsWith('http')) {
+        url = title;
+      }
+      
+      // Or from aria-label
+      const ariaLabel = anchor.getAttribute('aria-label');
+      if (ariaLabel &amp;&amp; ariaLabel.startsWith('http')) {
+        url = ariaLabel;
+      }
+      
+      // Get display text which sometimes has the full URL
+      const displayText = anchor.textContent;
+      if (displayText &amp;&amp; displayText.startsWith('http') &amp;&amp; !displayText.includes('…')) {
+        url = displayText;
+      }
+
+      if (isValidLink(url)) {
+        tweetLinks.push(url);
+      }
+    }
+    
+    return [...new Set(tweetLinks)]; // Dedupe
+  };
+
+  // ============================================
+  // PROCESSING
+  // ============================================
+  const processTweets = () =&gt; {
+    const tweets = document.querySelectorAll(SELECTORS.tweet);
+    
+    for (const tweet of tweets) {
+      const tweetId = getTweetId(tweet);
+      if (!tweetId || processedTweetIds.has(tweetId)) continue;
+      
+      processedTweetIds.add(tweetId);
+      tweetsProcessed++;
+
+      const tweetLinks = extractLinks(tweet);
+      const tweetUrl = `https://x.com/i/status/${tweetId}`;
+      
+      for (const url of tweetLinks) {
+        if (links.has(url)) {
+          const existing = links.get(url);
+          existing.count++;
+          existing.tweets.push(tweetUrl);
+        } else {
+          links.set(url, {
+            count: 1,
+            tweets: [tweetUrl],
+            firstSeen: new Date().toISOString(),
+          });
+        }
+      }
+    }
+  };
+
+  // ============================================
+  // OUTPUT
+  // ============================================
+  const generateReport = () =&gt; {
+    const username = getUsername();
+    const sortedLinks = Array.from(links.entries())
+      .sort((a, b) =&gt; b[1].count - a[1].count);
+
+    // Console output
+    console.log('\n' + '='.repeat(60));
+    console.log(`📎 LINKS FROM @${username}`);
+    console.log('='.repeat(60));
+    console.log(`Total unique links: ${links.size}`);
+    console.log(`Tweets processed: ${tweetsProcessed}`);
+    console.log('='.repeat(60) + '\n');
+
+    // Group by domain
+    const byDomain = {};
+    for (const [url, data] of sortedLinks) {
+      try {
+        const domain = new URL(url).hostname.replace('www.', '');
+        if (!byDomain[domain]) byDomain[domain] = [];
+        byDomain[domain].push({ url, ...data });
+      } catch (e) {}
+    }
+
+    // Print by domain
+    const sortedDomains = Object.entries(byDomain)
+      .sort((a, b) =&gt; b[1].length - a[1].length);
+
+    for (const [domain, domainLinks] of sortedDomains.slice(0, 10)) {
+      console.log(`\n🌐 ${domain} (${domainLinks.length} links)`);
+      for (const link of domainLinks.slice(0, 5)) {
+        console.log(`   ${link.url}`);
+        if (link.count &gt; 1) console.log(`      ↳ Shared ${link.count}x`);
+      }
+      if (domainLinks.length &gt; 5) {
+        console.log(`   ... and ${domainLinks.length - 5} more`);
+      }
+    }
+
+    return { username, sortedLinks, byDomain, tweetsProcessed };
+  };
+
+  const downloadResults = (report) =&gt; {
+    const { username, sortedLinks } = report;
+    
+    // Create detailed JSON
+    const jsonData = {
+      username,
+      scrapedAt: new Date().toISOString(),
+      totalLinks: links.size,
+      tweetsProcessed: report.tweetsProcessed,
+      links: sortedLinks.map(([url, data]) =&gt; ({
+        url,
+        timesShared: data.count,
+        tweets: data.tweets,
+      })),
+    };
+
+    // Download JSON
+    const jsonBlob = new Blob([JSON.stringify(jsonData, null, 2)], { type: 'application/json' });
+    const jsonUrl = URL.createObjectURL(jsonBlob);
+    const jsonLink = document.createElement('a');
+    jsonLink.href = jsonUrl;
+    jsonLink.download = `${username}-links-${Date.now()}.json`;
+    document.body.appendChild(jsonLink);
+    jsonLink.click();
+    document.body.removeChild(jsonLink);
+
+    // Also create simple text list
+    const textContent = sortedLinks.map(([url]) =&gt; url).join('\n');
+    const textBlob = new Blob([textContent], { type: 'text/plain' });
+    const textUrl = URL.createObjectURL(textBlob);
+    const textLink = document.createElement('a');
+    textLink.href = textUrl;
+    textLink.download = `${username}-links-${Date.now()}.txt`;
+    document.body.appendChild(textLink);
+    textLink.click();
+    document.body.removeChild(textLink);
+
+    log('📥 Downloaded JSON and TXT files!', 'success');
+  };
+
+  // ============================================
+  // MAIN RUN
+  // ============================================
+  const run = async () =&gt; {
+    const username = getUsername();
+    log(`🔗 Starting Link Scraper for @${username}...`, 'info');
+    log(`Max scrolls: ${OPTIONS.MAX_SCROLLS}`, 'info');
+
+    while (scrollCount &lt; OPTIONS.MAX_SCROLLS &amp;&amp; tweetsProcessed &lt; OPTIONS.MAX_TWEETS) {
+      processTweets();
+      
+      scrollBy(800);
+      scrollCount++;
+      await sleep(1500);
+      
+      if (scrollCount % 10 === 0) {
+        log(`Progress: ${tweetsProcessed} tweets, ${links.size} unique links`, 'info');
+      }
+    }
+
+    const report = generateReport();
+    
+    // Save to storage
+    storage.set(`links_${username}`, {
+      links: Array.from(links.entries()),
+      scrapedAt: Date.now(),
+    });
+
+    if (OPTIONS.AUTO_DOWNLOAD) {
+      downloadResults(report);
+    }
+
+    log(`\n✅ Done! Found ${links.size} unique links from ${tweetsProcessed} tweets.`, 'success');
+  };
+
+  run();
+
+  // Expose data for manual access
+  window.XActions.linkData = () =&gt; links;
+  window.stopLinkScraper = () =&gt; {
+    OPTIONS.MAX_SCROLLS = 0;
+    log('Stopping...', 'warning');
+  };
+})();
+</code></pre>
+          </div>
+        </section>
+
+        <div class="cta-box">
+          <h3>⚡ More XActions Scripts</h3>
+          <p>Browse 300+ free browser scripts for X/Twitter automation. No API keys, no fees.</p>
+          <a href="/scripts">Browse All Scripts</a>
+        </div>
+      </article>
+    </main>
+
+    <aside class="sidebar-right">
+      <div class="sidebar-card">
+        <h3>🔗 Scrapers</h3>
+        <a href="/scripts/scrape-bookmarks">🔖 Bookmarks Scraper</a>
+<a href="/scripts/scrape-dms">✉️ DM Scraper</a>
+<a href="/scripts/export-to-csv">📄 Export to CSV Utility</a>
+<a href="/scripts/scrape-followers">👥 Followers Scraper</a>
+<a href="/scripts/scrape-following">👥 Following Scraper</a>
+<a href="/scripts/scrape-hashtag">#️⃣ Hashtag Scraper</a>
+<a href="/scripts/scrape-likers">❤️ Likers Scraper</a>
+<a href="/scripts/scrape-likes">❤️ Likes Scraper</a>
+<a href="/scripts/scrape-list">📝 List Members Scraper</a>
+<a href="/scripts/scrape-media">🖼️ Media Scraper</a>
+      </div>
+      <div class="sidebar-card">
+        <h3>🔗 Quick Links</h3>
+        <a href="/scripts">All Scripts</a>
+        <a href="/features">Features</a>
+        <a href="/docs">Documentation</a>
+        <a href="/tutorials">Tutorials</a>
+        <a href="/mcp">MCP Server</a>
+        <a href="https://github.com/nirholas/XActions" rel="noopener">GitHub</a>
+      </div>
+    </aside>
+  </div>
+</body>
+</html>

@@ -1,0 +1,232 @@
+# ═══════════════════════════════════════════════════════════════════════════════
+# XActions CI — Tests + Lint on every push/PR
+# by nichxbt
+# ═══════════════════════════════════════════════════════════════════════════════
+
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    name: Test (Node ${{ matrix.node-version }})
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: xactions
+          POSTGRES_PASSWORD: test_password
+          POSTGRES_DB: xactions_test
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+
+      redis:
+        image: redis:7-alpine
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 6379:6379
+
+    env:
+      NODE_ENV: test
+      DATABASE_URL: postgresql://xactions:test_password@localhost:5432/xactions_test?schema=public
+      JWT_SECRET: ci-test-jwt-secret-not-for-production
+      SESSION_SECRET: ci-test-session-secret
+      REDIS_HOST: localhost
+      REDIS_PORT: 6379
+
+    strategy:
+      fail-fast: false
+      matrix:
+        # engines.node says >=22.12, so prove it on the floor and on what
+        # people actually run. A test that only ever sees 22 is a claim,
+        # not a guarantee.
+        node-version: [22, 24]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Setup Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v7
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Generate Prisma client
+        run: npx prisma generate
+
+      - name: Run database migrations
+        run: npx prisma migrate deploy
+        continue-on-error: true
+
+      - name: Push schema (fallback)
+        run: npx prisma db push --skip-generate
+        if: failure()
+
+      - name: Run tests
+        run: npm test
+
+      - name: Report coverage
+        if: matrix.node-version == 22
+        run: npm run test:coverage
+
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run ESLint
+        run: npm run lint
+
+  build:
+    name: Build Check
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Generate Prisma client
+        run: npx prisma generate
+
+      - name: Syntax check (server)
+        run: node -c api/server.js
+
+      - name: Syntax check (CLI)
+        run: node -c src/cli/index.js
+
+      - name: Syntax check (MCP)
+        run: node -c src/mcp/server.js
+
+      - name: Syntax check (examples)
+        run: for f in examples/*.js; do node -c "$f"; done
+
+      # bin/ was never syntax-checked, which is how `unfollowx` shipped for two
+      # years as a SyntaxError: a `#` shell comment on line 2 of a Node script.
+      - name: Syntax check (bin)
+        run: for f in bin/*; do [ -f "$f" ] && head -1 "$f" | grep -q '^#!.*node' && node -c "$f"; done; true
+
+      - name: One licence, everywhere
+        run: npm run check:licenses
+
+      # The npm tarball has shipped without files the CLI imports three times
+      # (issues #9, #11, #15). Install what would actually be published and run it.
+      - name: Smoke test the published tarball
+        run: |
+          npm pack --silent
+          mkdir -p /tmp/tarball-smoke && cd /tmp/tarball-smoke
+          npm init -y >/dev/null
+          npm install --no-audit --no-fund "$GITHUB_WORKSPACE"/xactions-*.tgz
+          npx xactions --version
+          npx xactions --help >/dev/null
+          node -e "import('xactions').then(m => { if (!m.Scraper) { throw new Error('xactions main export is missing Scraper'); } console.log('package entry point resolves'); })"
+
+  docs:
+    name: Documentation
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: 22
+
+      # Needs no dependencies: the auditor is dependency-free by design so a
+      # broken link fails in seconds rather than after a full install.
+
+      # The retrieval index and the action catalogue are derived from the tree,
+      # so any commit that adds a doc, a skill, a browser script or an MCP tool
+      # without rerunning the generators leaves them behind and fails this job
+      # for whoever pushes next. Regenerate first, then check: the gate keeps
+      # catching what it is actually for (dead links, wrong counts, commands
+      # that do not exist) and stops failing on a lag nobody introduced.
+      - name: Regenerate derived documentation artifacts
+        run: |
+          npm run ask:index
+          node scripts/sync-registry.mjs
+
+      - name: Audit documentation
+        run: npm run docs:check
+
+      # A stale artifact is still worth knowing about, because the deployed edge
+      # serves the committed copy. Report it without failing the build; the
+      # deploy regenerates before it builds, so production is never stale.
+      - name: Report uncommitted regeneration
+        if: always()
+        run: |
+          if ! git diff --quiet; then
+            echo "::warning::Derived docs artifacts were out of date. Run 'npm run ask:index && node scripts/sync-registry.mjs' and commit:"
+            git diff --stat
+          fi
+
+  docker:
+    name: Docker Build
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v4
+
+      - name: Build Docker image
+        uses: docker/build-push-action@v7
+        with:
+          context: .
+          push: false
+          tags: xactions:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max

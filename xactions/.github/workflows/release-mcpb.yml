@@ -1,0 +1,111 @@
+# ═══════════════════════════════════════════════════════════════════════════════
+# XActions — MCP Bundle release artifact
+# Builds xactions-<version>.mcpb and attaches it to the GitHub Release
+# by nichxbt
+# ═══════════════════════════════════════════════════════════════════════════════
+#
+# A .mcpb is a zip carrying the MCP server plus a manifest.json describing how
+# to launch it and which settings to collect. A user drags it onto Claude
+# Desktop > Settings > Extensions and fills in the fields the manifest declares.
+# That is the whole install: no npm, no hand-edited config, no absolute paths.
+#
+# Two triggers:
+#   - a v* tag, same tags release.yml reacts to. The bundle is attached to that
+#     release. softprops/action-gh-release updates the release release.yml
+#     created, or creates it if this job wins the race, so the order does not
+#     matter.
+#   - workflow_dispatch, to prove a build without cutting a release. The bundle
+#     is uploaded as a workflow artifact and nothing is published.
+#
+# ═══════════════════════════════════════════════════════════════════════════════
+
+name: Release MCP Bundle
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: release-mcpb-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  bundle:
+    name: Build .mcpb
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: npm
+
+      # The build script reads the live TOOLS array out of src/mcp/server.js so
+      # the manifest can never advertise a tool list the server does not serve.
+      # That import needs the repo's own dependencies present.
+      - name: Install dependencies
+        run: npm ci
+        env:
+          PUPPETEER_SKIP_DOWNLOAD: '1'
+
+      # Stages the payload, installs production dependencies inside the bundle,
+      # validates the manifest, packs, then unpacks the result and starts the
+      # server from it. A bundle that cannot launch fails here, not on a user's
+      # machine.
+      - name: Build bundle
+        run: node scripts/build-mcpb.mjs
+
+      - name: Read bundle path
+        id: bundle
+        run: |
+          FILE=$(ls dist/xactions-*.mcpb)
+          echo "path=$FILE" >> $GITHUB_OUTPUT
+          echo "name=$(basename "$FILE")" >> $GITHUB_OUTPUT
+          echo "sha256=$(sha256sum "$FILE" | cut -d' ' -f1)" >> $GITHUB_OUTPUT
+
+      - name: Write checksum
+        run: sha256sum "${{ steps.bundle.outputs.path }}" | sed 's|dist/||' > dist/SHA256SUMS.txt
+
+      - name: Upload workflow artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: ${{ steps.bundle.outputs.name }}
+          path: |
+            ${{ steps.bundle.outputs.path }}
+            dist/SHA256SUMS.txt
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Attach to release
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v3
+        with:
+          files: |
+            ${{ steps.bundle.outputs.path }}
+            dist/SHA256SUMS.txt
+          fail_on_unmatched_files: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Summary
+        run: |
+          {
+            echo "### MCP Bundle"
+            echo ""
+            echo "| | |"
+            echo "|---|---|"
+            echo "| File | \`${{ steps.bundle.outputs.name }}\` |"
+            echo "| SHA-256 | \`${{ steps.bundle.outputs.sha256 }}\` |"
+            echo ""
+            echo "Install: download the file, then drag it onto Claude Desktop > Settings > Extensions."
+          } >> $GITHUB_STEP_SUMMARY

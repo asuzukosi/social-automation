@@ -1,0 +1,13 @@
+# Upload only what the static-site build needs
+*
+!deploy/
+!deploy/gcp/
+!deploy/gcp/**
+!site/
+!site/index.html
+!llms.txt
+!llms-full.txt
+!dashboard/
+!dashboard/**
+!public/
+!public/**
