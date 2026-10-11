@@ -46,6 +46,18 @@ from social_automation.platforms.linkedin.adapter import LinkedInAdapter
         (
             ActionRequest(
                 platform=Platform.LINKEDIN,
+                action=ActionName.DELETE_POST,
+                account="primary",
+                target="https://www.linkedin.com/posts/example",
+            ),
+            {"status": "confirmed", "confirmed": True},
+            "delete_post",
+            {"post_url": "https://www.linkedin.com/posts/example"},
+            True,
+        ),
+        (
+            ActionRequest(
+                platform=Platform.LINKEDIN,
                 action=ActionName.CONNECT,
                 account="primary",
                 target="reader",

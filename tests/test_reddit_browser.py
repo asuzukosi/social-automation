@@ -119,3 +119,59 @@ async def test_reddit_reply_scopes_editor_to_exact_comment(tmp_path: Path) -> No
     editor.fill.assert_awaited_once_with("nested reply")
     assert result["status"] == "outcome_unknown"
     assert result["retry_safe"] is False
+
+
+async def test_reddit_create_post_selects_the_named_visible_body() -> None:
+    page = SimpleNamespace(url="https://www.reddit.com/r/test/submit?type=TEXT")
+    title = SimpleNamespace(fill=AsyncMock())
+    body = SimpleNamespace(fill=AsyncMock())
+    submit = SimpleNamespace(click=AsyncMock())
+    actions = RedditBrowserActions()
+    actions._navigate = AsyncMock()
+    actions._visible = AsyncMock(side_effect=[title, body])
+    actions._button = AsyncMock(return_value=submit)
+    page.wait_for_url = AsyncMock()
+    action = RenderedAction(
+        request=ActionRequest(
+            platform=Platform.REDDIT,
+            action=ActionName.CREATE_POST,
+            account="primary",
+            target="r/test",
+            title="Connection test",
+            text="hello",
+        ),
+        rendered_text="hello",
+    )
+
+    await actions._create_post(page, action)
+
+    body_selectors = actions._visible.await_args_list[1].args[1]
+    assert body_selectors[0] == "[contenteditable='true'][role='textbox'][name='body']"
+
+
+async def test_reddit_delete_uses_current_user_actions_menu() -> None:
+    page = SimpleNamespace(url="https://www.reddit.com/r/test/comments/abc/title/")
+    post = object()
+    open_menu = SimpleNamespace(click=AsyncMock())
+    delete_item = SimpleNamespace(click=AsyncMock())
+    confirm = SimpleNamespace(click=AsyncMock())
+    actions = RedditBrowserActions()
+    actions._navigate = AsyncMock()
+    actions._post = AsyncMock(return_value=post)
+    actions._visible = AsyncMock(return_value=open_menu)
+    actions._menuitem = AsyncMock(return_value=delete_item)
+    actions._button = AsyncMock(return_value=confirm)
+    action = RenderedAction(
+        request=ActionRequest(
+            platform=Platform.REDDIT,
+            action=ActionName.DELETE_POST,
+            account="primary",
+            target=page.url,
+        )
+    )
+
+    await actions._delete(page, action)
+
+    actions._visible.assert_awaited_once_with(post, ["button[aria-label='Open user actions']"])
+    actions._menuitem.assert_awaited_once_with(page, "Delete")
+    actions._button.assert_awaited_once_with(page, "Yes, Delete")

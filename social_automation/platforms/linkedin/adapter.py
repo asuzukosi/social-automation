@@ -2,7 +2,6 @@ import json
 from typing import Any
 
 from social_automation.core.models import (
-    AccessMode,
     AccountRef,
     ActionName,
     ActionResult,
@@ -15,6 +14,7 @@ from social_automation.core.models import (
     RenderedAction,
 )
 from social_automation.platforms.base import READ_OPERATIONS
+from social_automation.platforms.linkedin.capabilities import capability
 from social_automation.platforms.linkedin.mapping import post_page, reference_post
 from social_automation.platforms.linkedin.runtime import LinkedInRuntime
 from social_automation.platforms.linkedin.urls import (
@@ -26,6 +26,7 @@ from social_automation.platforms.linkedin.urls import (
 _SUPPORTED_WRITES = {
     ActionName.CREATE_POST,
     ActionName.COMMENT,
+    ActionName.DELETE_POST,
     ActionName.REACT,
     ActionName.CONNECT,
     ActionName.SEND_MESSAGE,
@@ -53,8 +54,8 @@ class LinkedInAdapter:
 
     def capabilities(self) -> list[Capability]:
         supported_reads = {"search", "get_feed", "get_profile", "get_post"}
-        return [_capability(name, False, name in supported_reads) for name in READ_OPERATIONS] + [
-            _capability(name.value, True, name in _SUPPORTED_WRITES) for name in ActionName
+        return [capability(name, False, name in supported_reads) for name in READ_OPERATIONS] + [
+            capability(name.value, True, name in _SUPPORTED_WRITES) for name in ActionName
         ]
 
     async def search(self, query: str, limit: int) -> ReadResult:
@@ -77,7 +78,7 @@ class LinkedInAdapter:
         )
 
     async def get_feed(self, feed: str | None, limit: int, cursor: str | None = None) -> ReadResult:
-        if feed:
+        if feed not in {None, "home"}:
             return self._unsupported("LinkedIn currently exposes only the signed-in home feed")
         if cursor:
             return self._unsupported("LinkedIn does not expose a stable feed cursor")
@@ -88,7 +89,7 @@ class LinkedInAdapter:
         return ReadResult(
             completeness=Completeness.BLOCKED if error and not items else Completeness.PARTIAL,
             reason=json.dumps(error) if error else "LinkedIn feed is bounded by visible scrolling",
-            items=items,
+            items=items[:limit],
         )
 
     async def get_profile(self, profile_id: str) -> ReadResult:
@@ -151,7 +152,11 @@ class LinkedInAdapter:
             action.request.action is ActionName.CREATE_POST and action.request.target is not None
         ):
             raise ValueError("LinkedIn posts do not accept a title or publishing target")
-        if action.request.action in {ActionName.COMMENT, ActionName.REACT}:
+        if action.request.action in {
+            ActionName.COMMENT,
+            ActionName.DELETE_POST,
+            ActionName.REACT,
+        }:
             action.request.target = validate_post_url(str(action.request.target))
         if action.request.action in {ActionName.CONNECT, ActionName.SEND_MESSAGE}:
             action.request.target = normalize_profile_id(str(action.request.target))
@@ -178,6 +183,8 @@ class LinkedInAdapter:
             )
         elif request.action is ActionName.REACT:
             data = await self._call("react_to_post", {"post_url": request.target})
+        elif request.action is ActionName.DELETE_POST:
+            data = await self._call("delete_post", {"post_url": request.target})
         elif request.action is ActionName.CONNECT:
             data = await self._call(
                 "connect_with_person",
@@ -217,34 +224,3 @@ class LinkedInAdapter:
     @staticmethod
     def _unsupported(reason: str) -> ReadResult:
         return ReadResult(completeness=Completeness.BLOCKED, reason=reason)
-
-
-def _capability(operation: str, write: bool, supported: bool) -> Capability:
-    restrictions = [
-        "Browser automation may trigger restrictions",
-        "No bulk automation" if write else "Reads are bounded",
-    ]
-    detail = {
-        "get_profile": "Company reads require a canonical /company/ URL",
-        "get_feed": "The visible feed does not expose a stable resume cursor",
-    }.get(operation)
-    if detail:
-        restrictions.append(detail)
-    return Capability(
-        operation=operation,
-        supported=supported,
-        write=write,
-        authentication="Dedicated LinkedIn browser profile",
-        access=AccessMode.BROWSER,
-        automation_allowed=supported and not write,
-        approval_required=supported and write,
-        reliably_confirmed=supported
-        and (not write or operation in {ActionName.REACT.value, ActionName.SEND_MESSAGE.value}),
-        max_items_per_call=_read_limit(operation) if supported and not write else None,
-        max_writes_per_confirmation=1 if supported and write else None,
-        restrictions=restrictions,
-    )
-
-
-def _read_limit(operation: str) -> int:
-    return {"get_thread": 200, "search": 25, "get_feed": 25}.get(operation, 1)

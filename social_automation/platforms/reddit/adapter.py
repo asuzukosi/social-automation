@@ -15,12 +15,8 @@ from social_automation.core.models import (
 )
 from social_automation.core.redaction import redact_error
 from social_automation.platforms.base import READ_OPERATIONS
+from social_automation.platforms.reddit import mapping
 from social_automation.platforms.reddit.browser import RedditBrowser
-from social_automation.platforms.reddit.mapping import (
-    comment_nodes,
-    comment_rows,
-    post_from_row,
-)
 from social_automation.platforms.reddit.reader import RedditReader
 from social_automation.platforms.reddit.urls import (
     normalize_comment_url,
@@ -62,8 +58,7 @@ class RedditAdapter:
         return await self._browser.logout()
 
     def capabilities(self) -> list[Capability]:
-        reads = [self._capability(name, False, True) for name in READ_OPERATIONS]
-        return reads + [
+        return [self._capability(name, False, True) for name in READ_OPERATIONS] + [
             self._capability(item.value, True, item in _SUPPORTED_WRITES) for item in ActionName
         ]
 
@@ -75,7 +70,11 @@ class RedditAdapter:
             if data.get("data", {}).get("after")
             else Completeness.COMPLETE,
             cursor=data.get("data", {}).get("after"),
-            items=[post_from_row(child["data"]) for child in children if child.get("kind") == "t3"],
+            items=[
+                mapping.post_from_row(child["data"])
+                for child in children
+                if child.get("kind") == "t3"
+            ],
         )
 
     async def get_feed(self, feed: str | None, limit: int, cursor: str | None = None) -> ReadResult:
@@ -102,13 +101,13 @@ class RedditAdapter:
     async def get_post(self, post_id: str) -> ReadResult:
         listing = await self._post_listing(post_id, limit=1)
         post = listing[0]["data"]["children"][0]["data"]
-        return ReadResult(completeness=Completeness.COMPLETE, items=[post_from_row(post)])
+        return ReadResult(completeness=Completeness.COMPLETE, items=[mapping.post_from_row(post)])
 
     async def get_thread(self, post_id: str, limit: int) -> ReadResult:
         native_id = normalize_post_id(post_id)
         post_listing, comments = await self._post_listing(native_id, limit=limit)
-        post = post_from_row(post_listing["data"]["children"][0]["data"])
-        rows, more_ids = comment_rows(comments["data"]["children"])
+        post = mapping.post_from_row(post_listing["data"]["children"][0]["data"])
+        rows, more_ids = mapping.comment_rows(comments["data"]["children"])
         expansion_error: str | None = None
         try:
             rows, more_ids = await self._expand_comments(native_id, rows, more_ids, limit)
@@ -126,7 +125,7 @@ class RedditAdapter:
                 else None
             ),
             items=[post],
-            thread=comment_nodes(rows[:limit]),
+            thread=mapping.comment_nodes(rows[:limit]),
         )
 
     async def _expand_comments(
@@ -152,7 +151,7 @@ class RedditAdapter:
                 },
             )
             things = data.get("json", {}).get("data", {}).get("things", [])
-            expanded, nested_more = comment_rows(things)
+            expanded, nested_more = mapping.comment_rows(things)
             for row in expanded:
                 native_id = str(row.get("id"))
                 if native_id and native_id not in seen:
@@ -208,7 +207,8 @@ class RedditAdapter:
             confirmed=bool(data.get("confirmed")),
             retry_safe=bool(data.get("retry_safe", False)),
             native_id=post_id_from_url(data.get("url")),
-            canonical_url=data.get("url") or request.target,
+            canonical_url=data.get("url")
+            or (None if request.action is ActionName.CREATE_POST else request.target),
             detail=data.get("message"),
         )
 
@@ -240,11 +240,11 @@ class RedditAdapter:
             automation_allowed=supported and not write,
             approval_required=supported and write,
             reliably_confirmed=supported and (not write or operation in {"create_post", "react"}),
-            max_items_per_call=(RedditAdapter._read_limit(operation) if not write else None),
+            max_items_per_call=(
+                {"get_thread": 200, "search": 25, "get_feed": 25}.get(operation, 1)
+                if not write
+                else None
+            ),
             max_writes_per_confirmation=1 if supported and write else None,
             restrictions=restrictions,
         )
-
-    @staticmethod
-    def _read_limit(operation: str) -> int:
-        return {"get_thread": 200, "search": 25, "get_feed": 25}.get(operation, 1)

@@ -9,6 +9,20 @@ from linkedin_mcp_server.linkedin.contracts import ExtractedSection
 from social_automation.platforms.linkedin.runtime import LinkedInRuntime
 
 
+def test_linkedin_activity_boost_url_yields_stable_post_url() -> None:
+    url = LinkedInRuntime._post_url(
+        "https://www.linkedin.com/campaignmanager/boost/?content=urn%3Ali%3Ashare%3A123"
+    )
+
+    assert url == "https://www.linkedin.com/feed/update/urn:li:share:123/"
+
+
+def test_linkedin_profile_url_yields_activity_url() -> None:
+    url = LinkedInRuntime._activity_url("https://www.linkedin.com/in/reader/?tracking=ignored")
+
+    assert url == "https://www.linkedin.com/in/reader/recent-activity/all/"
+
+
 @pytest.mark.parametrize(
     ("name", "arguments", "method_name", "expected_args", "expected_kwargs"),
     [
@@ -114,6 +128,12 @@ async def test_linkedin_runtime_serializes_extracted_sections(
             "react_to_post",
             {"post_url": "https://www.linkedin.com/posts/example"},
             "react",
+            ("https://www.linkedin.com/posts/example",),
+        ),
+        (
+            "delete_post",
+            {"post_url": "https://www.linkedin.com/posts/example"},
+            "delete",
             ("https://www.linkedin.com/posts/example",),
         ),
     ],

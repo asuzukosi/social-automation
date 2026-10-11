@@ -4,6 +4,7 @@ import asyncio
 import sys
 from dataclasses import asdict
 from typing import Any, cast
+from urllib.parse import parse_qs, urlsplit
 
 from linkedin_mcp_server.authentication import clear_auth_state, get_authentication_source
 from linkedin_mcp_server.dependencies import get_ready_extractor
@@ -13,6 +14,7 @@ from linkedin_mcp_server.linkedin.navigation import PageNavigator
 from linkedin_mcp_server.linkedin.session import PageSession
 
 from social_automation.platforms.linkedin.browser_actions import LinkedInBrowserActions
+from social_automation.platforms.linkedin.urls import normalize_linkedin_url
 
 
 class LinkedInRuntime:
@@ -86,7 +88,7 @@ class LinkedInRuntime:
                 )
                 return cast(dict[str, Any], result)
             if name == "get_feed":
-                return asdict(await extractor.extract_feed(self._integer(arguments, "num_posts")))
+                return await self._feed(extractor, self._integer(arguments, "num_posts"))
             if name == "get_person_profile":
                 result = await extractor.read_person(
                     str(arguments["linkedin_username"]), {"main_profile"}
@@ -112,7 +114,13 @@ class LinkedInRuntime:
                 return cast(dict[str, Any], result)
             actions = await self._actions()
             if name == "create_post":
-                return await actions.create_post(str(arguments["text"]))
+                text = str(arguments["text"])
+                result = await actions.create_post(text)
+                if result.get("status") == "submitted":
+                    return await self._confirm_created_post(text, result)
+                return result
+            if name == "delete_post":
+                return await actions.delete(str(arguments["post_url"]))
             if name == "comment_on_post":
                 return await actions.comment(str(arguments["post_url"]), str(arguments["text"]))
             if name == "react_to_post":
@@ -124,6 +132,60 @@ class LinkedInRuntime:
         browser = await get_or_create_browser()
         session = PageSession(browser.page)
         return LinkedInBrowserActions(session, PageNavigator(session))
+
+    @staticmethod
+    async def _feed(extractor: Any, limit: int) -> dict[str, Any]:
+        data = asdict(await extractor.extract_feed(limit))
+        references = data.get("references", [])
+        if not references:
+            return data
+        browser = await get_or_create_browser()
+        posts = browser.page.locator("main [data-testid='mainFeed'] [role='listitem']").filter(
+            has_text="Feed post"
+        )
+        texts = [await posts.nth(index).inner_text() for index in range(await posts.count())]
+        for reference, text in zip(references, texts, strict=False):
+            reference["text"] = text
+        return data
+
+    async def _confirm_created_post(self, text: str, fallback: dict[str, Any]) -> dict[str, Any]:
+        browser = await get_or_create_browser()
+        page = browser.page
+        await page.goto("https://www.linkedin.com/feed/", wait_until="domcontentloaded")
+        profile_url = await page.locator(
+            "main [data-testid='mainFeed'] [role='listitem'] a[href*='/in/']"
+        ).first.get_attribute("href")
+        await page.goto(self._activity_url(profile_url), wait_until="domcontentloaded")
+        item = page.locator("main [role='listitem']").filter(has_text=text).first
+        try:
+            await item.wait_for(state="visible", timeout=10_000)
+            boost_url = await item.locator("a[href*='content=urn%3Ali%3A']").first.get_attribute(
+                "href"
+            )
+            post_url = self._post_url(boost_url)
+        except Exception:
+            return fallback
+        return {
+            "status": "confirmed",
+            "confirmed": True,
+            "retry_safe": False,
+            "url": post_url,
+            "message": "Created post observed in the account activity",
+        }
+
+    @staticmethod
+    def _post_url(boost_url: str | None) -> str:
+        values = parse_qs(urlsplit(boost_url or "").query).get("content", [])
+        if not values or not values[0].startswith("urn:li:"):
+            raise ValueError("LinkedIn activity did not expose a stable post ID")
+        return normalize_linkedin_url(f"/feed/update/{values[0]}/")
+
+    @staticmethod
+    def _activity_url(profile_url: str | None) -> str:
+        profile = urlsplit(normalize_linkedin_url(profile_url or ""))
+        if not profile.path.startswith("/in/"):
+            raise ValueError("LinkedIn feed did not expose the signed-in profile")
+        return f"https://www.linkedin.com{profile.path.rstrip('/')}/recent-activity/all/"
 
     @staticmethod
     def _optional(arguments: dict[str, object], key: str) -> str | None:

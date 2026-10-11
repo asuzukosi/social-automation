@@ -84,6 +84,7 @@ def test_linkedin_write_capabilities_are_truthful() -> None:
     assert capabilities["create_post"].reliably_confirmed is False
     assert capabilities["comment"].supported is True
     assert capabilities["react"].reliably_confirmed is True
+    assert capabilities["delete_post"].supported is True
     assert capabilities["reply"].supported is False
 
 
@@ -105,6 +106,16 @@ async def test_linkedin_feed_stays_behind_normalized_contract() -> None:
     assert result.items[0].provider_metadata == {
         "reference": {"kind": "feed_post", "url": "/posts/post-1/"}
     }
+
+
+async def test_linkedin_home_feed_uses_the_signed_in_feed() -> None:
+    adapter = LinkedInAdapter()
+    adapter._call = AsyncMock(return_value={"references": [], "error": None})
+
+    result = await adapter.get_feed("home", 3)
+
+    adapter._call.assert_awaited_once_with("get_feed", {"num_posts": 3})
+    assert result.completeness.value == "partial"
 
 
 async def test_linkedin_feed_rejects_unstable_cursor() -> None:

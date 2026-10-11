@@ -21,17 +21,29 @@ class LinkedInBrowserActions:
 
     async def create_post(self, text: str) -> dict[str, Any]:
         content = self._validate_text(text)
-        await self._navigator._navigate_to_page("https://www.linkedin.com/feed/")
-        await self._click("main [data-view-name='share-box-feed-entry']")
+        await self._navigator._navigate_to_page("https://www.linkedin.com/preload/sharebox/")
         async with self._element(
             "[role='dialog'] [contenteditable='true'][role='textbox']"
+            "[aria-label='Text editor for creating content']"
         ) as editor:
             await editor.fill(content)
-        return await self._submit(
-            "[role='dialog'] button[data-view-name='share-post'], "
-            "[role='dialog'] footer button[type='submit']",
-            "[role='dialog']",
-        )
+        async with self._role("button", "Post") as button:
+            await button.click()
+        return self._submitted("LinkedIn accepted the post for submission")
+
+    async def delete(self, post_url: str) -> dict[str, Any]:
+        validate_post_url(post_url)
+        await self._navigator._navigate_to_page(post_url)
+        await self._click("button[aria-label^='Open control menu for post by']")
+        async with self._role("menuitem", "Delete post") as item:
+            await item.click()
+        async with self._role("button", "Delete") as button:
+            await button.click()
+        try:
+            await self._session.page.get_by_role("dialog").wait_for(state="hidden", timeout=8000)
+        except Exception:
+            return self._unknown("Delete was submitted but could not be verified")
+        return self._confirmed(post_url, "LinkedIn removed the post")
 
     async def comment(self, post_url: str, text: str) -> dict[str, Any]:
         validate_post_url(post_url)
@@ -80,6 +92,12 @@ class LinkedInBrowserActions:
         async with linkedin_element(locator, timeout=8000) as element:
             yield element
 
+    @asynccontextmanager
+    async def _role(self, role: str, name: str) -> AsyncIterator[Any]:
+        locator = self._session.page.get_by_role(role, name=name, exact=True).first
+        async with linkedin_element(locator, timeout=8000) as element:
+            yield element
+
     @staticmethod
     def _validate_text(text: str) -> str:
         content = text.strip()
@@ -101,6 +119,15 @@ class LinkedInBrowserActions:
     def _unknown(message: str) -> dict[str, Any]:
         return {
             "status": "outcome_unknown",
+            "confirmed": False,
+            "retry_safe": False,
+            "message": message,
+        }
+
+    @staticmethod
+    def _submitted(message: str) -> dict[str, Any]:
+        return {
+            "status": "submitted",
             "confirmed": False,
             "retry_safe": False,
             "message": message,

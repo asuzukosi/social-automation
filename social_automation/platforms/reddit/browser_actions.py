@@ -3,7 +3,7 @@ from __future__ import annotations
 import asyncio
 import re
 from typing import Any
-from urllib.parse import quote
+from urllib.parse import quote, urljoin
 
 from patchright.async_api import Locator, Page
 from patchright.async_api import TimeoutError as PlaywrightTimeoutError
@@ -44,6 +44,7 @@ class RedditBrowserActions:
         body = await self._visible(
             page,
             [
+                "[contenteditable='true'][role='textbox'][name='body']",
                 "div[contenteditable='true'][role='textbox']",
                 "textarea[name='body']",
                 "textarea[placeholder*='body' i]",
@@ -54,7 +55,23 @@ class RedditBrowserActions:
         try:
             await page.wait_for_url(re.compile(r"/comments/"), timeout=12_000)
         except Exception:
-            return self._unknown("Post submission was attempted but could not be verified")
+            await self._navigate(page, f"https://www.reddit.com/r/{quote(subreddit)}/new/")
+            post = (
+                page.locator("shreddit-post")
+                .filter(has_text=str(action.request.title))
+                .filter(has_text=action.rendered_text or "")
+                .first
+            )
+            try:
+                await post.wait_for(state="visible", timeout=8000)
+            except PlaywrightTimeoutError:
+                return self._unknown("Post submission was attempted but could not be verified")
+            permalink = await post.get_attribute("permalink")
+            if not permalink:
+                return self._unknown("Created post was visible without a stable URL")
+            return self._confirmed(
+                urljoin("https://www.reddit.com", permalink), "Reddit showed the created post"
+            )
         return self._confirmed(page.url, "Reddit opened the created post")
 
     async def _comment(self, page: Page, action: RenderedAction) -> dict[str, Any]:
@@ -123,9 +140,10 @@ class RedditBrowserActions:
     async def _delete(self, page: Page, action: RenderedAction) -> dict[str, Any]:
         await self._navigate(page, str(action.request.target))
         post = await self._post(page, str(action.request.target))
-        await (await self._button(post, "More options")).click()
-        await (await self._button(page, "Delete")).click()
-        await (await self._button(page, "Delete")).click()
+        menu = await self._visible(post, ["button[aria-label='Open user actions']"])
+        await menu.click()
+        await (await self._menuitem(page, "Delete")).click()
+        await (await self._button(page, "Yes, Delete")).click()
         return self._unknown("Delete was submitted but final removal could not be verified")
 
     async def _post(self, page: Page, target: str) -> Locator:
@@ -173,6 +191,12 @@ class RedditBrowserActions:
         button = page.get_by_role("button", name=re.compile(rf"^{re.escape(name)}$", re.I)).first
         await button.wait_for(state="visible", timeout=8_000)
         return button
+
+    @staticmethod
+    async def _menuitem(page: Page | Locator, name: str) -> Locator:
+        item = page.get_by_role("menuitem", name=name, exact=True).first
+        await item.wait_for(state="visible", timeout=8_000)
+        return item
 
     @staticmethod
     async def _attribute_becomes(

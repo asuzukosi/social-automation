@@ -66,6 +66,29 @@ async def test_reddit_writes_use_browser_without_oauth() -> None:
     assert create.access.value == "browser"
 
 
+async def test_unverified_reddit_create_does_not_return_the_subreddit_as_a_url() -> None:
+    browser = FakeRedditBrowser()
+    browser.execute = AsyncMock(
+        return_value={"status": "outcome_unknown", "confirmed": False, "retry_safe": False}
+    )
+    adapter = adapter_with(browser)
+    action = RenderedAction(
+        request=ActionRequest(
+            platform=Platform.REDDIT,
+            action=ActionName.CREATE_POST,
+            account="primary",
+            target="example",
+            text="body",
+            title="title",
+        ),
+        rendered_text="body",
+    )
+
+    result = await adapter.execute_action(action, "idempotency-key")
+
+    assert result.canonical_url is None
+
+
 async def test_reddit_status_does_not_start_browser_session(tmp_path) -> None:
     browser = RedditBrowser(profile=tmp_path / "profile")
     browser._start = AsyncMock()
