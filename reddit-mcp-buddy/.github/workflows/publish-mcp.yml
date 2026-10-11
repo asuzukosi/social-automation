@@ -1,0 +1,151 @@
+name: Publish to MCP Registry
+
+on:
+  push:
+    tags:
+      - "v*.*.*"  # Triggers on version tags like v1.0.0
+  workflow_dispatch:  # Allow manual triggering
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write  # Required for GitHub OIDC authentication
+      contents: write  # Required to create GitHub Releases
+
+    env:
+      MCP_PUBLISHER_VERSION: "1.8.0"
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          registry-url: "https://registry.npmjs.org"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build package
+        run: npm run build
+
+      - name: Run unit tests
+        run: npm test
+
+      - name: Build Desktop Extension (.mcpb)
+        run: |
+          chmod +x scripts/build-mcpb.sh
+          ./scripts/build-mcpb.sh
+
+      - name: Verify .mcpb file was created
+        run: |
+          if [ ! -f "reddit-mcp-buddy.mcpb" ]; then
+            echo "Error: reddit-mcp-buddy.mcpb not found!"
+            exit 1
+          fi
+          ls -lh reddit-mcp-buddy.mcpb
+          echo "✅ All build artifacts ready"
+
+      - name: Extract version from tag
+        id: get_version
+        run: echo "VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
+
+      - name: Publish to npm
+        run: |
+          CURRENT=$(node -p "require('./package.json').version")
+          PUBLISHED=$(npm view reddit-mcp-buddy version 2>/dev/null || echo "none")
+          if [ "$CURRENT" = "$PUBLISHED" ]; then
+            echo "✅ v$CURRENT already on npm, skipping."
+          else
+            npm publish --access public
+          fi
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          name: Release ${{ steps.get_version.outputs.VERSION }}
+          draft: false
+          prerelease: false
+          generate_release_notes: true
+          files: |
+            reddit-mcp-buddy.mcpb
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Install MCP Publisher
+        run: |
+          echo "📥 Downloading MCP Publisher v${{ env.MCP_PUBLISHER_VERSION }}..."
+          # Release assets dropped the version from their filename after 1.2.0
+          curl -fL "https://github.com/modelcontextprotocol/registry/releases/download/v${{ env.MCP_PUBLISHER_VERSION }}/mcp-publisher_$(uname -s | tr '[:upper:]' '[:lower:]')_$(uname -m | sed 's/x86_64/amd64/;s/aarch64/arm64/').tar.gz" -o mcp-publisher.tar.gz
+
+          echo "📦 Extracting..."
+          tar xzf mcp-publisher.tar.gz
+
+          echo "✅ Verifying installation..."
+          if [ ! -f "./mcp-publisher" ]; then
+            echo "::error::MCP Publisher binary not found after extraction"
+            exit 1
+          fi
+          chmod +x ./mcp-publisher
+          ./mcp-publisher --version || echo "Version check failed, continuing..."
+
+      # `login github-oidc` only accepts -registry; the --audience flag added in
+      # #54 does not exist in any published mcp-publisher, which is why every
+      # release since v1.1.13 failed here. The wrong-audience error that #54
+      # was chasing came from publisher 1.2.0 itself and is fixed upstream.
+      - name: Login to MCP Registry
+        run: ./mcp-publisher login github-oidc
+
+      - name: Publish to MCP Registry
+        run: |
+          echo "📤 Publishing to MCP Registry..."
+          ./mcp-publisher publish
+          EXIT_CODE=$?
+
+          if [ $EXIT_CODE -ne 0 ]; then
+            echo "::error::MCP Publisher failed to publish the server (exit code: $EXIT_CODE)"
+            exit 1
+          fi
+
+          echo "✅ Successfully published to MCP registry!"
+
+      - name: Verify Registry Publishing
+        run: |
+          echo "⏳ Waiting 30 seconds for registry to update..."
+          sleep 30
+
+          # Get the version we just published from package.json
+          PUBLISHED_VERSION=$(node -p "require('./package.json').version")
+          echo "📦 Expected version: $PUBLISHED_VERSION"
+
+          echo "🔍 Verifying server appears in MCP registry with correct version..."
+          RESPONSE=$(curl -s "https://registry.modelcontextprotocol.io/v0/servers?search=io.github.karanb192/reddit-mcp-buddy")
+
+          # Check if our server is in the response
+          if echo "$RESPONSE" | grep -q '"name":"io.github.karanb192/reddit-mcp-buddy"'; then
+            echo "✅ Server found in registry, checking version..."
+
+            # Extract the latest version from the response
+            LATEST_VERSION=$(echo "$RESPONSE" | python3 -c "import sys, json; data = json.load(sys.stdin); servers = data.get('servers', []); [print(server.get('server', {}).get('version', 'unknown')) for server in servers if server.get('_meta', {}).get('io.modelcontextprotocol.registry/official', {}).get('isLatest')]" | head -1)
+
+            echo "🔍 Latest version in registry: $LATEST_VERSION"
+
+            if [ "$LATEST_VERSION" = "$PUBLISHED_VERSION" ]; then
+              echo "✅ Success! Version $PUBLISHED_VERSION is now live in the MCP registry!"
+              echo "$RESPONSE" | python3 -m json.tool | head -40
+            else
+              echo "::error::Version mismatch! Published $PUBLISHED_VERSION but registry shows $LATEST_VERSION"
+              echo "This likely means the registry hasn't updated yet or an older version is marked as latest."
+              echo "Full registry response:"
+              echo "$RESPONSE" | python3 -m json.tool
+              exit 1
+            fi
+          else
+            echo "::error::Server not found in MCP registry after publishing"
+            echo "Registry response:"
+            echo "$RESPONSE" | python3 -m json.tool
+            exit 1
+          fi
