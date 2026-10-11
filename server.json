@@ -1,0 +1,65 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-09-29/server.schema.json",
+  "name": "io.github.karanb192/reddit-mcp-buddy",
+  "version": "1.1.14",
+  "description": "Reddit browser for AI assistants. Browse without API keys; add credentials for search and analysis.",
+  "author": {
+    "name": "Karan Bansal",
+    "email": "karanb192@gmail.com",
+    "url": "https://github.com/karanb192"
+  },
+  "license": "MIT",
+  "homepage": "https://github.com/karanb192/reddit-mcp-buddy",
+  "bugs": "https://github.com/karanb192/reddit-mcp-buddy/issues",
+  "repository": {
+    "id": "1056452116",
+    "url": "https://github.com/karanb192/reddit-mcp-buddy",
+    "source": "github"
+  },
+  "packages": [
+    {
+      "registryType": "npm",
+      "identifier": "reddit-mcp-buddy",
+      "version": "1.1.14",
+      "transport": {
+        "type": "stdio"
+      }
+    }
+  ],
+  "tags": [
+    "reddit",
+    "social-media",
+    "content",
+    "search",
+    "analysis"
+  ],
+  "features": [
+    "browse-subreddits",
+    "search-posts",
+    "get-comments",
+    "user-analysis",
+    "reddit-terms"
+  ],
+  "tools": [
+    {
+      "name": "browse_subreddit",
+      "description": "Browse posts from any subreddit with sorting options (hot, new, top, rising, controversial). Supports time ranges, NSFW filtering, and subreddit metadata."
+    },
+    {
+      "name": "search_reddit",
+      "description": "Search Reddit content across all subreddits or specific ones. Filter by author, time range, flair, and sort by relevance, hot, top, new, or comments."
+    },
+    {
+      "name": "get_post_details",
+      "description": "Get detailed information about a Reddit post including full comment threads. Supports comment sorting, depth control, and link extraction."
+    },
+    {
+      "name": "user_analysis",
+      "description": "Analyze a Reddit user's profile including karma, posting history, active subreddits, and activity patterns over different time ranges."
+    },
+    {
+      "name": "reddit_explain",
+      "description": "Get explanations of Reddit terminology, slang, and culture (karma, cake day, AMA, ELI5, etc.) with definitions and usage examples."
+    }
+  ]
+}
