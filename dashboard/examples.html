@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Examples — XActions</title>
+<meta name="description" content="8 runnable XActions examples: scrape X profiles and timelines with no API key, export followers to CSV, monitor keywords, and drive the MCP server.">
+<meta name="keywords" content="xactions, twitter automation, x automation, open source, free">
+<meta name="author" content="nich (@nichxbt)">
+<meta name="robots" content="index, follow, max-image-preview:large">
+<meta name="color-scheme" content="light dark">
+
+<meta property="og:type" content="website">
+<meta property="og:title" content="Examples — XActions">
+<meta property="og:description" content="8 runnable XActions examples: scrape X profiles and timelines with no API key, export followers to CSV, monitor keywords, and drive the MCP server.">
+<meta property="og:url" content="https://xactions.app/examples">
+<meta property="og:image" content="https://xactions.app/og-docs.png">
+<meta property="og:site_name" content="XActions">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@nichxbt">
+<meta name="twitter:title" content="Examples — XActions">
+<meta name="twitter:description" content="8 runnable XActions examples: scrape X profiles and timelines with no API key, export followers to CSV, monitor keywords, and drive the MCP server.">
+<meta name="twitter:image" content="https://xactions.app/og-docs.png">
+
+<link rel="canonical" href="https://xactions.app/examples">
+<link rel="manifest" href="/manifest.json">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+<link rel="stylesheet" href="/docs/assets/docs.css">
+
+<script>
+/* Applied before first paint so a dark-theme reader never sees a white flash. */
+(function(){try{var t=localStorage.getItem('xactions-theme');if(t==='light'||t==='dark'){document.documentElement.setAttribute('data-theme',t);}}catch(e){}})();
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "ItemList",
+  "name": "XActions examples",
+  "numberOfItems": 8,
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Profile lookup", "url": "https://github.com/nirholas/XActions/blob/main/examples/01-profile-lookup.js" },
+    { "@type": "ListItem", "position": 2, "name": "User timeline and engagement stats", "url": "https://github.com/nirholas/XActions/blob/main/examples/02-user-timeline.js" },
+    { "@type": "ListItem", "position": 3, "name": "Sentiment report for an account", "url": "https://github.com/nirholas/XActions/blob/main/examples/03-sentiment-report.js" },
+    { "@type": "ListItem", "position": 4, "name": "One account, three networks", "url": "https://github.com/nirholas/XActions/blob/main/examples/04-cross-platform.js" },
+    { "@type": "ListItem", "position": 5, "name": "Export followers to CSV", "url": "https://github.com/nirholas/XActions/blob/main/examples/05-export-followers.js" },
+    { "@type": "ListItem", "position": 6, "name": "Who doesn't follow you back", "url": "https://github.com/nirholas/XActions/blob/main/examples/06-find-non-followers.js" },
+    { "@type": "ListItem", "position": 7, "name": "Watch a keyword and alert on it", "url": "https://github.com/nirholas/XActions/blob/main/examples/07-keyword-monitor.js" },
+    { "@type": "ListItem", "position": 8, "name": "Drive the MCP server the way an AI agent does", "url": "https://github.com/nirholas/XActions/blob/main/examples/08-mcp-tool-call.js" }
+  ]
+}
+</script>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header class="topbar">
+  <button class="icon-btn menu-toggle" data-menu-toggle aria-expanded="false" aria-label="Open navigation">☰</button>
+  <a class="topbar__brand" href="/">⚡ XActions</a>
+  <div class="topbar__spacer"></div>
+  <button class="search-trigger" data-search-trigger aria-label="Search documentation">
+    <span aria-hidden="true">🔍</span><span class="search-trigger__label">Search docs</span><kbd>⌘K</kbd>
+  </button>
+  <nav class="topbar__nav" aria-label="Main">
+    <a class="topbar__link" href="/docs">Docs</a>
+    <a class="topbar__link" href="/tutorials">Tutorials</a>
+    <a class="topbar__link" href="/examples" aria-current="page">Examples</a>
+    <a class="topbar__link" href="https://github.com/nirholas/XActions" target="_blank" rel="noopener">GitHub</a>
+  </nav>
+  <button class="icon-btn" data-theme-toggle aria-label="Switch theme">☾</button>
+</header>
+
+<div class="scrim" data-scrim></div>
+
+<main class="content content--wide" id="main">
+  <div class="prose">
+    <span class="eyebrow">⚡ Examples</span>
+    <h1>Runnable examples</h1>
+    <p class="hero__lede">8 Node.js programs built on the XActions library. Every one runs against the live API and was verified before release. 5 of them need no account at all.</p>
+
+    <h2 id="run-them">Run them</h2>
+    <pre><code>git clone https://github.com/nirholas/XActions.git
+cd XActions
+npm install
+node examples/01-profile-lookup.js</code></pre>
+    <p>That last command needs no API key, no account, and no browser.</p>
+
+    <h2 id="the-examples">The examples</h2>
+    <div class="card-grid">
+      <a class="card" href="https://github.com/nirholas/XActions/blob/main/examples/01-profile-lookup.js" target="_blank" rel="noopener">
+        <span class="card__icon" aria-hidden="true">01</span>
+        <span class="card__title">Profile lookup</span>
+        <span class="card__desc">Fetch a public X profile. No account, no API key, no browser.</span>
+        <span class="card__meta"><span class="tag tag--ok">no login</span> <code>01-profile-lookup.js</code></span>
+      </a>
+      <a class="card" href="https://github.com/nirholas/XActions/blob/main/examples/02-user-timeline.js" target="_blank" rel="noopener">
+        <span class="card__icon" aria-hidden="true">02</span>
+        <span class="card__title">User timeline and engagement stats</span>
+        <span class="card__desc">Stream a public timeline and summarise what actually performs. No account needed.</span>
+        <span class="card__meta"><span class="tag tag--ok">no login</span> <code>02-user-timeline.js</code></span>
+      </a>
+      <a class="card" href="https://github.com/nirholas/XActions/blob/main/examples/03-sentiment-report.js" target="_blank" rel="noopener">
+        <span class="card__icon" aria-hidden="true">03</span>
+        <span class="card__title">Sentiment report for an account</span>
+        <span class="card__desc">Pull a public timeline and score how the account talks. The analyzer is rule-based and runs entirely offline, so this costs nothing and needs no model, no key, and no network beyond the timeline fetch itself.</span>
+        <span class="card__meta"><span class="tag tag--ok">no login</span> <code>03-sentiment-report.js</code></span>
+      </a>
+      <a class="card" href="https://github.com/nirholas/XActions/blob/main/examples/04-cross-platform.js" target="_blank" rel="noopener">
+        <span class="card__icon" aria-hidden="true">04</span>
+        <span class="card__title">One account, three networks</span>
+        <span class="card__desc">Look up the same brand on X, Bluesky, and Mastodon and print the results side by side. All three reads are public: no account on any network.</span>
+        <span class="card__meta"><span class="tag tag--ok">no login</span> <code>04-cross-platform.js</code></span>
+      </a>
+      <a class="card" href="https://github.com/nirholas/XActions/blob/main/examples/05-export-followers.js" target="_blank" rel="noopener">
+        <span class="card__icon" aria-hidden="true">05</span>
+        <span class="card__title">Export followers to CSV</span>
+        <span class="card__desc">Page through a follower list and write a spreadsheet-ready CSV. Requires a logged-in session: X does not serve follower lists to guests.</span>
+        <span class="card__meta"><span class="tag tag--auth">login</span> <code>05-export-followers.js</code></span>
+      </a>
+      <a class="card" href="https://github.com/nirholas/XActions/blob/main/examples/06-find-non-followers.js" target="_blank" rel="noopener">
+        <span class="card__icon" aria-hidden="true">06</span>
+        <span class="card__title">Who doesn&#39;t follow you back</span>
+        <span class="card__desc">The set difference that XActions is best known for, done with the HTTP client instead of a browser. Requires a logged-in session.</span>
+        <span class="card__meta"><span class="tag tag--auth">login</span> <code>06-find-non-followers.js</code></span>
+      </a>
+      <a class="card" href="https://github.com/nirholas/XActions/blob/main/examples/07-keyword-monitor.js" target="_blank" rel="noopener">
+        <span class="card__icon" aria-hidden="true">07</span>
+        <span class="card__title">Watch a keyword and alert on it</span>
+        <span class="card__desc">Poll X search on an interval, score each new post for sentiment, and fire a webhook when something negative shows up. This is the shape of a brand monitor, a support-mention watcher, or an incident tripwire.</span>
+        <span class="card__meta"><span class="tag tag--auth">login</span> <code>07-keyword-monitor.js</code></span>
+      </a>
+      <a class="card" href="https://github.com/nirholas/XActions/blob/main/examples/08-mcp-tool-call.js" target="_blank" rel="noopener">
+        <span class="card__icon" aria-hidden="true">08</span>
+        <span class="card__title">Drive the MCP server the way an AI agent does</span>
+        <span class="card__desc">Claude, Cursor, and Windsurf talk to XActions over MCP: they spawn the server, exchange JSON-RPC over stdio, and call tools. This example does exactly that, in about 60 lines, so you can see the wire format and verify your setup without an AI client in the loop.</span>
+        <span class="card__meta"><span class="tag tag--ok">no login</span> <code>08-mcp-tool-call.js</code></span>
+      </a>
+    </div>
+
+    <h2 id="guest-vs-session">What needs a login, and why</h2>
+    <p>X splits its internal API into two tiers. Profiles and public user timelines are served to anyone. Search, followers, following, likes, bookmarks, and DMs require a logged-in session, and X answers a logged-out request to one of those with a bare <code>404</code>.</p>
+    <p>The examples that need a session check for one up front and print setup instructions rather than failing halfway through. See <a href="/docs/guides/configuration">Configuration</a> for how to supply <code>auth_token</code> and <code>ct0</code>.</p>
+
+    <div class="callout">
+      <h3>Want the guided version?</h3>
+      <p>The tutorials walk through this material step by step, with the reasoning behind each decision.</p>
+      <a class="btn" href="/tutorials">Read the tutorials</a>
+    </div>
+  </div>
+</main>
+
+<dialog class="search-dialog" data-search-dialog aria-label="Search documentation">
+  <input class="search-dialog__input" data-search-input type="search" placeholder="Search the documentation…" aria-label="Search query" autocomplete="off" spellcheck="false">
+  <div class="search-dialog__results" data-search-results role="listbox" aria-label="Search results"></div>
+  <div class="search-dialog__footer">
+    <span><kbd>↑</kbd><kbd>↓</kbd> navigate</span>
+    <span><kbd>↵</kbd> open</span>
+    <span><kbd>esc</kbd> close</span>
+  </div>
+</dialog>
+
+<footer class="site-footer">
+  <div class="site-footer__inner">
+    <div>
+      <h4>XActions</h4>
+      <p>Free, open-source X/Twitter automation.</p>
+      <p>Built by <a href="https://x.com/nichxbt" target="_blank" rel="noopener">@nichxbt</a></p>
+    </div>
+    <div>
+      <h4>Learn</h4>
+      <a href="/docs/learn/your-first-scrape">Your first scrape</a>
+      <a href="/docs/learn/mcp-with-claude">MCP with Claude</a>
+      <a href="/examples">Examples</a>
+      <a href="/docs/guides/troubleshooting">Troubleshooting</a>
+    </div>
+    <div>
+      <h4>Reference</h4>
+      <a href="/docs/guides/cli-reference">CLI</a>
+      <a href="/docs/guides/api-reference">API</a>
+      <a href="/docs/guides/mcp-setup">MCP server</a>
+      <a href="/docs/guides/browser-scripts">Browser scripts</a>
+    </div>
+    <div>
+      <h4>Project</h4>
+      <a href="https://github.com/nirholas/XActions" target="_blank" rel="noopener">GitHub</a>
+      <a href="/docs/project/contributing">Contributing</a>
+      <a href="/docs/project/changelog">Changelog</a>
+      <a href="/docs/project/security">Security</a>
+    </div>
+  </div>
+  <div class="site-footer__bottom">
+    <p>© 2024–2026 XActions. Apache-2.0 licensed. No API fees.</p>
+  </div>
+</footer>
+
+<script src="/docs/assets/docs.js" defer></script>
+</body>
+</html>

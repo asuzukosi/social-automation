@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quota Supervisor — Free X/Twitter Script | XActions</title>
+  <meta name="description" content="XActions Automation - Quota Supervisor">
+  <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, quota, supervisor, automation">
+  <meta name="author" content="nich (@nichxbt)">
+  <meta name="robots" content="index, follow">
+
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Quota Supervisor — XActions">
+  <meta property="og:description" content="XActions Automation - Quota Supervisor">
+  <meta property="og:url" content="https://xactions.app/scripts/quota-supervisor">
+  <meta property="og:site_name" content="XActions">
+  <meta property="og:image" content="https://xactions.app/og-image.png">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@nichxbt">
+  <meta name="twitter:title" content="Quota Supervisor — XActions">
+  <meta name="twitter:description" content="XActions Automation - Quota Supervisor">
+
+  <link rel="canonical" href="https://xactions.app/scripts/quota-supervisor">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "Quota Supervisor — Free X/Twitter Script | XActions",
+    "description": "XActions Automation - Quota Supervisor",
+    "url": "https://xactions.app/scripts/quota-supervisor",
+    "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
+    "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
+    "datePublished": "2026-03-30",
+    "dateModified": "2026-03-30",
+    "articleSection": "Automation",
+    "keywords": "xactions, twitter automation, x automation, browser script, devtools console, free, open source, quota, supervisor, automation"
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
+      { "@type": "ListItem", "position": 2, "name": "Scripts", "item": "https://xactions.app/scripts" },
+      { "@type": "ListItem", "position": 3, "name": "Automation", "item": "https://xactions.app/scripts#automation" },
+      { "@type": "ListItem", "position": 4, "name": "Quota Supervisor", "item": "https://xactions.app/scripts/quota-supervisor" }
+    ]
+  }
+  </script>
+
+  <link rel="stylesheet" href="/css/common.css">
+  <style>
+    .article { padding: 24px 20px; }
+    .article h1 { font-size: 1.75rem; font-weight: 800; margin-bottom: 8px; line-height: 1.2; }
+    .article h2 { font-size: 1.375rem; font-weight: 700; margin: 32px 0 12px; padding-top: 16px; border-top: 1px solid var(--border); }
+    .article h3 { font-size: 1.125rem; font-weight: 600; margin: 24px 0 8px; color: var(--accent); }
+    .article p { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 16px; }
+    .article a { color: var(--accent); text-decoration: none; }
+    .article a:hover { text-decoration: underline; }
+    .article strong { color: var(--text-primary); }
+    .article code { background: var(--bg-tertiary); padding: 2px 6px; border-radius: 4px; font-family: 'Monaco','Menlo','Consolas', monospace; font-size: 0.875rem; color: var(--accent); }
+    .article pre { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 16px; overflow-x: auto; margin: 16px 0; }
+    .article pre code { background: none; padding: 0; color: var(--text-primary); font-size: 0.8125rem; display: block; }
+    .article table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 0.875rem; }
+    .article th { background: var(--bg-secondary); padding: 10px 12px; text-align: left; border: 1px solid var(--border); font-weight: 600; }
+    .article td { padding: 10px 12px; border: 1px solid var(--border); color: var(--text-secondary); }
+    .cat-badge { display: inline-block; background: var(--accent-light); color: var(--accent); padding: 4px 12px; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; margin-bottom: 16px; }
+    .meta-row { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 16px; font-size: 0.8125rem; color: var(--text-secondary); }
+    .meta-row span { display: flex; align-items: center; gap: 4px; }
+    .usage-steps { margin-left: 24px; margin-bottom: 16px; }
+    .usage-steps li { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 8px; padding-left: 4px; }
+    .warning-box { background: rgba(244, 33, 46, 0.1); border: 1px solid var(--error); border-radius: 12px; padding: 16px; margin: 16px 0; }
+    .warning-box p { color: var(--error); margin: 0; font-size: 0.875rem; }
+    .controls-box { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 16px; margin: 16px 0; }
+    .controls-box h3 { margin: 0 0 8px; font-size: 1rem; }
+    .code-block { position: relative; }
+    .copy-btn { position: absolute; top: 8px; right: 8px; background: var(--bg-tertiary); color: var(--text-secondary); border: 1px solid var(--border); border-radius: 8px; padding: 6px 12px; cursor: pointer; font-size: 0.75rem; z-index: 10; transition: all .2s; }
+    .copy-btn:hover { background: var(--accent); color: #fff; }
+    .full-code { margin-top: 32px; }
+    .full-code pre { max-height: 600px; overflow-y: auto; }
+    .cta-box { background: linear-gradient(135deg, var(--bg-secondary), var(--bg-tertiary)); border: 1px solid var(--border); border-radius: 16px; padding: 24px; margin: 32px 0; text-align: center; }
+    .cta-box h3 { font-size: 1.25rem; margin-bottom: 8px; color: var(--text-primary); }
+    .cta-box p { color: var(--text-secondary); margin-bottom: 16px; }
+    .cta-box a { display: inline-block; padding: 12px 24px; background: var(--accent); color: #fff; border-radius: 9999px; text-decoration: none; font-weight: 700; transition: background .2s; }
+    .cta-box a:hover { background: var(--accent-hover); }
+    .sidebar-right { width: 350px; padding: 16px 24px; position: sticky; top: 0; height: 100vh; overflow-y: auto; }
+    .sidebar-card { background: var(--bg-secondary); border-radius: 16px; padding: 16px; margin-bottom: 16px; }
+    .sidebar-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 12px; }
+    .sidebar-card a { display: block; color: var(--text-secondary); text-decoration: none; font-size: 0.875rem; padding: 6px 0; border-bottom: 1px solid var(--border); transition: color .2s; }
+    .sidebar-card a:last-child { border-bottom: none; }
+    .sidebar-card a:hover { color: var(--accent); }
+    .breadcrumb { font-size: 0.8125rem; color: var(--text-secondary); margin-top: 4px; }
+    .breadcrumb a { color: var(--accent); text-decoration: none; }
+    .breadcrumb a:hover { text-decoration: underline; }
+    .source-badge { display: inline-block; background: var(--bg-tertiary); color: var(--text-secondary); padding: 2px 8px; border-radius: 6px; font-size: 0.6875rem; margin-left: 8px; }
+    @media (max-width: 1024px) { .sidebar-right { display: none; } }
+    @media (max-width: 768px) {
+      .article pre { font-size: 0.75rem; }
+      .meta-row { flex-direction: column; gap: 4px; }
+    }
+  </style>
+</head>
+<body>
+  <a href="#main-content" class="skip-nav">Skip to main content</a>
+  <div class="layout">
+    <aside class="sidebar-left" aria-label="Main navigation"></aside>
+    <script src="/js/sidebar.js"></script>
+
+    <main class="main-content" id="main-content">
+      <header class="main-header">
+        <h1>⚠️ Quota Supervisor</h1>
+        <div class="breadcrumb">
+          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#automation">Automation</a> › Quota Supervisor
+        </div>
+      </header>
+
+      <article class="article">
+        <span class="cat-badge">Automation</span>
+        <span class="source-badge">src/automation</span>
+
+        <div class="meta-row">
+          
+          
+          <span>362 lines</span>
+          <span>by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></span>
+        </div>
+
+        <p>XActions Automation - Quota Supervisor</p>
+
+        
+
+        <h2>How to Use</h2>
+        <ol class="usage-steps"><li>Paste core.js first</li>
+<li>Paste this script to enable quota supervision</li>
+<li>All other automation scripts will respect these limits</li></ol>
+        <p><strong>Note:</strong> This script requires pasting <code>src/automation/core.js</code> first for shared utilities.</p>
+
+        
+        
+        
+
+        <section class="full-code">
+          <h2>Full Script</h2>
+          <p>Copy and paste this entire script into your browser DevTools console on <a href="https://x.com" rel="noopener">x.com</a>.</p>
+          <div class="code-block">
+            <button class="copy-btn" onclick="navigator.clipboard.writeText(this.nextElementSibling.querySelector('code').textContent).then(()=>{this.textContent='Copied!';setTimeout(()=>this.textContent='Copy Script',2000)})">Copy Script</button>
+            <pre><code>// Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
+// XActions Automation - Quota Supervisor
+// https://github.com/nirholas/XActions
+//
+// REQUIRES: Paste core.js first!
+//
+// Sophisticated rate limiting and action management to protect your account
+//
+// HOW TO USE:
+// 1. Paste core.js first
+// 2. Paste this script to enable quota supervision
+// 3. All other automation scripts will respect these limits
+
+(() =&gt; {
+  if (!window.XActions?.Core) {
+    console.error('❌ Core module not loaded! Paste core.js first.');
+    return;
+  }
+
+  const { log, storage } = window.XActions.Core;
+
+  // ============================================
+  // QUOTA CONFIGURATION
+  // ============================================
+  const QUOTAS = {
+    // Hourly limits
+    HOURLY: {
+      likes: 60,           // Max likes per hour
+      follows: 30,         // Max follows per hour
+      unfollows: 40,       // Max unfollows per hour
+      comments: 10,        // Max comments per hour
+      dms: 5,              // Max DMs per hour
+    },
+    
+    // Daily limits
+    DAILY: {
+      likes: 500,
+      follows: 200,
+      unfollows: 300,
+      comments: 50,
+      dms: 20,
+    },
+    
+    // Sleep behavior when quota is hit
+    SLEEP: {
+      enabled: true,
+      sleepyhead: true,    // Add extra sleep time when tired
+      minSleepMinutes: 5,
+      maxSleepMinutes: 15,
+    },
+    
+    // Notifications
+    NOTIFY: {
+      enabled: true,
+      onQuotaHit: true,    // Notify when quota is reached
+      onResume: true,      // Notify when resuming after sleep
+    },
+    
+    // Stochastic flow (randomize limits slightly)
+    STOCHASTIC: {
+      enabled: true,
+      variance: 0.15,      // 15% variance in limits
+    },
+  };
+
+  // ============================================
+  // QUOTA STATE
+  // ============================================
+  const KEY = 'xactions_quota_state';
+  
+  const getState = () =&gt; {
+    const saved = storage.get(KEY);
+    if (!saved) return createFreshState();
+    
+    const now = Date.now();
+    const state = saved;
+    
+    // Reset hourly counts if hour has passed
+    if (now - state.hourlyReset &gt; 60 * 60 * 1000) {
+      state.hourly = { likes: 0, follows: 0, unfollows: 0, comments: 0, dms: 0 };
+      state.hourlyReset = now;
+    }
+    
+    // Reset daily counts if day has passed
+    if (now - state.dailyReset &gt; 24 * 60 * 60 * 1000) {
+      state.daily = { likes: 0, follows: 0, unfollows: 0, comments: 0, dms: 0 };
+      state.dailyReset = now;
+    }
+    
+    return state;
+  };
+  
+  const createFreshState = () =&gt; ({
+    hourly: { likes: 0, follows: 0, unfollows: 0, comments: 0, dms: 0 },
+    daily: { likes: 0, follows: 0, unfollows: 0, comments: 0, dms: 0 },
+    hourlyReset: Date.now(),
+    dailyReset: Date.now(),
+    totalAllTime: { likes: 0, follows: 0, unfollows: 0, comments: 0, dms: 0 },
+    sleepUntil: null,
+  });
+  
+  const saveState = (state) =&gt; storage.set(KEY, state);
+
+  // ============================================
+  // GET EFFECTIVE LIMIT (with stochastic variance)
+  // ============================================
+  const getEffectiveLimit = (baseLimit) =&gt; {
+    if (!QUOTAS.STOCHASTIC.enabled) return baseLimit;
+    
+    const variance = QUOTAS.STOCHASTIC.variance;
+    const min = Math.floor(baseLimit * (1 - variance));
+    const max = Math.ceil(baseLimit * (1 + variance));
+    
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+  };
+
+  // ============================================
+  // CHECK IF ACTION IS ALLOWED
+  // ============================================
+  const canPerform = (action) =&gt; {
+    const state = getState();
+    const now = Date.now();
+    
+    // Check if we're in a sleep period
+    if (state.sleepUntil &amp;&amp; now &lt; state.sleepUntil) {
+      const remaining = Math.ceil((state.sleepUntil - now) / 1000 / 60);
+      return { 
+        allowed: false, 
+        reason: `sleeping`, 
+        waitMinutes: remaining 
+      };
+    }
+    
+    // Check hourly limit
+    const hourlyLimit = getEffectiveLimit(QUOTAS.HOURLY[action] || Infinity);
+    if (state.hourly[action] &gt;= hourlyLimit) {
+      return { 
+        allowed: false, 
+        reason: 'hourly_limit', 
+        limit: hourlyLimit,
+        current: state.hourly[action] 
+      };
+    }
+    
+    // Check daily limit
+    const dailyLimit = getEffectiveLimit(QUOTAS.DAILY[action] || Infinity);
+    if (state.daily[action] &gt;= dailyLimit) {
+      return { 
+        allowed: false, 
+        reason: 'daily_limit', 
+        limit: dailyLimit,
+        current: state.daily[action] 
+      };
+    }
+    
+    return { allowed: true };
+  };
+
+  // ============================================
+  // RECORD ACTION
+  // ============================================
+  const recordAction = (action) =&gt; {
+    const state = getState();
+    
+    state.hourly[action] = (state.hourly[action] || 0) + 1;
+    state.daily[action] = (state.daily[action] || 0) + 1;
+    state.totalAllTime[action] = (state.totalAllTime[action] || 0) + 1;
+    
+    saveState(state);
+    
+    return state;
+  };
+
+  // ============================================
+  // SLEEP FUNCTION
+  // ============================================
+  const triggerSleep = (reason) =&gt; {
+    if (!QUOTAS.SLEEP.enabled) return;
+    
+    const state = getState();
+    let sleepMinutes = Math.floor(
+      Math.random() * (QUOTAS.SLEEP.maxSleepMinutes - QUOTAS.SLEEP.minSleepMinutes + 1)
+    ) + QUOTAS.SLEEP.minSleepMinutes;
+    
+    // Sleepyhead mode: add extra time if near multiple limits
+    if (QUOTAS.SLEEP.sleepyhead) {
+      const actions = ['likes', 'follows', 'unfollows', 'comments'];
+      let nearLimitCount = 0;
+      
+      for (const action of actions) {
+        const hourlyRatio = state.hourly[action] / (QUOTAS.HOURLY[action] || Infinity);
+        const dailyRatio = state.daily[action] / (QUOTAS.DAILY[action] || Infinity);
+        
+        if (hourlyRatio &gt; 0.8 || dailyRatio &gt; 0.8) nearLimitCount++;
+      }
+      
+      sleepMinutes += nearLimitCount * 3; // Add 3 mins per near-limit action
+    }
+    
+    state.sleepUntil = Date.now() + (sleepMinutes * 60 * 1000);
+    saveState(state);
+    
+    log(`😴 Quota hit! Sleeping for ${sleepMinutes} minutes (${reason})`, 'warning');
+    
+    if (QUOTAS.NOTIFY.enabled &amp;&amp; QUOTAS.NOTIFY.onQuotaHit) {
+      notify(`XActions: Sleeping ${sleepMinutes}min`, reason);
+    }
+    
+    return sleepMinutes;
+  };
+
+  // ============================================
+  // NOTIFICATION
+  // ============================================
+  const notify = (title, body) =&gt; {
+    if (!('Notification' in window)) return;
+    
+    if (Notification.permission === 'granted') {
+      new Notification(title, { body, icon: '✂️' });
+    } else if (Notification.permission !== 'denied') {
+      Notification.requestPermission().then(permission =&gt; {
+        if (permission === 'granted') {
+          new Notification(title, { body, icon: '✂️' });
+        }
+      });
+    }
+  };
+
+  // ============================================
+  // PERFORM ACTION WITH QUOTA CHECK
+  // ============================================
+  const perform = async (action, callback) =&gt; {
+    const check = canPerform(action);
+    
+    if (!check.allowed) {
+      if (check.reason === 'sleeping') {
+        log(`⏳ Waiting ${check.waitMinutes} minutes (quota sleep)`, 'info');
+        return { success: false, reason: check.reason, wait: check.waitMinutes };
+      }
+      
+      // Trigger sleep on limit hit
+      const sleepMins = triggerSleep(`${action} ${check.reason}`);
+      return { success: false, reason: check.reason, wait: sleepMins };
+    }
+    
+    // Perform the action
+    const result = await callback();
+    
+    // Record the action
+    if (result !== false) {
+      recordAction(action);
+    }
+    
+    return { success: true, result };
+  };
+
+  // ============================================
+  // GET STATUS REPORT
+  // ============================================
+  const getStatus = () =&gt; {
+    const state = getState();
+    const now = Date.now();
+    
+    const hourlyRemaining = {};
+    const dailyRemaining = {};
+    
+    for (const action of Object.keys(QUOTAS.HOURLY)) {
+      hourlyRemaining[action] = Math.max(0, QUOTAS.HOURLY[action] - (state.hourly[action] || 0));
+      dailyRemaining[action] = Math.max(0, QUOTAS.DAILY[action] - (state.daily[action] || 0));
+    }
+    
+    return {
+      hourly: { used: state.hourly, remaining: hourlyRemaining, limits: QUOTAS.HOURLY },
+      daily: { used: state.daily, remaining: dailyRemaining, limits: QUOTAS.DAILY },
+      allTime: state.totalAllTime,
+      sleeping: state.sleepUntil &amp;&amp; now &lt; state.sleepUntil,
+      sleepRemaining: state.sleepUntil ? Math.max(0, Math.ceil((state.sleepUntil - now) / 1000 / 60)) : 0,
+      hourlyResetsIn: Math.ceil((state.hourlyReset + 60 * 60 * 1000 - now) / 1000 / 60),
+      dailyResetsIn: Math.ceil((state.dailyReset + 24 * 60 * 60 * 1000 - now) / 1000 / 60 / 60),
+    };
+  };
+
+  // ============================================
+  // PRINT STATUS
+  // ============================================
+  const printStatus = () =&gt; {
+    const status = getStatus();
+    
+    console.log(`
+╔═══════════════════════════════════════════════════════════╗
+║  📊 QUOTA SUPERVISOR STATUS                               ║
+╠═══════════════════════════════════════════════════════════╣
+║  HOURLY (resets in ${String(status.hourlyResetsIn).padStart(2)}m)                              ║
+║    Likes:    ${String(status.hourly.used.likes || 0).padStart(3)}/${String(status.hourly.limits.likes).padStart(3)}  │  Follows:   ${String(status.hourly.used.follows || 0).padStart(3)}/${String(status.hourly.limits.follows).padStart(3)}  ║
+║    Unfollows:${String(status.hourly.used.unfollows || 0).padStart(3)}/${String(status.hourly.limits.unfollows).padStart(3)}  │  Comments:  ${String(status.hourly.used.comments || 0).padStart(3)}/${String(status.hourly.limits.comments).padStart(3)}  ║
+╠───────────────────────────────────────────────────────────╣
+║  DAILY (resets in ${String(status.dailyResetsIn).padStart(2)}h)                               ║
+║    Likes:    ${String(status.daily.used.likes || 0).padStart(3)}/${String(status.daily.limits.likes).padStart(3)}  │  Follows:   ${String(status.daily.used.follows || 0).padStart(3)}/${String(status.daily.limits.follows).padStart(3)}  ║
+║    Unfollows:${String(status.daily.used.unfollows || 0).padStart(3)}/${String(status.daily.limits.unfollows).padStart(3)}  │  Comments:  ${String(status.daily.used.comments || 0).padStart(3)}/${String(status.daily.limits.comments).padStart(3)}  ║
+╠───────────────────────────────────────────────────────────╣
+║  STATUS: ${status.sleeping ? `😴 Sleeping (${status.sleepRemaining}m left)`.padEnd(25) : '✅ Active'.padEnd(25)}                ║
+╚═══════════════════════════════════════════════════════════╝
+    `);
+  };
+
+  // ============================================
+  // RESET FUNCTIONS
+  // ============================================
+  const resetHourly = () =&gt; {
+    const state = getState();
+    state.hourly = { likes: 0, follows: 0, unfollows: 0, comments: 0, dms: 0 };
+    state.hourlyReset = Date.now();
+    saveState(state);
+    log('Hourly quotas reset', 'success');
+  };
+
+  const resetDaily = () =&gt; {
+    const state = getState();
+    state.daily = { likes: 0, follows: 0, unfollows: 0, comments: 0, dms: 0 };
+    state.dailyReset = Date.now();
+    saveState(state);
+    log('Daily quotas reset', 'success');
+  };
+
+  const resetAll = () =&gt; {
+    storage.set(KEY, createFreshState());
+    log('All quotas reset', 'success');
+  };
+
+  const wakeUp = () =&gt; {
+    const state = getState();
+    state.sleepUntil = null;
+    saveState(state);
+    log('Woken up from quota sleep', 'success');
+  };
+
+  // ============================================
+  // EXPORT
+  // ============================================
+  window.XActions.Quota = {
+    canPerform,
+    recordAction,
+    perform,
+    getStatus,
+    printStatus,
+    triggerSleep,
+    resetHourly,
+    resetDaily,
+    resetAll,
+    wakeUp,
+    config: QUOTAS,
+  };
+
+  // Also expose as global shortcuts
+  window.quotaStatus = printStatus;
+  window.quotaReset = resetAll;
+  window.quotaWake = wakeUp;
+
+  log('✅ Quota Supervisor loaded!', 'success');
+  printStatus();
+})();
+</code></pre>
+          </div>
+        </section>
+
+        <div class="cta-box">
+          <h3>⚡ More XActions Scripts</h3>
+          <p>Browse 300+ free browser scripts for X/Twitter automation. No API keys, no fees.</p>
+          <a href="/scripts">Browse All Scripts</a>
+        </div>
+      </article>
+    </main>
+
+    <aside class="sidebar-right">
+      <div class="sidebar-card">
+        <h3>⚠️ Automation</h3>
+        <a href="/scripts/actions">⚡ Actions</a>
+<a href="/scripts/control-panel">🎛️ Control Panel</a>
+<a href="/scripts/core">⚙️ Core</a>
+<a href="/scripts/customer-service">🤝 Customer Service</a>
+<a href="/scripts/protect-active-users">🛡️ Protect Active Users</a>
+<a href="/scripts/rate-limiter">⏱️ Rate Limiter</a>
+<a href="/scripts/session-logger">📋 Session Logger</a>
+<a href="/scripts/rss-monitor">📡 XActions RSS &amp; Webhook Content Ingestion</a>
+      </div>
+      <div class="sidebar-card">
+        <h3>🔗 Quick Links</h3>
+        <a href="/scripts">All Scripts</a>
+        <a href="/features">Features</a>
+        <a href="/docs">Documentation</a>
+        <a href="/tutorials">Tutorials</a>
+        <a href="/mcp">MCP Server</a>
+        <a href="https://github.com/nirholas/XActions" rel="noopener">GitHub</a>
+      </div>
+    </aside>
+  </div>
+</body>
+</html>

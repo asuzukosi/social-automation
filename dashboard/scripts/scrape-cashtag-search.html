@@ -1,0 +1,1094 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>X Cashtag Search Scraper — Free X/Twitter Script | XActions</title>
+  <meta name="description" content="X Cashtag Search Scraper — Free browser console script for X/Twitter automation. No API keys needed.">
+  <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, scrape, cashtag, search, scrapers">
+  <meta name="author" content="nich (@nichxbt)">
+  <meta name="robots" content="index, follow">
+
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="X Cashtag Search Scraper — XActions">
+  <meta property="og:description" content="X Cashtag Search Scraper — Free browser console script for X/Twitter automation. No API keys needed.">
+  <meta property="og:url" content="https://xactions.app/scripts/scrape-cashtag-search">
+  <meta property="og:site_name" content="XActions">
+  <meta property="og:image" content="https://xactions.app/og-image.png">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@nichxbt">
+  <meta name="twitter:title" content="X Cashtag Search Scraper — XActions">
+  <meta name="twitter:description" content="X Cashtag Search Scraper — Free browser console script for X/Twitter automation. No API keys needed.">
+
+  <link rel="canonical" href="https://xactions.app/scripts/scrape-cashtag-search">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "X Cashtag Search Scraper — Free X/Twitter Script | XActions",
+    "description": "X Cashtag Search Scraper — Free browser console script for X/Twitter automation. No API keys needed.",
+    "url": "https://xactions.app/scripts/scrape-cashtag-search",
+    "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
+    "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
+    "datePublished": "2026-03-30",
+    "dateModified": "2026-03-30",
+    "articleSection": "Scrapers",
+    "keywords": "xactions, twitter automation, x automation, browser script, devtools console, free, open source, scrape, cashtag, search, scrapers"
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
+      { "@type": "ListItem", "position": 2, "name": "Scripts", "item": "https://xactions.app/scripts" },
+      { "@type": "ListItem", "position": 3, "name": "Scrapers", "item": "https://xactions.app/scripts#scrapers" },
+      { "@type": "ListItem", "position": 4, "name": "X Cashtag Search Scraper", "item": "https://xactions.app/scripts/scrape-cashtag-search" }
+    ]
+  }
+  </script>
+
+  <link rel="stylesheet" href="/css/common.css">
+  <style>
+    .article { padding: 24px 20px; }
+    .article h1 { font-size: 1.75rem; font-weight: 800; margin-bottom: 8px; line-height: 1.2; }
+    .article h2 { font-size: 1.375rem; font-weight: 700; margin: 32px 0 12px; padding-top: 16px; border-top: 1px solid var(--border); }
+    .article h3 { font-size: 1.125rem; font-weight: 600; margin: 24px 0 8px; color: var(--accent); }
+    .article p { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 16px; }
+    .article a { color: var(--accent); text-decoration: none; }
+    .article a:hover { text-decoration: underline; }
+    .article strong { color: var(--text-primary); }
+    .article code { background: var(--bg-tertiary); padding: 2px 6px; border-radius: 4px; font-family: 'Monaco','Menlo','Consolas', monospace; font-size: 0.875rem; color: var(--accent); }
+    .article pre { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 16px; overflow-x: auto; margin: 16px 0; }
+    .article pre code { background: none; padding: 0; color: var(--text-primary); font-size: 0.8125rem; display: block; }
+    .article table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 0.875rem; }
+    .article th { background: var(--bg-secondary); padding: 10px 12px; text-align: left; border: 1px solid var(--border); font-weight: 600; }
+    .article td { padding: 10px 12px; border: 1px solid var(--border); color: var(--text-secondary); }
+    .cat-badge { display: inline-block; background: var(--accent-light); color: var(--accent); padding: 4px 12px; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; margin-bottom: 16px; }
+    .meta-row { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 16px; font-size: 0.8125rem; color: var(--text-secondary); }
+    .meta-row span { display: flex; align-items: center; gap: 4px; }
+    .usage-steps { margin-left: 24px; margin-bottom: 16px; }
+    .usage-steps li { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 8px; padding-left: 4px; }
+    .warning-box { background: rgba(244, 33, 46, 0.1); border: 1px solid var(--error); border-radius: 12px; padding: 16px; margin: 16px 0; }
+    .warning-box p { color: var(--error); margin: 0; font-size: 0.875rem; }
+    .controls-box { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 16px; margin: 16px 0; }
+    .controls-box h3 { margin: 0 0 8px; font-size: 1rem; }
+    .code-block { position: relative; }
+    .copy-btn { position: absolute; top: 8px; right: 8px; background: var(--bg-tertiary); color: var(--text-secondary); border: 1px solid var(--border); border-radius: 8px; padding: 6px 12px; cursor: pointer; font-size: 0.75rem; z-index: 10; transition: all .2s; }
+    .copy-btn:hover { background: var(--accent); color: #fff; }
+    .full-code { margin-top: 32px; }
+    .full-code pre { max-height: 600px; overflow-y: auto; }
+    .cta-box { background: linear-gradient(135deg, var(--bg-secondary), var(--bg-tertiary)); border: 1px solid var(--border); border-radius: 16px; padding: 24px; margin: 32px 0; text-align: center; }
+    .cta-box h3 { font-size: 1.25rem; margin-bottom: 8px; color: var(--text-primary); }
+    .cta-box p { color: var(--text-secondary); margin-bottom: 16px; }
+    .cta-box a { display: inline-block; padding: 12px 24px; background: var(--accent); color: #fff; border-radius: 9999px; text-decoration: none; font-weight: 700; transition: background .2s; }
+    .cta-box a:hover { background: var(--accent-hover); }
+    .sidebar-right { width: 350px; padding: 16px 24px; position: sticky; top: 0; height: 100vh; overflow-y: auto; }
+    .sidebar-card { background: var(--bg-secondary); border-radius: 16px; padding: 16px; margin-bottom: 16px; }
+    .sidebar-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 12px; }
+    .sidebar-card a { display: block; color: var(--text-secondary); text-decoration: none; font-size: 0.875rem; padding: 6px 0; border-bottom: 1px solid var(--border); transition: color .2s; }
+    .sidebar-card a:last-child { border-bottom: none; }
+    .sidebar-card a:hover { color: var(--accent); }
+    .breadcrumb { font-size: 0.8125rem; color: var(--text-secondary); margin-top: 4px; }
+    .breadcrumb a { color: var(--accent); text-decoration: none; }
+    .breadcrumb a:hover { text-decoration: underline; }
+    .source-badge { display: inline-block; background: var(--bg-tertiary); color: var(--text-secondary); padding: 2px 8px; border-radius: 6px; font-size: 0.6875rem; margin-left: 8px; }
+    @media (max-width: 1024px) { .sidebar-right { display: none; } }
+    @media (max-width: 768px) {
+      .article pre { font-size: 0.75rem; }
+      .meta-row { flex-direction: column; gap: 4px; }
+    }
+  </style>
+</head>
+<body>
+  <a href="#main-content" class="skip-nav">Skip to main content</a>
+  <div class="layout">
+    <aside class="sidebar-left" aria-label="Main navigation"></aside>
+    <script src="/js/sidebar.js"></script>
+
+    <main class="main-content" id="main-content">
+      <header class="main-header">
+        <h1>💲 X Cashtag Search Scraper</h1>
+        <div class="breadcrumb">
+          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#scrapers">Scrapers</a> › X Cashtag Search Scraper
+        </div>
+      </header>
+
+      <article class="article">
+        <span class="cat-badge">Scrapers</span>
+        <span class="source-badge">scripts</span>
+
+        <div class="meta-row">
+          
+          
+          <span>903 lines</span>
+          <span>by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></span>
+        </div>
+
+        <p>X Cashtag Search Scraper — a free, open-source browser console script for X/Twitter automation. No API keys or fees required.</p>
+
+        
+
+        <h2>How to Use</h2>
+        <ol class="usage-steps">
+        <li>Navigate to <a href="https://x.com" rel="noopener">x.com</a> and log in</li>
+        <li>Open DevTools Console (F12 or Cmd+Option+I)</li>
+        
+        <li>Paste the script below and press Enter</li>
+      </ol>
+        
+
+        
+        
+        
+
+        <section class="full-code">
+          <h2>Full Script</h2>
+          <p>Copy and paste this entire script into your browser DevTools console on <a href="https://x.com" rel="noopener">x.com</a>.</p>
+          <div class="code-block">
+            <button class="copy-btn" onclick="navigator.clipboard.writeText(this.nextElementSibling.querySelector('code').textContent).then(()=>{this.textContent='Copied!';setTimeout(()=>this.textContent='Copy Script',2000)})">Copy Script</button>
+            <pre><code>// Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
+/**
+ * X Cashtag Search Scraper — Browser Console Script
+ * 
+ * USAGE:
+ * 1. Go to x.com and search for a cashtag (e.g. &quot;$pump-sdk&quot;) in the search bar
+ * 2. Select the &quot;Latest&quot; tab for chronological results
+ * 3. Open DevTools (F12) → Console
+ * 4. Paste this entire script and press Enter
+ * 5. Use the floating control panel to manage scraping
+ *
+ * FEATURES:
+ * - Auto-scrolls and extracts all posts from cashtag search results
+ * - Optional date range filtering (start/end date)
+ * - Extracts replies for each post (click-through scraping)
+ * - Built-in sentiment analysis for case study research
+ * - Floating control panel: Pause, Resume, Stop, Export JSON, Export CSV, Download
+ * - Deduplication by post ID
+ * - Progress counter in real-time
+ *
+ * CONFIG (edit before pasting if needed):
+ */
+const SCRAPER_CONFIG = {
+  /** Set to filter posts ON or AFTER this date (inclusive). null = no limit */
+  startDate: null, // e.g. '2026-01-01' or new Date('2026-01-01')
+  /** Set to filter posts ON or BEFORE this date (inclusive). null = no limit */
+  endDate: null,   // e.g. '2026-03-09' or new Date('2026-03-09')
+  /** Scroll delay in ms between scroll steps (lower = faster, higher = safer) */
+  scrollDelay: 1500,
+  /** Max posts to collect (0 = unlimited) */
+  maxPosts: 0,
+  /** Also scrape replies for each post (slower but thorough) */
+  scrapeReplies: true,
+  /** Max replies to collect per post */
+  maxRepliesPerPost: 50,
+  /** Delay between opening each post for reply scraping (ms) */
+  replyDelay: 2000,
+};
+
+// ============================================================================
+// DO NOT EDIT BELOW — Script logic
+// ============================================================================
+
+(function XCashtagScraper() {
+  'use strict';
+
+  // ── State ──────────────────────────────────────────────────────────────────
+  const state = {
+    running: false,
+    paused: false,
+    posts: new Map(),       // id → post object
+    replies: new Map(),     // parentId → [reply objects]
+    scrollCount: 0,
+    phase: 'idle',         // idle | scrolling | scraping-replies | done
+    startDate: SCRAPER_CONFIG.startDate ? new Date(SCRAPER_CONFIG.startDate) : null,
+    endDate: SCRAPER_CONFIG.endDate ? new Date(SCRAPER_CONFIG.endDate) : null,
+    reachedEnd: false,
+    abortController: null,
+  };
+
+  // Normalise dates to start/end of day
+  if (state.startDate) state.startDate.setHours(0, 0, 0, 0);
+  if (state.endDate) state.endDate.setHours(23, 59, 59, 999);
+
+  // ── Sentiment helpers ──────────────────────────────────────────────────────
+  const BULLISH = [
+    'moon','bullish','pump','buy','long','rocket','ath','gains','profit',
+    'green','breakout','surge','accumulate','hodl','wagmi','send it','lfg',
+    'undervalued','gem','100x','alpha','bullrun','rally','huge','massive',
+    'explode','soar','🚀','🔥','💎','🙌'
+  ];
+  const BEARISH = [
+    'crash','bearish','dump','sell','short','rekt','scam','rug','loss','red',
+    'down','fear','dead','ngmi','panic','liquidated','ponzi','bubble','fraud',
+    'overvalued','collapse','plummet','tank','🐻','📉','💀'
+  ];
+
+  function scoreSentiment(text) {
+    if (!text) return { score: 0, label: 'neutral', confidence: 0 };
+    const lower = text.toLowerCase();
+    let bull = 0, bear = 0;
+    for (const w of BULLISH) if (lower.includes(w)) bull++;
+    for (const w of BEARISH) if (lower.includes(w)) bear++;
+    const total = bull + bear;
+    if (total === 0) return { score: 0, label: 'neutral', confidence: 0 };
+    const score = (bull - bear) / total; // -1 to 1
+    const label = score &gt; 0.2 ? 'bullish' : score &lt; -0.2 ? 'bearish' : 'neutral';
+    const confidence = Math.min(total / 5, 1);
+    return { score: +score.toFixed(3), label, confidence: +confidence.toFixed(2) };
+  }
+
+  function extractTickers(text) {
+    if (!text) return [];
+    const m = text.match(/\$[A-Za-z][A-Za-z0-9_-]{0,19}\b/g);
+    return m ? [...new Set(m)] : [];
+  }
+
+  // ── DOM Parsing ────────────────────────────────────────────────────────────
+  function parseRelativeTime(timeStr) {
+    if (!timeStr) return null;
+    // X shows absolute dates like &quot;Jan 5&quot; or &quot;Jan 5, 2026&quot;, or relative &quot;2h&quot;, &quot;3m&quot;
+    const absolute = Date.parse(timeStr);
+    if (!isNaN(absolute)) return new Date(absolute);
+    const now = Date.now();
+    const match = timeStr.match(/^(\d+)(s|m|h|d)$/);
+    if (match) {
+      const n = parseInt(match[1], 10);
+      const unit = { s: 1e3, m: 6e4, h: 36e5, d: 864e5 }[match[2]];
+      return new Date(now - n * unit);
+    }
+    return null;
+  }
+
+  function extractPostsFromDOM() {
+    const articles = document.querySelectorAll('article[data-testid=&quot;tweet&quot;]');
+    const newPosts = [];
+    for (const article of articles) {
+      try {
+        // Post ID from the permalink
+        const timeEl = article.querySelector('time');
+        const linkEl = timeEl ? timeEl.closest('a') : null;
+        const href = linkEl ? linkEl.getAttribute('href') : null;
+        if (!href) continue;
+        const idMatch = href.match(/\/status\/(\d+)/);
+        if (!idMatch) continue;
+        const id = idMatch[1];
+        if (state.posts.has(id)) continue;
+
+        // Timestamp
+        const datetime = timeEl ? timeEl.getAttribute('datetime') : null;
+        const postDate = datetime ? new Date(datetime) : parseRelativeTime(timeEl?.textContent?.trim());
+
+        // Date filtering
+        if (postDate) {
+          if (state.startDate &amp;&amp; postDate &lt; state.startDate) {
+            state.reachedEnd = true;
+            continue;
+          }
+          if (state.endDate &amp;&amp; postDate &gt; state.endDate) continue;
+        }
+
+        // Author
+        const userLinks = article.querySelectorAll('a[role=&quot;link&quot;]');
+        let username = '';
+        let displayName = '';
+        for (const ul of userLinks) {
+          const h = ul.getAttribute('href');
+          if (h &amp;&amp; h.match(/^\/[A-Za-z0-9_]+$/) &amp;&amp; !h.includes('/status/')) {
+            username = h.replace('/', '');
+            const nameSpan = ul.querySelector('span');
+            if (nameSpan) displayName = nameSpan.textContent?.trim() || '';
+            break;
+          }
+        }
+
+        // Text content
+        const textEl = article.querySelector('[data-testid=&quot;tweetText&quot;]');
+        const text = textEl ? textEl.textContent?.trim() : '';
+
+        // Engagement metrics
+        const getMetric = (testid) =&gt; {
+          const el = article.querySelector(`[data-testid=&quot;${testid}&quot;]`);
+          if (!el) return 0;
+          const raw = el.getAttribute('aria-label') || el.textContent || '0';
+          const nums = raw.match(/[\d,]+/);
+          return nums ? parseInt(nums[0].replace(/,/g, ''), 10) : 0;
+        };
+
+        const likes = getMetric('like');
+        const retweets = getMetric('retweet');
+        const replyCount = getMetric('reply');
+        const bookmarks = getMetric('bookmark');
+
+        // Views
+        const analyticsLink = article.querySelector('a[href*=&quot;/analytics&quot;]');
+        let views = 0;
+        if (analyticsLink) {
+          const viewText = analyticsLink.getAttribute('aria-label') || analyticsLink.textContent || '0';
+          const vn = viewText.match(/[\d,]+/);
+          views = vn ? parseInt(vn[0].replace(/,/g, ''), 10) : 0;
+        }
+
+        // Media
+        const hasImage = !!article.querySelector('[data-testid=&quot;tweetPhoto&quot;]');
+        const hasVideo = !!article.querySelector('[data-testid=&quot;videoPlayer&quot;]');
+
+        // Sentiment
+        const sentiment = scoreSentiment(text);
+        const tickers = extractTickers(text);
+
+        const post = {
+          id,
+          url: `https://x.com${href}`,
+          username,
+          displayName,
+          text,
+          timestamp: postDate ? postDate.toISOString() : null,
+          likes,
+          retweets,
+          replies: replyCount,
+          bookmarks,
+          views,
+          hasImage,
+          hasVideo,
+          tickers,
+          sentiment,
+          scrapedAt: new Date().toISOString(),
+        };
+
+        state.posts.set(id, post);
+        newPosts.push(post);
+      } catch (e) {
+        // Skip malformed articles
+      }
+    }
+    return newPosts;
+  }
+
+  // ── Reply Scraping ─────────────────────────────────────────────────────────
+  // Uses X's SPA router — click into thread view, scrape, press Back.
+  // This keeps the script alive (no full page reload).
+
+  function parseReplyArticle(article, parentId) {
+    try {
+      const timeEl = article.querySelector('time');
+      const linkEl = timeEl ? timeEl.closest('a') : null;
+      const href = linkEl ? linkEl.getAttribute('href') : null;
+      if (!href) return null;
+      const idMatch = href.match(/\/status\/(\d+)/);
+      if (!idMatch) return null;
+      const replyId = idMatch[1];
+      if (replyId === parentId) return null; // skip the parent post itself
+
+      const datetime = timeEl ? timeEl.getAttribute('datetime') : null;
+      const replyDate = datetime ? new Date(datetime) : null;
+
+      const userLinks = article.querySelectorAll('a[role=&quot;link&quot;]');
+      let username = '';
+      for (const ul of userLinks) {
+        const h = ul.getAttribute('href');
+        if (h &amp;&amp; h.match(/^\/[A-Za-z0-9_]+$/) &amp;&amp; !h.includes('/status/')) {
+          username = h.replace('/', '');
+          break;
+        }
+      }
+
+      const textEl = article.querySelector('[data-testid=&quot;tweetText&quot;]');
+      const text = textEl ? textEl.textContent?.trim() : '';
+      const sentiment = scoreSentiment(text);
+      const tickers = extractTickers(text);
+
+      const getMetric = (testid) =&gt; {
+        const el = article.querySelector(`[data-testid=&quot;${testid}&quot;]`);
+        if (!el) return 0;
+        const raw = el.getAttribute('aria-label') || el.textContent || '0';
+        const nums = raw.match(/[\d,]+/);
+        return nums ? parseInt(nums[0].replace(/,/g, ''), 10) : 0;
+      };
+
+      return {
+        id: replyId,
+        parentId,
+        url: `https://x.com${href}`,
+        username,
+        text,
+        timestamp: replyDate ? replyDate.toISOString() : null,
+        likes: getMetric('like'),
+        retweets: getMetric('retweet'),
+        replies: getMetric('reply'),
+        tickers,
+        sentiment,
+        scrapedAt: new Date().toISOString(),
+      };
+    } catch (e) {
+      return null;
+    }
+  }
+
+  async function scrapeRepliesForPost(post) {
+    if (!SCRAPER_CONFIG.scrapeReplies) return [];
+    const replies = [];
+    const seenIds = new Set();
+    
+    try {
+      // Click the post text/time area to navigate into thread view via SPA router
+      // Find the article for this post by matching its status link
+      const allArticles = document.querySelectorAll('article[data-testid=&quot;tweet&quot;]');
+      let targetArticle = null;
+      for (const a of allArticles) {
+        const link = a.querySelector(`a[href*=&quot;/status/${post.id}&quot;]`);
+        if (link) { targetArticle = a; break; }
+      }
+      if (!targetArticle) return [];
+
+      // Click the tweet text to enter thread view (SPA navigation, no reload)
+      const clickTarget = targetArticle.querySelector('[data-testid=&quot;tweetText&quot;]')
+                       || targetArticle.querySelector('time');
+      if (!clickTarget) return [];
+      clickTarget.click();
+
+      // Wait for thread view to load
+      await sleep(SCRAPER_CONFIG.replyDelay);
+
+      // Scroll through the thread to collect replies
+      let prevHeight = 0;
+      let scrollAttempts = 0;
+      const maxScrolls = Math.ceil(SCRAPER_CONFIG.maxRepliesPerPost / 5);
+
+      while (scrollAttempts &lt; maxScrolls &amp;&amp; replies.length &lt; SCRAPER_CONFIG.maxRepliesPerPost) {
+        if (state.paused) await waitForResume();
+        if (!state.running) break;
+
+        const threadArticles = document.querySelectorAll('article[data-testid=&quot;tweet&quot;]');
+        for (const article of threadArticles) {
+          if (replies.length &gt;= SCRAPER_CONFIG.maxRepliesPerPost) break;
+          const reply = parseReplyArticle(article, post.id);
+          if (reply &amp;&amp; !seenIds.has(reply.id)) {
+            seenIds.add(reply.id);
+            replies.push(reply);
+          }
+        }
+
+        window.scrollTo(0, document.body.scrollHeight);
+        await sleep(1200);
+
+        const newHeight = document.body.scrollHeight;
+        if (newHeight === prevHeight) break;
+        prevHeight = newHeight;
+        scrollAttempts++;
+      }
+
+      // Navigate back to search results (SPA back button)
+      window.history.back();
+      await sleep(SCRAPER_CONFIG.replyDelay);
+
+      // Wait for search results to re-render
+      let retries = 0;
+      while (retries &lt; 10) {
+        const searchInput = document.querySelector('input[data-testid=&quot;SearchBox_Search_Input&quot;]');
+        if (searchInput) break;
+        await sleep(500);
+        retries++;
+      }
+    } catch (e) {
+      console.warn(`[Scraper] Failed to scrape replies for ${post.id}:`, e.message);
+      // Try to go back if something went wrong
+      try { window.history.back(); } catch (_) {}
+      await sleep(SCRAPER_CONFIG.replyDelay);
+    }
+
+    return replies;
+  }
+
+  // ── Utilities ──────────────────────────────────────────────────────────────
+  function sleep(ms) {
+    return new Promise(resolve =&gt; {
+      const id = setTimeout(resolve, ms);
+      // Allow abort
+      if (state.abortController) {
+        state.abortController.signal.addEventListener('abort', () =&gt; {
+          clearTimeout(id);
+          resolve();
+        }, { once: true });
+      }
+    });
+  }
+
+  function waitForResume() {
+    return new Promise(resolve =&gt; {
+      const check = setInterval(() =&gt; {
+        if (!state.paused || !state.running) {
+          clearInterval(check);
+          resolve();
+        }
+      }, 300);
+    });
+  }
+
+  // ── Export helpers ─────────────────────────────────────────────────────────
+  function buildExportData() {
+    const posts = [...state.posts.values()].sort((a, b) =&gt;
+      (b.timestamp || '').localeCompare(a.timestamp || '')
+    );
+    const allReplies = [];
+    for (const [, reps] of state.replies) {
+      allReplies.push(...reps);
+    }
+    
+    // Aggregate sentiment
+    const sentiments = posts.map(p =&gt; p.sentiment.score);
+    const avgSentiment = sentiments.length
+      ? sentiments.reduce((a, b) =&gt; a + b, 0) / sentiments.length
+      : 0;
+
+    // Top tickers
+    const tickerCounts = {};
+    for (const p of posts) {
+      for (const t of p.tickers) {
+        tickerCounts[t] = (tickerCounts[t] || 0) + 1;
+      }
+    }
+    const topTickers = Object.entries(tickerCounts)
+      .sort((a, b) =&gt; b[1] - a[1])
+      .slice(0, 20)
+      .map(([ticker, count]) =&gt; ({ ticker, count }));
+
+    return {
+      meta: {
+        query: document.querySelector('input[data-testid=&quot;SearchBox_Search_Input&quot;]')?.value || 'unknown',
+        scrapedAt: new Date().toISOString(),
+        totalPosts: posts.length,
+        totalReplies: allReplies.length,
+        dateRange: {
+          start: state.startDate ? state.startDate.toISOString() : null,
+          end: state.endDate ? state.endDate.toISOString() : null,
+        },
+        aggregateSentiment: {
+          score: +avgSentiment.toFixed(3),
+          label: avgSentiment &gt; 0.1 ? 'bullish' : avgSentiment &lt; -0.1 ? 'bearish' : 'neutral',
+          distribution: {
+            bullish: posts.filter(p =&gt; p.sentiment.label === 'bullish').length,
+            neutral: posts.filter(p =&gt; p.sentiment.label === 'neutral').length,
+            bearish: posts.filter(p =&gt; p.sentiment.label === 'bearish').length,
+          },
+        },
+        topTickers,
+      },
+      posts,
+      replies: allReplies,
+    };
+  }
+
+  function downloadJSON() {
+    const data = buildExportData();
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    const query = data.meta.query.replace(/[^a-zA-Z0-9_-]/g, '_');
+    a.download = `x-cashtag-${query}-${Date.now()}.json`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    log(`Exported ${data.meta.totalPosts} posts + ${data.meta.totalReplies} replies as JSON`);
+  }
+
+  function downloadCSV() {
+    const data = buildExportData();
+    const rows = [
+      ['type','id','parentId','url','username','text','timestamp','likes','retweets','replies','bookmarks','views','tickers','sentiment_score','sentiment_label'].join(',')
+    ];
+    
+    const escape = (s) =&gt; `&quot;${String(s || '').replace(/&quot;/g, '&quot;&quot;')}&quot;`;
+    
+    for (const p of data.posts) {
+      rows.push([
+        'post', p.id, '', escape(p.url), escape(p.username), escape(p.text),
+        p.timestamp || '', p.likes, p.retweets, p.replies, p.bookmarks || 0, p.views,
+        escape(p.tickers.join(' ')), p.sentiment.score, p.sentiment.label
+      ].join(','));
+    }
+    for (const r of data.replies) {
+      rows.push([
+        'reply', r.id, r.parentId, escape(r.url), escape(r.username), escape(r.text),
+        r.timestamp || '', r.likes, r.retweets, r.replies, '', '',
+        escape(r.tickers.join(' ')), r.sentiment.score, r.sentiment.label
+      ].join(','));
+    }
+
+    const blob = new Blob([rows.join('\n')], { type: 'text/csv' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    const query = data.meta.query.replace(/[^a-zA-Z0-9_-]/g, '_');
+    a.download = `x-cashtag-${query}-${Date.now()}.csv`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    log(`Exported ${data.meta.totalPosts} posts + ${data.meta.totalReplies} replies as CSV`);
+  }
+
+  // ── Logging ────────────────────────────────────────────────────────────────
+  function log(msg) {
+    console.log(`%c[X-Scraper] ${msg}`, 'color: #1d9bf0; font-weight: bold;');
+    updatePanel();
+  }
+
+  // ── Control Panel UI ──────────────────────────────────────────────────────
+  let panelEl = null;
+
+  function createPanel() {
+    if (panelEl) panelEl.remove();
+
+    panelEl = document.createElement('div');
+    panelEl.id = 'x-scraper-panel';
+    panelEl.innerHTML = `
+      &lt;style&gt;
+        #x-scraper-panel {
+          position: fixed;
+          top: 12px;
+          right: 12px;
+          z-index: 999999;
+          background: #15202b;
+          border: 1px solid #38444d;
+          border-radius: 16px;
+          padding: 16px;
+          width: 320px;
+          font-family: -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, Roboto, sans-serif;
+          color: #e7e9ea;
+          box-shadow: 0 4px 24px rgba(0,0,0,0.5);
+          cursor: move;
+          user-select: none;
+        }
+        #x-scraper-panel * { box-sizing: border-box; }
+        #x-scraper-panel h3 {
+          margin: 0 0 8px 0;
+          font-size: 15px;
+          color: #1d9bf0;
+          display: flex;
+          align-items: center;
+          gap: 6px;
+        }
+        #x-scraper-panel .stats {
+          font-size: 13px;
+          color: #8899a6;
+          margin-bottom: 10px;
+          line-height: 1.6;
+        }
+        #x-scraper-panel .stats b { color: #e7e9ea; }
+        #x-scraper-panel .btn-row {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 6px;
+          margin-bottom: 8px;
+        }
+        #x-scraper-panel button {
+          flex: 1 1 auto;
+          min-width: 70px;
+          padding: 7px 10px;
+          border: 1px solid #38444d;
+          border-radius: 9999px;
+          background: #1d2935;
+          color: #e7e9ea;
+          font-size: 12px;
+          font-weight: 600;
+          cursor: pointer;
+          transition: background 0.15s;
+        }
+        #x-scraper-panel button:hover { background: #22303c; }
+        #x-scraper-panel button.primary { 
+          background: #1d9bf0; 
+          border-color: #1d9bf0; 
+          color: #fff; 
+        }
+        #x-scraper-panel button.primary:hover { background: #1a8cd8; }
+        #x-scraper-panel button.danger { 
+          background: #67070f; 
+          border-color: #67070f; 
+          color: #fff; 
+        }
+        #x-scraper-panel button.danger:hover { background: #8b1a1a; }
+        #x-scraper-panel button:disabled {
+          opacity: 0.4;
+          cursor: not-allowed;
+        }
+        #x-scraper-panel .date-row {
+          display: flex;
+          gap: 6px;
+          margin-bottom: 8px;
+        }
+        #x-scraper-panel .date-row label {
+          font-size: 11px;
+          color: #8899a6;
+          display: block;
+          margin-bottom: 2px;
+        }
+        #x-scraper-panel .date-row input {
+          width: 100%;
+          padding: 5px 8px;
+          border: 1px solid #38444d;
+          border-radius: 8px;
+          background: #1d2935;
+          color: #e7e9ea;
+          font-size: 12px;
+        }
+        #x-scraper-panel .log-area {
+          max-height: 80px;
+          overflow-y: auto;
+          font-size: 11px;
+          color: #8899a6;
+          border-top: 1px solid #38444d;
+          padding-top: 6px;
+          margin-top: 6px;
+        }
+        #x-scraper-panel .sentiment-bar {
+          height: 6px;
+          border-radius: 3px;
+          background: #38444d;
+          overflow: hidden;
+          margin-top: 4px;
+        }
+        #x-scraper-panel .sentiment-fill {
+          height: 100%;
+          border-radius: 3px;
+          transition: width 0.3s;
+        }
+        #x-scraper-panel .minimize-btn {
+          position: absolute;
+          top: 8px;
+          right: 12px;
+          background: none;
+          border: none;
+          color: #8899a6;
+          font-size: 16px;
+          cursor: pointer;
+          min-width: unset;
+          padding: 2px 6px;
+          flex: unset;
+        }
+      &lt;/style&gt;
+      &lt;button class=&quot;minimize-btn&quot; id=&quot;xsp-minimize&quot;&gt;−&lt;/button&gt;
+      &lt;h3&gt;🔍 X Cashtag Scraper&lt;/h3&gt;
+      &lt;div class=&quot;date-row&quot;&gt;
+        &lt;div style=&quot;flex:1&quot;&gt;
+          &lt;label&gt;Start Date&lt;/label&gt;
+          &lt;input type=&quot;date&quot; id=&quot;xsp-start-date&quot; /&gt;
+        &lt;/div&gt;
+        &lt;div style=&quot;flex:1&quot;&gt;
+          &lt;label&gt;End Date&lt;/label&gt;
+          &lt;input type=&quot;date&quot; id=&quot;xsp-end-date&quot; /&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+      &lt;div class=&quot;stats&quot; id=&quot;xsp-stats&quot;&gt;
+        Status: &lt;b&gt;Ready&lt;/b&gt;&lt;br&gt;
+        Posts: &lt;b&gt;0&lt;/b&gt; &amp;nbsp;|&amp;nbsp; Replies: &lt;b&gt;0&lt;/b&gt;&lt;br&gt;
+        Scrolls: &lt;b&gt;0&lt;/b&gt;
+      &lt;/div&gt;
+      &lt;div id=&quot;xsp-sentiment-section&quot; style=&quot;margin-bottom:8px;display:none&quot;&gt;
+        &lt;div style=&quot;font-size:12px;color:#8899a6;&quot;&gt;
+          Sentiment: &lt;b id=&quot;xsp-sentiment-label&quot;&gt;neutral&lt;/b&gt; 
+          (&lt;span id=&quot;xsp-sentiment-score&quot;&gt;0.000&lt;/span&gt;)
+        &lt;/div&gt;
+        &lt;div class=&quot;sentiment-bar&quot;&gt;
+          &lt;div class=&quot;sentiment-fill&quot; id=&quot;xsp-sentiment-fill&quot; 
+               style=&quot;width:50%;background:#8899a6;&quot;&gt;&lt;/div&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+      &lt;div class=&quot;btn-row&quot;&gt;
+        &lt;button class=&quot;primary&quot; id=&quot;xsp-start&quot;&gt;▶ Start&lt;/button&gt;
+        &lt;button id=&quot;xsp-pause&quot; disabled&gt;⏸ Pause&lt;/button&gt;
+        &lt;button class=&quot;danger&quot; id=&quot;xsp-stop&quot; disabled&gt;⏹ Stop&lt;/button&gt;
+      &lt;/div&gt;
+      &lt;div class=&quot;btn-row&quot;&gt;
+        &lt;button id=&quot;xsp-export-json&quot; disabled&gt;📋 JSON&lt;/button&gt;
+        &lt;button id=&quot;xsp-export-csv&quot; disabled&gt;📊 CSV&lt;/button&gt;
+        &lt;button id=&quot;xsp-download&quot; disabled&gt;⬇ Download&lt;/button&gt;
+      &lt;/div&gt;
+      &lt;div class=&quot;log-area&quot; id=&quot;xsp-log&quot;&gt;&lt;/div&gt;
+    `;
+    document.body.appendChild(panelEl);
+
+    // Draggable
+    let isDragging = false, startX, startY, origX, origY;
+    panelEl.addEventListener('mousedown', (e) =&gt; {
+      if (e.target.tagName === 'BUTTON' || e.target.tagName === 'INPUT') return;
+      isDragging = true;
+      startX = e.clientX; startY = e.clientY;
+      const rect = panelEl.getBoundingClientRect();
+      origX = rect.left; origY = rect.top;
+    });
+    document.addEventListener('mousemove', (e) =&gt; {
+      if (!isDragging) return;
+      panelEl.style.left = (origX + e.clientX - startX) + 'px';
+      panelEl.style.top = (origY + e.clientY - startY) + 'px';
+      panelEl.style.right = 'auto';
+    });
+    document.addEventListener('mouseup', () =&gt; { isDragging = false; });
+
+    // Minimize/expand
+    let minimized = false;
+    document.getElementById('xsp-minimize').addEventListener('click', () =&gt; {
+      minimized = !minimized;
+      const els = panelEl.querySelectorAll('.stats,.btn-row,.date-row,.log-area,#xsp-sentiment-section');
+      els.forEach(el =&gt; el.style.display = minimized ? 'none' : '');
+      document.getElementById('xsp-minimize').textContent = minimized ? '+' : '−';
+    });
+
+    // Date inputs
+    const startInput = document.getElementById('xsp-start-date');
+    const endInput = document.getElementById('xsp-end-date');
+    if (state.startDate) startInput.value = state.startDate.toISOString().slice(0, 10);
+    if (state.endDate) endInput.value = state.endDate.toISOString().slice(0, 10);
+    startInput.addEventListener('change', () =&gt; {
+      state.startDate = startInput.value ? new Date(startInput.value + 'T00:00:00') : null;
+    });
+    endInput.addEventListener('change', () =&gt; {
+      state.endDate = endInput.value ? new Date(endInput.value + 'T23:59:59') : null;
+    });
+
+    // Button handlers
+    document.getElementById('xsp-start').addEventListener('click', startScraping);
+    document.getElementById('xsp-pause').addEventListener('click', togglePause);
+    document.getElementById('xsp-stop').addEventListener('click', stopScraping);
+    document.getElementById('xsp-export-json').addEventListener('click', downloadJSON);
+    document.getElementById('xsp-export-csv').addEventListener('click', downloadCSV);
+    document.getElementById('xsp-download').addEventListener('click', () =&gt; {
+      downloadJSON();
+      downloadCSV();
+    });
+  }
+
+  function panelLog(msg) {
+    const logEl = document.getElementById('xsp-log');
+    if (!logEl) return;
+    const line = document.createElement('div');
+    line.textContent = `[${new Date().toLocaleTimeString()}] ${msg}`;
+    logEl.prepend(line);
+    // Keep last 50 log lines
+    while (logEl.children.length &gt; 50) logEl.removeChild(logEl.lastChild);
+  }
+
+  function updatePanel() {
+    const statsEl = document.getElementById('xsp-stats');
+    if (!statsEl) return;
+
+    const totalReplies = [...state.replies.values()].reduce((s, r) =&gt; s + r.length, 0);
+    const statusText = state.phase === 'idle' ? 'Ready' 
+      : state.paused ? 'Paused'
+      : state.phase === 'scrolling' ? 'Scrolling &amp; Collecting...'
+      : state.phase === 'scraping-replies' ? 'Scraping Replies...'
+      : 'Done';
+
+    statsEl.innerHTML = `
+      Status: &lt;b&gt;${statusText}&lt;/b&gt;&lt;br&gt;
+      Posts: &lt;b&gt;${state.posts.size}&lt;/b&gt; &amp;nbsp;|&amp;nbsp; Replies: &lt;b&gt;${totalReplies}&lt;/b&gt;&lt;br&gt;
+      Scrolls: &lt;b&gt;${state.scrollCount}&lt;/b&gt;
+    `;
+
+    // Sentiment bar
+    const sentSection = document.getElementById('xsp-sentiment-section');
+    if (state.posts.size &gt; 0 &amp;&amp; sentSection) {
+      sentSection.style.display = '';
+      const posts = [...state.posts.values()];
+      const avg = posts.reduce((s, p) =&gt; s + p.sentiment.score, 0) / posts.length;
+      const pct = ((avg + 1) / 2 * 100).toFixed(0);
+      const color = avg &gt; 0.1 ? '#00ba7c' : avg &lt; -0.1 ? '#f4212e' : '#8899a6';
+      const label = avg &gt; 0.1 ? 'bullish' : avg &lt; -0.1 ? 'bearish' : 'neutral';
+      document.getElementById('xsp-sentiment-label').textContent = label;
+      document.getElementById('xsp-sentiment-label').style.color = color;
+      document.getElementById('xsp-sentiment-score').textContent = avg.toFixed(3);
+      const fill = document.getElementById('xsp-sentiment-fill');
+      fill.style.width = pct + '%';
+      fill.style.background = color;
+    }
+
+    // Button states
+    const isActive = state.running;
+    const hasData = state.posts.size &gt; 0;
+    const setDisabled = (id, d) =&gt; { const el = document.getElementById(id); if (el) el.disabled = d; };
+    setDisabled('xsp-start', isActive);
+    setDisabled('xsp-pause', !isActive);
+    setDisabled('xsp-stop', !isActive &amp;&amp; !hasData);
+    setDisabled('xsp-export-json', !hasData);
+    setDisabled('xsp-export-csv', !hasData);
+    setDisabled('xsp-download', !hasData);
+
+    // Update pause button text
+    const pauseBtn = document.getElementById('xsp-pause');
+    if (pauseBtn) {
+      pauseBtn.textContent = state.paused ? '▶ Resume' : '⏸ Pause';
+    }
+  }
+
+  // ── Main Scraping Loop ─────────────────────────────────────────────────────
+  async function startScraping() {
+    if (state.running) return;
+    state.running = true;
+    state.paused = false;
+    state.phase = 'scrolling';
+    state.reachedEnd = false;
+    state.abortController = new AbortController();
+
+    log('Scraping started — scrolling to collect posts...');
+    panelLog('Started scraping');
+    updatePanel();
+
+    // Phase 1: Scroll and collect posts
+    let noNewPostsCount = 0;
+    const maxNoNew = 10; // stop after 10 scrolls with no new posts
+
+    while (state.running &amp;&amp; !state.reachedEnd) {
+      if (state.paused) {
+        await waitForResume();
+        if (!state.running) break;
+      }
+
+      const prevCount = state.posts.size;
+      const newPosts = extractPostsFromDOM();
+
+      if (newPosts.length &gt; 0) {
+        panelLog(`+${newPosts.length} posts (total: ${state.posts.size})`);
+        noNewPostsCount = 0;
+      } else {
+        noNewPostsCount++;
+        if (noNewPostsCount &gt;= maxNoNew) {
+          log(`No new posts after ${maxNoNew} scrolls, finishing scroll phase`);
+          panelLog('Reached end of results');
+          break;
+        }
+      }
+
+      // Check max posts limit
+      if (SCRAPER_CONFIG.maxPosts &gt; 0 &amp;&amp; state.posts.size &gt;= SCRAPER_CONFIG.maxPosts) {
+        log(`Reached max posts limit (${SCRAPER_CONFIG.maxPosts})`);
+        panelLog(`Max limit: ${SCRAPER_CONFIG.maxPosts}`);
+        break;
+      }
+
+      // Scroll down
+      window.scrollTo(0, document.body.scrollHeight);
+      state.scrollCount++;
+      updatePanel();
+      await sleep(SCRAPER_CONFIG.scrollDelay);
+    }
+
+    if (!state.running) {
+      state.phase = 'done';
+      updatePanel();
+      return;
+    }
+
+    // Phase 2: Scrape replies (optional)
+    if (SCRAPER_CONFIG.scrapeReplies &amp;&amp; state.running) {
+      state.phase = 'scraping-replies';
+      updatePanel();
+      log(`Scraping replies for ${state.posts.size} posts...`);
+      panelLog(`Starting reply scraping for ${state.posts.size} posts`);
+
+      const postsArray = [...state.posts.values()];
+      let i = 0;
+      for (const post of postsArray) {
+        if (!state.running) break;
+        if (state.paused) {
+          await waitForResume();
+          if (!state.running) break;
+        }
+
+        i++;
+        if (post.replies === 0) continue; // skip posts with no replies
+
+        panelLog(`Replies ${i}/${postsArray.length}: @${post.username}`);
+        const replies = await scrapeRepliesForPost(post);
+        if (replies.length &gt; 0) {
+          state.replies.set(post.id, replies);
+          panelLog(`Got ${replies.length} replies for post ${post.id}`);
+        }
+        updatePanel();
+      }
+    }
+
+    // Done
+    state.running = false;
+    state.phase = 'done';
+    const totalReplies = [...state.replies.values()].reduce((s, r) =&gt; s + r.length, 0);
+    log(`✅ Scraping complete! ${state.posts.size} posts, ${totalReplies} replies`);
+    panelLog('Scraping complete!');
+    updatePanel();
+  }
+
+  function togglePause() {
+    if (!state.running) return;
+    state.paused = !state.paused;
+    log(state.paused ? 'Paused' : 'Resumed');
+    panelLog(state.paused ? 'Paused' : 'Resumed');
+    updatePanel();
+  }
+
+  function stopScraping() {
+    state.running = false;
+    state.paused = false;
+    if (state.abortController) state.abortController.abort();
+    state.phase = 'done';
+    log('Stopped');
+    panelLog('Stopped by user');
+    updatePanel();
+  }
+
+  // ── Initialize ─────────────────────────────────────────────────────────────
+  // Clean up any previous instance 
+  const existingPanel = document.getElementById('x-scraper-panel');
+  if (existingPanel) existingPanel.remove();
+
+  createPanel();
+  log('Panel ready. Set date filters if needed then click Start.');
+  panelLog('Scraper loaded');
+  console.log(
+    '%c[X-Scraper] Ready! Use the floating panel in the top-right corner.',
+    'color: #1d9bf0; font-size: 14px; font-weight: bold;'
+  );
+})();
+</code></pre>
+          </div>
+        </section>
+
+        <div class="cta-box">
+          <h3>⚡ More XActions Scripts</h3>
+          <p>Browse 300+ free browser scripts for X/Twitter automation. No API keys, no fees.</p>
+          <a href="/scripts">Browse All Scripts</a>
+        </div>
+      </article>
+    </main>
+
+    <aside class="sidebar-right">
+      <div class="sidebar-card">
+        <h3>💲 Scrapers</h3>
+        <a href="/scripts/scrape-bookmarks">🔖 Bookmarks Scraper</a>
+<a href="/scripts/scrape-dms">✉️ DM Scraper</a>
+<a href="/scripts/export-to-csv">📄 Export to CSV Utility</a>
+<a href="/scripts/scrape-followers">👥 Followers Scraper</a>
+<a href="/scripts/scrape-following">👥 Following Scraper</a>
+<a href="/scripts/scrape-hashtag">#️⃣ Hashtag Scraper</a>
+<a href="/scripts/scrape-likers">❤️ Likers Scraper</a>
+<a href="/scripts/scrape-likes">❤️ Likes Scraper</a>
+<a href="/scripts/link-scraper">🔗 Link Scraper</a>
+<a href="/scripts/scrape-list">📝 List Members Scraper</a>
+      </div>
+      <div class="sidebar-card">
+        <h3>🔗 Quick Links</h3>
+        <a href="/scripts">All Scripts</a>
+        <a href="/features">Features</a>
+        <a href="/docs">Documentation</a>
+        <a href="/tutorials">Tutorials</a>
+        <a href="/mcp">MCP Server</a>
+        <a href="https://github.com/nirholas/XActions" rel="noopener">GitHub</a>
+      </div>
+    </aside>
+  </div>
+</body>
+</html>

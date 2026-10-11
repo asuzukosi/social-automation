@@ -1,0 +1,302 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 520" width="720" height="520">
+  <defs>
+    <style>
+      text { font-family: 'SF Mono', 'Cascadia Code', 'Fira Code', 'JetBrains Mono', Consolas, monospace; font-size: 12.5px; }
+      
+      /* Chrome DevTools dark theme */
+      .bg { fill: #1e1e1e; }
+      .toolbar { fill: #252526; }
+      .toolbar-border { stroke: #3c3c3c; stroke-width: 1; }
+      .tab-active { fill: #1e1e1e; }
+      .tab-inactive { fill: #2d2d2d; }
+      .tab-text { fill: #969696; font-size: 11px; }
+      .tab-text-active { fill: #e8e8e8; font-size: 11px; }
+      .dot-red { fill: #f44; }
+      .dot-yellow { fill: #fa3; }
+      .dot-green { fill: #5b5; }
+      .url-bar { fill: #333; rx: 4; ry: 4; }
+      .url-text { fill: #8ab4f8; font-size: 11px; }
+      .filter-bar { fill: #252526; }
+      .filter-text { fill: #888; font-size: 11px; }
+      .filter-border { stroke: #3c3c3c; stroke-width: 0.5; }
+      
+      /* Console prompt */
+      .prompt { fill: #8ab4f8; }
+      .console-text { fill: #d4d4d4; }
+      .log-text { fill: #d4d4d4; }
+      .warn-text { fill: #dcdcaa; }
+      .success-text { fill: #6a9955; }
+      .error-text { fill: #f44747; }
+      .info-text { fill: #9cdcfe; }
+      .emoji { font-size: 12px; }
+      .dim { fill: #666; }
+      .highlight { fill: #ce9178; }
+      .number { fill: #b5cea8; }
+      .bold { font-weight: bold; }
+      .white { fill: #e8e8e8; }
+      .yellow { fill: #dcdcaa; }
+      .green { fill: #6a9955; }
+      .cyan { fill: #9cdcfe; }
+      .orange { fill: #ce9178; }
+      .blue { fill: #569cd6; }
+      .box-char { fill: #569cd6; }
+      
+      /* Row hover stripe */
+      .row-even { fill: #1e1e1e; }
+      .row-odd { fill: #222; }
+      
+      /* Phase animations */
+      .p0 { opacity: 0; animation: show 0.01s forwards; animation-delay: 0.3s; }
+      .p1 { opacity: 0; animation: show 0.01s forwards; animation-delay: 0.8s; }
+      .p2 { opacity: 0; animation: show 0.01s forwards; animation-delay: 1.0s; }
+      .p3 { opacity: 0; animation: show 0.01s forwards; animation-delay: 1.2s; }
+      .p4 { opacity: 0; animation: show 0.01s forwards; animation-delay: 1.5s; }
+      .p5 { opacity: 0; animation: show 0.01s forwards; animation-delay: 1.8s; }
+      .p6 { opacity: 0; animation: show 0.01s forwards; animation-delay: 2.1s; }
+      .p7 { opacity: 0; animation: show 0.01s forwards; animation-delay: 2.4s; }
+      .p8 { opacity: 0; animation: show 0.01s forwards; animation-delay: 2.7s; }
+      .p9 { opacity: 0; animation: show 0.01s forwards; animation-delay: 3.0s; }
+      .p10 { opacity: 0; animation: show 0.01s forwards; animation-delay: 3.4s; }
+      .p11 { opacity: 0; animation: show 0.01s forwards; animation-delay: 3.8s; }
+      .p12 { opacity: 0; animation: show 0.01s forwards; animation-delay: 4.2s; }
+      .p13 { opacity: 0; animation: show 0.01s forwards; animation-delay: 4.6s; }
+      .p14 { opacity: 0; animation: show 0.01s forwards; animation-delay: 5.0s; }
+      .p15 { opacity: 0; animation: show 0.01s forwards; animation-delay: 5.2s; }
+      .p16 { opacity: 0; animation: show 0.01s forwards; animation-delay: 5.4s; }
+      .p17 { opacity: 0; animation: show 0.01s forwards; animation-delay: 5.6s; }
+      .p18 { opacity: 0; animation: show 0.01s forwards; animation-delay: 5.8s; }
+      .p19 { opacity: 0; animation: show 0.01s forwards; animation-delay: 6.0s; }
+      .p20 { opacity: 0; animation: show 0.01s forwards; animation-delay: 6.2s; }
+      .p21 { opacity: 0; animation: show 0.01s forwards; animation-delay: 6.5s; }
+      .p22 { opacity: 0; animation: show 0.01s forwards; animation-delay: 7.0s; }
+      
+      .cursor { opacity: 1; animation: blink 1s step-end infinite; }
+
+      @keyframes show { to { opacity: 1; } }
+      @keyframes blink { 0%,100% { opacity: 1; } 50% { opacity: 0; } }
+      @keyframes progress { from { width: 0; } to { width: 200; } }
+    </style>
+  </defs>
+
+  <!-- Background -->
+  <rect class="bg" width="720" height="520" rx="10"/>
+
+  <!-- ══ Browser chrome ══ -->
+  <rect class="toolbar" x="0" y="0" width="720" height="36" rx="10"/>
+  <rect class="toolbar" x="0" y="10" width="720" height="26"/>
+  <circle class="dot-red" cx="18" cy="14" r="5.5"/>
+  <circle class="dot-yellow" cx="36" cy="14" r="5.5"/>
+  <circle class="dot-green" cx="54" cy="14" r="5.5"/>
+  <rect class="url-bar" x="76" y="6" width="570" height="20" rx="4"/>
+  <text class="url-text" x="86" y="20">x.com/nichxbt/following</text>
+
+  <!-- DevTools tab bar -->
+  <rect class="filter-bar" x="0" y="36" width="720" height="26"/>
+  <line class="toolbar-border" x1="0" y1="36" x2="720" y2="36"/>
+  <rect class="tab-inactive" x="0" y="37" width="70" height="24"/>
+  <text class="tab-text" x="14" y="53">Elements</text>
+  <rect class="tab-active" x="70" y="37" width="64" height="24"/>
+  <text class="tab-text-active" x="82" y="53">Console</text>
+  <rect class="tab-inactive" x="134" y="37" width="68" height="24"/>
+  <text class="tab-text" x="144" y="53">Network</text>
+  <rect class="tab-inactive" x="202" y="37" width="72" height="24"/>
+  <text class="tab-text" x="212" y="53">Sources</text>
+  <line class="toolbar-border" x1="0" y1="61" x2="720" y2="61"/>
+
+  <!-- Filter row -->
+  <rect class="filter-bar" x="0" y="62" width="720" height="22"/>
+  <rect fill="#333" x="8" y="65" width="160" height="16" rx="3"/>
+  <text class="filter-text" x="16" y="77">Filter</text>
+  <line class="toolbar-border" x1="0" y1="84" x2="720" y2="84"/>
+
+  <!-- ══ Console output area ══ -->
+
+  <!-- Row 1: box top -->
+  <g class="p0">
+    <rect class="row-odd" x="0" y="85" width="720" height="18"/>
+    <text x="14" y="98">
+      <tspan class="box-char">╔════════════════════════════════════════════════════════════════╗</tspan>
+    </text>
+  </g>
+
+  <!-- Row 2: title -->
+  <g class="p1">
+    <rect class="row-even" x="0" y="103" width="720" height="18"/>
+    <text x="14" y="116">
+      <tspan class="box-char">║</tspan><tspan class="white">  🔙 UNFOLLOW NON-FOLLOWERS                                    </tspan><tspan class="box-char">║</tspan>
+    </text>
+  </g>
+
+  <!-- Row 3: author -->
+  <g class="p2">
+    <rect class="row-odd" x="0" y="121" width="720" height="18"/>
+    <text x="14" y="134">
+      <tspan class="box-char">║</tspan><tspan class="dim">  by nichxbt — v2.0                                            </tspan><tspan class="box-char">║</tspan>
+    </text>
+  </g>
+
+  <!-- Row 4: box bottom -->
+  <g class="p3">
+    <rect class="row-even" x="0" y="139" width="720" height="18"/>
+    <text x="14" y="152">
+      <tspan class="box-char">╚════════════════════════════════════════════════════════════════╝</tspan>
+    </text>
+  </g>
+
+  <!-- Row 5: blank -->
+  <g class="p4">
+    <rect class="row-odd" x="0" y="157" width="720" height="18"/>
+    <text x="14" y="170">
+      <tspan class="white">⚙️ Config:</tspan>
+    </text>
+  </g>
+
+  <!-- Row 6: max unfollows -->
+  <g class="p5">
+    <rect class="row-even" x="0" y="175" width="720" height="18"/>
+    <text x="14" y="188">
+      <tspan class="dim">   Max unfollows:  </tspan><tspan class="number">unlimited</tspan>
+    </text>
+  </g>
+
+  <!-- Row 7: whitelist -->
+  <g class="p6">
+    <rect class="row-odd" x="0" y="193" width="720" height="18"/>
+    <text x="14" y="206">
+      <tspan class="dim">   Whitelist:      </tspan><tspan class="cyan">@elonmusk, @nichxbt_dev</tspan>
+    </text>
+  </g>
+
+  <!-- Row 8: dry run -->
+  <g class="p7">
+    <rect class="row-even" x="0" y="211" width="720" height="18"/>
+    <text x="14" y="224">
+      <tspan class="dim">   Dry run:        </tspan><tspan class="orange">NO — LIVE MODE</tspan>
+    </text>
+  </g>
+
+  <!-- Row 9: blank + scanning -->
+  <g class="p8">
+    <rect class="row-odd" x="0" y="229" width="720" height="18"/>
+  </g>
+
+  <!-- Row 10: unfollowed line 1 -->
+  <g class="p9">
+    <rect class="row-even" x="0" y="247" width="720" height="18"/>
+    <text x="14" y="260">
+      <tspan class="white">   🔙 Unfollowed: </tspan><tspan class="cyan">@crypto_spam42</tspan><tspan class="dim">  [1 total | 12/min | scanned: 24]</tspan>
+    </text>
+  </g>
+
+  <!-- Row 11: unfollowed line 2 -->
+  <g class="p10">
+    <rect class="row-odd" x="0" y="265" width="720" height="18"/>
+    <text x="14" y="278">
+      <tspan class="white">   🔙 Unfollowed: </tspan><tspan class="cyan">@bot_network_99</tspan><tspan class="dim">  [2 total | 14/min | scanned: 51]</tspan>
+    </text>
+  </g>
+
+  <!-- Row 12: whitelisted -->
+  <g class="p11">
+    <rect class="row-even" x="0" y="283" width="720" height="18"/>
+    <text x="14" y="296">
+      <tspan class="white">   🛡️ Whitelisted: </tspan><tspan class="yellow">@elonmusk</tspan>
+    </text>
+  </g>
+
+  <!-- Row 13: unfollowed line 3 -->
+  <g class="p12">
+    <rect class="row-odd" x="0" y="301" width="720" height="18"/>
+    <text x="14" y="314">
+      <tspan class="white">   🔙 Unfollowed: </tspan><tspan class="cyan">@inactive_2019x</tspan><tspan class="dim">  [3 total | 13/min | scanned: 89]</tspan>
+    </text>
+  </g>
+
+  <!-- Row 14: more dots -->
+  <g class="p13">
+    <rect class="row-even" x="0" y="319" width="720" height="18"/>
+    <text x="14" y="332">
+      <tspan class="dim">   …scanning 1,247 accounts</tspan>
+    </text>
+    <!-- mini progress bar -->
+    <rect x="220" y="325" width="200" height="4" rx="2" fill="#333"/>
+    <rect x="220" y="325" height="4" rx="2" fill="#569cd6">
+      <animate attributeName="width" from="0" to="200" dur="1.8s" begin="4.6s" fill="freeze"/>
+    </rect>
+  </g>
+
+  <!-- Row 15: results box top -->
+  <g class="p14">
+    <rect class="row-odd" x="0" y="337" width="720" height="18"/>
+    <text x="14" y="350">
+      <tspan class="box-char">╔══════════════════════════════════════════════════════╗</tspan>
+    </text>
+  </g>
+
+  <!-- Row 16: results title -->
+  <g class="p15">
+    <rect class="row-even" x="0" y="355" width="720" height="18"/>
+    <text x="14" y="368">
+      <tspan class="box-char">║</tspan><tspan class="white">  📊 RESULTS                                         </tspan><tspan class="box-char">║</tspan>
+    </text>
+  </g>
+
+  <!-- Row 17: results divider -->
+  <g class="p16">
+    <rect class="row-odd" x="0" y="373" width="720" height="18"/>
+    <text x="14" y="386">
+      <tspan class="box-char">╠══════════════════════════════════════════════════════╣</tspan>
+    </text>
+  </g>
+
+  <!-- Row 18: scanned -->
+  <g class="p17">
+    <rect class="row-even" x="0" y="391" width="720" height="18"/>
+    <text x="14" y="404">
+      <tspan class="box-char">║</tspan><tspan class="dim">  Scanned:          </tspan><tspan class="number">1,247                              </tspan><tspan class="box-char">║</tspan>
+    </text>
+  </g>
+
+  <!-- Row 19: unfollowed -->
+  <g class="p18">
+    <rect class="row-odd" x="0" y="409" width="720" height="18"/>
+    <text x="14" y="422">
+      <tspan class="box-char">║</tspan><tspan class="dim">  Unfollowed:       </tspan><tspan class="green bold">312                                </tspan><tspan class="box-char">║</tspan>
+    </text>
+  </g>
+
+  <!-- Row 20: follows back -->
+  <g class="p19">
+    <rect class="row-even" x="0" y="427" width="720" height="18"/>
+    <text x="14" y="440">
+      <tspan class="box-char">║</tspan><tspan class="dim">  Follows back:     </tspan><tspan class="number">923                                </tspan><tspan class="box-char">║</tspan>
+    </text>
+  </g>
+
+  <!-- Row 21: whitelisted + errors -->
+  <g class="p20">
+    <rect class="row-odd" x="0" y="445" width="720" height="18"/>
+    <text x="14" y="458">
+      <tspan class="box-char">║</tspan><tspan class="dim">  Whitelisted:      </tspan><tspan class="number">2</tspan><tspan class="dim">    Errors: </tspan><tspan class="number">0</tspan><tspan class="dim">    Duration: </tspan><tspan class="number">247s</tspan><tspan class="dim">        </tspan><tspan class="box-char">║</tspan>
+    </text>
+  </g>
+
+  <!-- Row 22: results box bottom -->
+  <g class="p21">
+    <rect class="row-even" x="0" y="463" width="720" height="18"/>
+    <text x="14" y="476">
+      <tspan class="box-char">╚══════════════════════════════════════════════════════╝</tspan>
+    </text>
+  </g>
+
+  <!-- Prompt with blinking cursor -->
+  <g class="p22">
+    <rect class="row-odd" x="0" y="481" width="720" height="18"/>
+    <text x="14" y="494">
+      <tspan class="prompt">❯ </tspan><tspan class="cursor" fill="#d4d4d4">▋</tspan>
+    </text>
+  </g>
+
+  <!-- Bottom padding -->
+  <rect class="row-even" x="0" y="499" width="720" height="21"/>
+</svg>

@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Protect Active Users — Free X/Twitter Script | XActions</title>
+  <meta name="description" content="XActions Automation - Don't Unfollow Active Users">
+  <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, protect, active, users, automation">
+  <meta name="author" content="nich (@nichxbt)">
+  <meta name="robots" content="index, follow">
+
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Protect Active Users — XActions">
+  <meta property="og:description" content="XActions Automation - Don't Unfollow Active Users">
+  <meta property="og:url" content="https://xactions.app/scripts/protect-active-users">
+  <meta property="og:site_name" content="XActions">
+  <meta property="og:image" content="https://xactions.app/og-image.png">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@nichxbt">
+  <meta name="twitter:title" content="Protect Active Users — XActions">
+  <meta name="twitter:description" content="XActions Automation - Don't Unfollow Active Users">
+
+  <link rel="canonical" href="https://xactions.app/scripts/protect-active-users">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "Protect Active Users — Free X/Twitter Script | XActions",
+    "description": "XActions Automation - Don't Unfollow Active Users",
+    "url": "https://xactions.app/scripts/protect-active-users",
+    "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
+    "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
+    "datePublished": "2026-03-30",
+    "dateModified": "2026-03-30",
+    "articleSection": "Automation",
+    "keywords": "xactions, twitter automation, x automation, browser script, devtools console, free, open source, protect, active, users, automation"
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
+      { "@type": "ListItem", "position": 2, "name": "Scripts", "item": "https://xactions.app/scripts" },
+      { "@type": "ListItem", "position": 3, "name": "Automation", "item": "https://xactions.app/scripts#automation" },
+      { "@type": "ListItem", "position": 4, "name": "Protect Active Users", "item": "https://xactions.app/scripts/protect-active-users" }
+    ]
+  }
+  </script>
+
+  <link rel="stylesheet" href="/css/common.css">
+  <style>
+    .article { padding: 24px 20px; }
+    .article h1 { font-size: 1.75rem; font-weight: 800; margin-bottom: 8px; line-height: 1.2; }
+    .article h2 { font-size: 1.375rem; font-weight: 700; margin: 32px 0 12px; padding-top: 16px; border-top: 1px solid var(--border); }
+    .article h3 { font-size: 1.125rem; font-weight: 600; margin: 24px 0 8px; color: var(--accent); }
+    .article p { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 16px; }
+    .article a { color: var(--accent); text-decoration: none; }
+    .article a:hover { text-decoration: underline; }
+    .article strong { color: var(--text-primary); }
+    .article code { background: var(--bg-tertiary); padding: 2px 6px; border-radius: 4px; font-family: 'Monaco','Menlo','Consolas', monospace; font-size: 0.875rem; color: var(--accent); }
+    .article pre { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 16px; overflow-x: auto; margin: 16px 0; }
+    .article pre code { background: none; padding: 0; color: var(--text-primary); font-size: 0.8125rem; display: block; }
+    .article table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 0.875rem; }
+    .article th { background: var(--bg-secondary); padding: 10px 12px; text-align: left; border: 1px solid var(--border); font-weight: 600; }
+    .article td { padding: 10px 12px; border: 1px solid var(--border); color: var(--text-secondary); }
+    .cat-badge { display: inline-block; background: var(--accent-light); color: var(--accent); padding: 4px 12px; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; margin-bottom: 16px; }
+    .meta-row { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 16px; font-size: 0.8125rem; color: var(--text-secondary); }
+    .meta-row span { display: flex; align-items: center; gap: 4px; }
+    .usage-steps { margin-left: 24px; margin-bottom: 16px; }
+    .usage-steps li { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 8px; padding-left: 4px; }
+    .warning-box { background: rgba(244, 33, 46, 0.1); border: 1px solid var(--error); border-radius: 12px; padding: 16px; margin: 16px 0; }
+    .warning-box p { color: var(--error); margin: 0; font-size: 0.875rem; }
+    .controls-box { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 16px; margin: 16px 0; }
+    .controls-box h3 { margin: 0 0 8px; font-size: 1rem; }
+    .code-block { position: relative; }
+    .copy-btn { position: absolute; top: 8px; right: 8px; background: var(--bg-tertiary); color: var(--text-secondary); border: 1px solid var(--border); border-radius: 8px; padding: 6px 12px; cursor: pointer; font-size: 0.75rem; z-index: 10; transition: all .2s; }
+    .copy-btn:hover { background: var(--accent); color: #fff; }
+    .full-code { margin-top: 32px; }
+    .full-code pre { max-height: 600px; overflow-y: auto; }
+    .cta-box { background: linear-gradient(135deg, var(--bg-secondary), var(--bg-tertiary)); border: 1px solid var(--border); border-radius: 16px; padding: 24px; margin: 32px 0; text-align: center; }
+    .cta-box h3 { font-size: 1.25rem; margin-bottom: 8px; color: var(--text-primary); }
+    .cta-box p { color: var(--text-secondary); margin-bottom: 16px; }
+    .cta-box a { display: inline-block; padding: 12px 24px; background: var(--accent); color: #fff; border-radius: 9999px; text-decoration: none; font-weight: 700; transition: background .2s; }
+    .cta-box a:hover { background: var(--accent-hover); }
+    .sidebar-right { width: 350px; padding: 16px 24px; position: sticky; top: 0; height: 100vh; overflow-y: auto; }
+    .sidebar-card { background: var(--bg-secondary); border-radius: 16px; padding: 16px; margin-bottom: 16px; }
+    .sidebar-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 12px; }
+    .sidebar-card a { display: block; color: var(--text-secondary); text-decoration: none; font-size: 0.875rem; padding: 6px 0; border-bottom: 1px solid var(--border); transition: color .2s; }
+    .sidebar-card a:last-child { border-bottom: none; }
+    .sidebar-card a:hover { color: var(--accent); }
+    .breadcrumb { font-size: 0.8125rem; color: var(--text-secondary); margin-top: 4px; }
+    .breadcrumb a { color: var(--accent); text-decoration: none; }
+    .breadcrumb a:hover { text-decoration: underline; }
+    .source-badge { display: inline-block; background: var(--bg-tertiary); color: var(--text-secondary); padding: 2px 8px; border-radius: 6px; font-size: 0.6875rem; margin-left: 8px; }
+    @media (max-width: 1024px) { .sidebar-right { display: none; } }
+    @media (max-width: 768px) {
+      .article pre { font-size: 0.75rem; }
+      .meta-row { flex-direction: column; gap: 4px; }
+    }
+  </style>
+</head>
+<body>
+  <a href="#main-content" class="skip-nav">Skip to main content</a>
+  <div class="layout">
+    <aside class="sidebar-left" aria-label="Main navigation"></aside>
+    <script src="/js/sidebar.js"></script>
+
+    <main class="main-content" id="main-content">
+      <header class="main-header">
+        <h1>🛡️ Protect Active Users</h1>
+        <div class="breadcrumb">
+          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#automation">Automation</a> › Protect Active Users
+        </div>
+      </header>
+
+      <article class="article">
+        <span class="cat-badge">Automation</span>
+        <span class="source-badge">src/automation</span>
+
+        <div class="meta-row">
+          
+          
+          <span>376 lines</span>
+          <span>by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></span>
+        </div>
+
+        <p>XActions Automation - Don't Unfollow Active Users</p>
+
+        
+
+        <h2>How to Use</h2>
+        <ol class="usage-steps"><li>Paste core.js first</li>
+<li>Paste this script to scan your posts for active engagers</li>
+<li>Use with smartUnfollow.js - it will respect the protected list</li></ol>
+        <p><strong>Note:</strong> This script requires pasting <code>src/automation/core.js</code> first for shared utilities.</p>
+
+        
+        <section class="config-section">
+        <h2>Configuration Options</h2>
+        <table>
+          <thead><tr><th>Option</th><th>Default</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td><code>likers</code></td><td><code>true</code></td><td>People who liked your posts</td></tr>
+<tr><td><code>repliers</code></td><td><code>true</code></td><td>People who replied to your posts</td></tr>
+<tr><td><code>retweeters</code></td><td><code>true</code></td><td>People who retweeted your posts</td></tr>
+<tr><td><code>quoters</code></td><td><code>true</code></td><td>People who quoted your posts</td></tr>
+          </tbody>
+        </table>
+      </section>
+        <section class="config-code">
+        <h2>Default Configuration</h2>
+        <div class="code-block">
+          <button class="copy-btn" onclick="navigator.clipboard.writeText(this.nextElementSibling.querySelector('code').textContent).then(()=>{this.textContent='Copied!';setTimeout(()=>this.textContent='Copy',2000)})">Copy</button>
+          <pre><code>const CONFIG = {
+    // Your username (will auto-detect if not set)
+    USERNAME: null,
+    
+    // How many of your recent posts to scan
+    POSTS_TO_SCAN: 10,
+    
+    // Types of engagement to consider as &quot;active&quot;
+    ENGAGEMENT_TYPES: {
+      likers: true,       // People who liked your posts
+      repliers: true,     // People who replied to your posts
+      retweeters: true,   // People who retweeted your posts
+      quoters: true,      // People who quoted your posts
+    },
+    
+    // How far back to look (days)
+    // Users who engaged within this period are protected
+    LOOKBACK_DAYS: 30,
+    
+    // Minimum engagements to be considered &quot;active&quot;
+    // User must have engaged at least this many times
+    MIN_ENGAGEMENTS: 1,
+    
+    // Also protect users you recently followed
+    PROTECT_RECENT_FOLLOWS: true,
+    RECENT_FOLLOW_DAYS: 7,
+  };</code></pre>
+        </div>
+      </section>
+
+        <section class="full-code">
+          <h2>Full Script</h2>
+          <p>Copy and paste this entire script into your browser DevTools console on <a href="https://x.com" rel="noopener">x.com</a>.</p>
+          <div class="code-block">
+            <button class="copy-btn" onclick="navigator.clipboard.writeText(this.nextElementSibling.querySelector('code').textContent).then(()=>{this.textContent='Copied!';setTimeout(()=>this.textContent='Copy Script',2000)})">Copy Script</button>
+            <pre><code>// Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
+// XActions Automation - Don't Unfollow Active Users
+// https://github.com/nirholas/XActions
+//
+// REQUIRES: Paste core.js first!
+//
+// Protect users who have engaged with your content from being unfollowed
+//
+// HOW TO USE:
+// 1. Paste core.js first
+// 2. Paste this script to scan your posts for active engagers
+// 3. Use with smartUnfollow.js - it will respect the protected list
+
+(() =&gt; {
+  if (!window.XActions?.Core) {
+    console.error('❌ Core module not loaded! Paste core.js first.');
+    return;
+  }
+
+  const { log, sleep, scrollBy, storage, SELECTORS } = window.XActions.Core;
+
+  // ============================================
+  // CONFIGURATION
+  // ============================================
+  const CONFIG = {
+    // Your username (will auto-detect if not set)
+    USERNAME: null,
+    
+    // How many of your recent posts to scan
+    POSTS_TO_SCAN: 10,
+    
+    // Types of engagement to consider as &quot;active&quot;
+    ENGAGEMENT_TYPES: {
+      likers: true,       // People who liked your posts
+      repliers: true,     // People who replied to your posts
+      retweeters: true,   // People who retweeted your posts
+      quoters: true,      // People who quoted your posts
+    },
+    
+    // How far back to look (days)
+    // Users who engaged within this period are protected
+    LOOKBACK_DAYS: 30,
+    
+    // Minimum engagements to be considered &quot;active&quot;
+    // User must have engaged at least this many times
+    MIN_ENGAGEMENTS: 1,
+    
+    // Also protect users you recently followed
+    PROTECT_RECENT_FOLLOWS: true,
+    RECENT_FOLLOW_DAYS: 7,
+  };
+
+  // ============================================
+  // STATE
+  // ============================================
+  const KEY = 'xactions_protected_users';
+  
+  const state = {
+    postsScanned: 0,
+    usersProtected: 0,
+    engagements: {},
+    isRunning: true,
+  };
+
+  const getProtectedList = () =&gt; storage.get(KEY) || {};
+  
+  const saveProtectedList = (list) =&gt; storage.set(KEY, list);
+
+  // ============================================
+  // DETECT CURRENT USER
+  // ============================================
+  const detectUsername = () =&gt; {
+    if (CONFIG.USERNAME) return CONFIG.USERNAME;
+    
+    const switcher = document.querySelector('[data-testid=&quot;SideNav_AccountSwitcher_Button&quot;]');
+    if (switcher) {
+      const match = switcher.textContent.match(/@(\w+)/);
+      if (match) return match[1].toLowerCase();
+    }
+    
+    const path = window.location.pathname;
+    if (path.match(/^\/\w+\/(followers|following|status)/)) {
+      return path.split('/')[1].toLowerCase();
+    }
+    
+    return null;
+  };
+
+  // ============================================
+  // GET MY POSTS
+  // ============================================
+  const getMyPosts = async (username) =&gt; {
+    log('📍 Fetching your recent posts...', 'info');
+    
+    window.location.href = `https://x.com/${username}`;
+    await sleep(3000);
+    
+    const posts = [];
+    let scrolls = 0;
+    const maxScrolls = 20;
+    
+    while (posts.length &lt; CONFIG.POSTS_TO_SCAN &amp;&amp; scrolls &lt; maxScrolls) {
+      const tweets = document.querySelectorAll(SELECTORS.tweet);
+      
+      for (const tweet of tweets) {
+        if (posts.length &gt;= CONFIG.POSTS_TO_SCAN) break;
+        
+        // Make sure it's my post (not a retweet)
+        const retweetIndicator = tweet.querySelector('[data-testid=&quot;socialContext&quot;]');
+        if (retweetIndicator?.textContent?.includes('reposted')) continue;
+        
+        const link = tweet.querySelector('a[href*=&quot;/status/&quot;]');
+        if (link &amp;&amp; !posts.includes(link.href)) {
+          posts.push(link.href);
+        }
+      }
+      
+      scrollBy(600);
+      scrolls++;
+      await sleep(1500);
+    }
+    
+    log(`Found ${posts.length} posts to scan`, 'info');
+    return posts;
+  };
+
+  // ============================================
+  // SCAN POST FOR ENGAGERS
+  // ============================================
+  const scanPostEngagers = async (postUrl) =&gt; {
+    const engagers = new Map();
+    const postId = postUrl.match(/status\/(\d+)/)?.[1];
+    if (!postId) return engagers;
+    
+    // Scan likers
+    if (CONFIG.ENGAGEMENT_TYPES.likers) {
+      log('  Scanning likers...', 'action');
+      window.location.href = `${postUrl}/likes`;
+      await sleep(2000);
+      
+      const users = await scrapeUserList();
+      users.forEach(u =&gt; {
+        if (!engagers.has(u)) engagers.set(u, []);
+        engagers.get(u).push('like');
+      });
+    }
+    
+    // Scan retweeters
+    if (CONFIG.ENGAGEMENT_TYPES.retweeters) {
+      log('  Scanning retweeters...', 'action');
+      window.location.href = `${postUrl}/retweets`;
+      await sleep(2000);
+      
+      const users = await scrapeUserList();
+      users.forEach(u =&gt; {
+        if (!engagers.has(u)) engagers.set(u, []);
+        engagers.get(u).push('retweet');
+      });
+    }
+    
+    // Scan quoters
+    if (CONFIG.ENGAGEMENT_TYPES.quoters) {
+      log('  Scanning quoters...', 'action');
+      window.location.href = `${postUrl}/retweets/with_comments`;
+      await sleep(2000);
+      
+      const users = await scrapeUserList();
+      users.forEach(u =&gt; {
+        if (!engagers.has(u)) engagers.set(u, []);
+        engagers.get(u).push('quote');
+      });
+    }
+    
+    // Scan repliers (from the post itself)
+    if (CONFIG.ENGAGEMENT_TYPES.repliers) {
+      log('  Scanning repliers...', 'action');
+      window.location.href = postUrl;
+      await sleep(2000);
+      
+      // Scroll a bit to load replies
+      for (let i = 0; i &lt; 5; i++) {
+        scrollBy(500);
+        await sleep(1000);
+      }
+      
+      const tweets = document.querySelectorAll(SELECTORS.tweet);
+      for (const tweet of tweets) {
+        const link = tweet.querySelector('a[href^=&quot;/&quot;]');
+        if (link) {
+          const username = link.getAttribute('href').replace('/', '').toLowerCase();
+          if (username &amp;&amp; !username.includes('/')) {
+            if (!engagers.has(username)) engagers.set(username, []);
+            engagers.get(username).push('reply');
+          }
+        }
+      }
+    }
+    
+    return engagers;
+  };
+
+  // ============================================
+  // SCRAPE USER LIST
+  // ============================================
+  const scrapeUserList = async () =&gt; {
+    const users = new Set();
+    let scrolls = 0;
+    let prev = 0;
+    
+    while (scrolls &lt; 10) {
+      const cells = document.querySelectorAll('[data-testid=&quot;UserCell&quot;]');
+      
+      for (const cell of cells) {
+        const link = cell.querySelector('a[href^=&quot;/&quot;]');
+        if (link) {
+          const username = link.getAttribute('href').replace('/', '').toLowerCase();
+          if (username &amp;&amp; !username.includes('/')) {
+            users.add(username);
+          }
+        }
+      }
+      
+      if (users.size === prev) break;
+      prev = users.size;
+      
+      scrollBy(500);
+      scrolls++;
+      await sleep(1000);
+    }
+    
+    return users;
+  };
+
+  // ============================================
+  // MAIN RUN
+  // ============================================
+  const run = async () =&gt; {
+    console.log(`
+╔═══════════════════════════════════════════════════════════╗
+║  🛡️ XActions - Protect Active Users                      ║
+╠═══════════════════════════════════════════════════════════╣
+║  Posts to scan: ${String(CONFIG.POSTS_TO_SCAN).padEnd(5)}                                ║
+║  Lookback: ${String(CONFIG.LOOKBACK_DAYS).padEnd(5)} days                               ║
+║  Min engagements: ${String(CONFIG.MIN_ENGAGEMENTS).padEnd(5)}                              ║
+║                                                           ║
+║  Run stopProtect() to stop early.                         ║
+╚═══════════════════════════════════════════════════════════╝
+    `);
+
+    const username = detectUsername();
+    if (!username) {
+      log('⚠️ Could not detect your username!', 'error');
+      return;
+    }
+    log(`Detected username: @${username}`, 'info');
+    
+    // Get posts
+    const posts = await getMyPosts(username);
+    
+    // Scan each post
+    const allEngagers = new Map();
+    
+    for (const postUrl of posts) {
+      if (!state.isRunning) break;
+      
+      log(`\n📍 Scanning post ${state.postsScanned + 1}/${posts.length}`, 'info');
+      state.postsScanned++;
+      
+      const postEngagers = await scanPostEngagers(postUrl);
+      
+      // Merge into allEngagers
+      for (const [user, types] of postEngagers) {
+        if (!allEngagers.has(user)) allEngagers.set(user, []);
+        allEngagers.get(user).push(...types);
+      }
+    }
+    
+    // Filter by minimum engagements
+    const protectedUsers = {};
+    const now = Date.now();
+    
+    for (const [user, engagements] of allEngagers) {
+      if (engagements.length &gt;= CONFIG.MIN_ENGAGEMENTS) {
+        protectedUsers[user] = {
+          engagements: engagements,
+          count: engagements.length,
+          protectedAt: now,
+          expiresAt: now + (CONFIG.LOOKBACK_DAYS * 24 * 60 * 60 * 1000),
+        };
+        state.usersProtected++;
+      }
+    }
+    
+    // Merge with existing protected list
+    const existing = getProtectedList();
+    const merged = { ...existing, ...protectedUsers };
+    
+    // Remove expired entries
+    for (const [user, data] of Object.entries(merged)) {
+      if (data.expiresAt &amp;&amp; data.expiresAt &lt; now) {
+        delete merged[user];
+      }
+    }
+    
+    saveProtectedList(merged);
+
+    console.log(`
+╔═══════════════════════════════════════════════════════════╗
+║  ✅ SCAN COMPLETE                                         ║
+╠═══════════════════════════════════════════════════════════╣
+║  Posts scanned: ${String(state.postsScanned).padEnd(5)}                                ║
+║  New protected: ${String(state.usersProtected).padEnd(5)}                                ║
+║  Total protected: ${String(Object.keys(merged).length).padEnd(5)}                              ║
+║                                                           ║
+║  Protected users will not be unfollowed by smartUnfollow  ║
+║  Protection expires after ${CONFIG.LOOKBACK_DAYS} days                        ║
+╚═══════════════════════════════════════════════════════════╝
+    `);
+    
+    // Show top engagers
+    const sorted = [...allEngagers.entries()]
+      .sort((a, b) =&gt; b[1].length - a[1].length)
+      .slice(0, 10);
+    
+    if (sorted.length &gt; 0) {
+      console.log('\n🌟 Top 10 Active Engagers:');
+      sorted.forEach(([user, engs], i) =&gt; {
+        console.log(`  ${i + 1}. @${user}: ${engs.length} engagements (${[...new Set(engs)].join(', ')})`);
+      });
+    }
+  };
+
+  run();
+
+  window.stopProtect = () =&gt; {
+    state.isRunning = false;
+    log('Stopping scan...', 'warning');
+  };
+  
+  // View protected users
+  window.viewProtected = () =&gt; {
+    const list = getProtectedList();
+    const users = Object.keys(list);
+    console.log(`\n🛡️ Protected Users (${users.length}):`);
+    users.forEach(u =&gt; {
+      const data = list[u];
+      console.log(`  @${u}: ${data.count} engagements, expires ${new Date(data.expiresAt).toLocaleDateString()}`);
+    });
+  };
+  
+  // Check if user is protected
+  window.isProtected = (username) =&gt; {
+    const list = getProtectedList();
+    const user = list[username.toLowerCase().replace('@', '')];
+    if (user &amp;&amp; user.expiresAt &gt; Date.now()) {
+      console.log(`✅ @${username} is protected (${user.count} engagements)`);
+      return true;
+    }
+    console.log(`❌ @${username} is not protected`);
+    return false;
+  };
+
+  window.XActions.ActiveUsers = {
+    getProtected: getProtectedList,
+    isProtected: (u) =&gt; {
+      const list = getProtectedList();
+      const user = list[u.toLowerCase().replace('@', '')];
+      return user &amp;&amp; user.expiresAt &gt; Date.now();
+    },
+    clearProtected: () =&gt; {
+      saveProtectedList({});
+      log('Protected list cleared', 'success');
+    },
+  };
+})();
+</code></pre>
+          </div>
+        </section>
+
+        <div class="cta-box">
+          <h3>⚡ More XActions Scripts</h3>
+          <p>Browse 300+ free browser scripts for X/Twitter automation. No API keys, no fees.</p>
+          <a href="/scripts">Browse All Scripts</a>
+        </div>
+      </article>
+    </main>
+
+    <aside class="sidebar-right">
+      <div class="sidebar-card">
+        <h3>🛡️ Automation</h3>
+        <a href="/scripts/actions">⚡ Actions</a>
+<a href="/scripts/control-panel">🎛️ Control Panel</a>
+<a href="/scripts/core">⚙️ Core</a>
+<a href="/scripts/customer-service">🤝 Customer Service</a>
+<a href="/scripts/quota-supervisor">⚠️ Quota Supervisor</a>
+<a href="/scripts/rate-limiter">⏱️ Rate Limiter</a>
+<a href="/scripts/session-logger">📋 Session Logger</a>
+<a href="/scripts/rss-monitor">📡 XActions RSS &amp; Webhook Content Ingestion</a>
+      </div>
+      <div class="sidebar-card">
+        <h3>🔗 Quick Links</h3>
+        <a href="/scripts">All Scripts</a>
+        <a href="/features">Features</a>
+        <a href="/docs">Documentation</a>
+        <a href="/tutorials">Tutorials</a>
+        <a href="/mcp">MCP Server</a>
+        <a href="https://github.com/nirholas/XActions" rel="noopener">GitHub</a>
+      </div>
+    </aside>
+  </div>
+</body>
+</html>

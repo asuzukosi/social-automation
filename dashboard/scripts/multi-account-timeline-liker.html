@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Multi Account Timeline Liker — Free X/Twitter Script | XActions</title>
+  <meta name="description" content="scripts/multiAccountTimelineLiker.js">
+  <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, multi, account, timeline, liker, engagement">
+  <meta name="author" content="nich (@nichxbt)">
+  <meta name="robots" content="index, follow">
+
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Multi Account Timeline Liker — XActions">
+  <meta property="og:description" content="scripts/multiAccountTimelineLiker.js">
+  <meta property="og:url" content="https://xactions.app/scripts/multi-account-timeline-liker">
+  <meta property="og:site_name" content="XActions">
+  <meta property="og:image" content="https://xactions.app/og-image.png">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@nichxbt">
+  <meta name="twitter:title" content="Multi Account Timeline Liker — XActions">
+  <meta name="twitter:description" content="scripts/multiAccountTimelineLiker.js">
+
+  <link rel="canonical" href="https://xactions.app/scripts/multi-account-timeline-liker">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "Multi Account Timeline Liker — Free X/Twitter Script | XActions",
+    "description": "scripts/multiAccountTimelineLiker.js",
+    "url": "https://xactions.app/scripts/multi-account-timeline-liker",
+    "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
+    "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
+    "datePublished": "2026-03-30",
+    "dateModified": "2026-03-30",
+    "articleSection": "Engagement",
+    "keywords": "xactions, twitter automation, x automation, browser script, devtools console, free, open source, multi, account, timeline, liker, engagement"
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
+      { "@type": "ListItem", "position": 2, "name": "Scripts", "item": "https://xactions.app/scripts" },
+      { "@type": "ListItem", "position": 3, "name": "Engagement", "item": "https://xactions.app/scripts#engagement" },
+      { "@type": "ListItem", "position": 4, "name": "Multi Account Timeline Liker", "item": "https://xactions.app/scripts/multi-account-timeline-liker" }
+    ]
+  }
+  </script>
+
+  <link rel="stylesheet" href="/css/common.css">
+  <style>
+    .article { padding: 24px 20px; }
+    .article h1 { font-size: 1.75rem; font-weight: 800; margin-bottom: 8px; line-height: 1.2; }
+    .article h2 { font-size: 1.375rem; font-weight: 700; margin: 32px 0 12px; padding-top: 16px; border-top: 1px solid var(--border); }
+    .article h3 { font-size: 1.125rem; font-weight: 600; margin: 24px 0 8px; color: var(--accent); }
+    .article p { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 16px; }
+    .article a { color: var(--accent); text-decoration: none; }
+    .article a:hover { text-decoration: underline; }
+    .article strong { color: var(--text-primary); }
+    .article code { background: var(--bg-tertiary); padding: 2px 6px; border-radius: 4px; font-family: 'Monaco','Menlo','Consolas', monospace; font-size: 0.875rem; color: var(--accent); }
+    .article pre { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 16px; overflow-x: auto; margin: 16px 0; }
+    .article pre code { background: none; padding: 0; color: var(--text-primary); font-size: 0.8125rem; display: block; }
+    .article table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 0.875rem; }
+    .article th { background: var(--bg-secondary); padding: 10px 12px; text-align: left; border: 1px solid var(--border); font-weight: 600; }
+    .article td { padding: 10px 12px; border: 1px solid var(--border); color: var(--text-secondary); }
+    .cat-badge { display: inline-block; background: var(--accent-light); color: var(--accent); padding: 4px 12px; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; margin-bottom: 16px; }
+    .meta-row { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 16px; font-size: 0.8125rem; color: var(--text-secondary); }
+    .meta-row span { display: flex; align-items: center; gap: 4px; }
+    .usage-steps { margin-left: 24px; margin-bottom: 16px; }
+    .usage-steps li { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 8px; padding-left: 4px; }
+    .warning-box { background: rgba(244, 33, 46, 0.1); border: 1px solid var(--error); border-radius: 12px; padding: 16px; margin: 16px 0; }
+    .warning-box p { color: var(--error); margin: 0; font-size: 0.875rem; }
+    .controls-box { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 16px; margin: 16px 0; }
+    .controls-box h3 { margin: 0 0 8px; font-size: 1rem; }
+    .code-block { position: relative; }
+    .copy-btn { position: absolute; top: 8px; right: 8px; background: var(--bg-tertiary); color: var(--text-secondary); border: 1px solid var(--border); border-radius: 8px; padding: 6px 12px; cursor: pointer; font-size: 0.75rem; z-index: 10; transition: all .2s; }
+    .copy-btn:hover { background: var(--accent); color: #fff; }
+    .full-code { margin-top: 32px; }
+    .full-code pre { max-height: 600px; overflow-y: auto; }
+    .cta-box { background: linear-gradient(135deg, var(--bg-secondary), var(--bg-tertiary)); border: 1px solid var(--border); border-radius: 16px; padding: 24px; margin: 32px 0; text-align: center; }
+    .cta-box h3 { font-size: 1.25rem; margin-bottom: 8px; color: var(--text-primary); }
+    .cta-box p { color: var(--text-secondary); margin-bottom: 16px; }
+    .cta-box a { display: inline-block; padding: 12px 24px; background: var(--accent); color: #fff; border-radius: 9999px; text-decoration: none; font-weight: 700; transition: background .2s; }
+    .cta-box a:hover { background: var(--accent-hover); }
+    .sidebar-right { width: 350px; padding: 16px 24px; position: sticky; top: 0; height: 100vh; overflow-y: auto; }
+    .sidebar-card { background: var(--bg-secondary); border-radius: 16px; padding: 16px; margin-bottom: 16px; }
+    .sidebar-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 12px; }
+    .sidebar-card a { display: block; color: var(--text-secondary); text-decoration: none; font-size: 0.875rem; padding: 6px 0; border-bottom: 1px solid var(--border); transition: color .2s; }
+    .sidebar-card a:last-child { border-bottom: none; }
+    .sidebar-card a:hover { color: var(--accent); }
+    .breadcrumb { font-size: 0.8125rem; color: var(--text-secondary); margin-top: 4px; }
+    .breadcrumb a { color: var(--accent); text-decoration: none; }
+    .breadcrumb a:hover { text-decoration: underline; }
+    .source-badge { display: inline-block; background: var(--bg-tertiary); color: var(--text-secondary); padding: 2px 8px; border-radius: 6px; font-size: 0.6875rem; margin-left: 8px; }
+    @media (max-width: 1024px) { .sidebar-right { display: none; } }
+    @media (max-width: 768px) {
+      .article pre { font-size: 0.75rem; }
+      .meta-row { flex-direction: column; gap: 4px; }
+    }
+  </style>
+</head>
+<body>
+  <a href="#main-content" class="skip-nav">Skip to main content</a>
+  <div class="layout">
+    <aside class="sidebar-left" aria-label="Main navigation"></aside>
+    <script src="/js/sidebar.js"></script>
+
+    <main class="main-content" id="main-content">
+      <header class="main-header">
+        <h1>❤️ Multi Account Timeline Liker</h1>
+        <div class="breadcrumb">
+          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#engagement">Engagement</a> › Multi Account Timeline Liker
+        </div>
+      </header>
+
+      <article class="article">
+        <span class="cat-badge">Engagement</span>
+        <span class="source-badge">scripts</span>
+
+        <div class="meta-row">
+          
+          
+          <span>307 lines</span>
+          <span>by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></span>
+        </div>
+
+        <p>scripts/multiAccountTimelineLiker.js</p>
+
+        
+
+        <h2>How to Use</h2>
+        <ol class="usage-steps">
+        <li>Navigate to <a href="https://x.com" rel="noopener">x.com</a> and log in</li>
+        <li>Open DevTools Console (F12 or Cmd+Option+I)</li>
+        
+        <li>Paste the script below and press Enter</li>
+      </ol>
+        
+
+        
+        <section class="config-section">
+        <h2>Configuration Options</h2>
+        <table>
+          <thead><tr><th>Option</th><th>Default</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td><code>scrollDelay</code></td><td><code>2500</code></td><td>Pause after each scroll (ms)</td></tr>
+<tr><td><code>maxScrollsWithoutNew</code></td><td><code>8</code></td><td>Stop scrolling if no new tweets found</td></tr>
+<tr><td><code>dryRun</code></td><td><code>false</code></td><td>true = preview mode (no clicks)</td></tr>
+<tr><td><code>pauseBetweenAccounts</code></td><td><code>10000</code></td><td>10s pause when switching accounts</td></tr>
+          </tbody>
+        </table>
+      </section>
+        <section class="config-code">
+        <h2>Default Configuration</h2>
+        <div class="code-block">
+          <button class="copy-btn" onclick="navigator.clipboard.writeText(this.nextElementSibling.querySelector('code').textContent).then(()=>{this.textContent='Copied!';setTimeout(()=>this.textContent='Copy',2000)})">Copy</button>
+          <pre><code>const CONFIG = {
+    delayBetween: [2000, 5000],   // Random delay between likes (ms)
+    scrollDelay: 2500,            // Pause after each scroll (ms)
+    maxScrollsWithoutNew: 8,      // Stop scrolling if no new tweets found
+    dryRun: false,                // true = preview mode (no clicks)
+    pauseBetweenAccounts: 10000,  // 10s pause when switching accounts
+  };</code></pre>
+        </div>
+      </section>
+
+        <section class="full-code">
+          <h2>Full Script</h2>
+          <p>Copy and paste this entire script into your browser DevTools console on <a href="https://x.com" rel="noopener">x.com</a>.</p>
+          <div class="code-block">
+            <button class="copy-btn" onclick="navigator.clipboard.writeText(this.nextElementSibling.querySelector('code').textContent).then(()=>{this.textContent='Copied!';setTimeout(()=>this.textContent='Copy Script',2000)})">Copy Script</button>
+            <pre><code>// Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
+// scripts/multiAccountTimelineLiker.js
+// Like the entire timeline of multiple X accounts in sequence
+// Example: like 500 posts on @nichxbt, then 500 on @doi, etc.
+// Paste in DevTools console on x.com
+// by nichxbt
+
+(() =&gt; {
+  'use strict';
+
+  // =============================================
+  // ⬇️ CONFIGURE YOUR TARGETS HERE
+  // =============================================
+  const TARGETS = [
+    { username: 'nichxbt', maxLikes: 500 },
+    { username: 'doi',     maxLikes: 500 },
+    // Add more accounts:
+    // { username: 'someUser', maxLikes: 200 },
+  ];
+
+  const CONFIG = {
+    delayBetween: [2000, 5000],   // Random delay between likes (ms)
+    scrollDelay: 2500,            // Pause after each scroll (ms)
+    maxScrollsWithoutNew: 8,      // Stop scrolling if no new tweets found
+    dryRun: false,                // true = preview mode (no clicks)
+    pauseBetweenAccounts: 10000,  // 10s pause when switching accounts
+  };
+
+  // =============================================
+
+  const sleep = (ms) =&gt; new Promise(r =&gt; setTimeout(r, ms));
+  const rand = (a, b) =&gt; Math.floor(a + Math.random() * (b - a));
+
+  const SEL = {
+    tweet:     'article[data-testid=&quot;tweet&quot;]',
+    tweetText: '[data-testid=&quot;tweetText&quot;]',
+    likeBtn:   '[data-testid=&quot;like&quot;]',
+    unlikeBtn: '[data-testid=&quot;unlike&quot;]',
+    toast:     '[data-testid=&quot;toast&quot;]',
+  };
+
+  // ── Abort handle ───────────────────────────────────────────
+  let aborted = false;
+  window.XActions = window.XActions || {};
+  window.XActions.stop = () =&gt; { aborted = true; console.log('🛑 Stopping after current tweet...'); };
+
+  const isRateLimited = () =&gt; {
+    for (const el of document.querySelectorAll(`${SEL.toast}, [role=&quot;alert&quot;]`)) {
+      if (/rate limit|try again|too many|slow down/i.test(el.textContent)) return true;
+    }
+    return false;
+  };
+
+  // ── Navigate to a user's profile ───────────────────────────
+  const goToProfile = async (username) =&gt; {
+    const url = `https://x.com/${username}`;
+    console.log(`\n🔗 Navigating to ${url}...`);
+    window.location.href = url;
+
+    // Wait for the profile timeline to load
+    let attempts = 0;
+    while (attempts &lt; 30) {
+      await sleep(1000);
+      const tweets = document.querySelectorAll(SEL.tweet);
+      // Check we're on the right page and tweets loaded
+      if (tweets.length &gt; 0 &amp;&amp; window.location.pathname.toLowerCase().includes(username.toLowerCase())) {
+        console.log(`   ✅ Profile loaded — ${tweets.length} tweets visible`);
+        return true;
+      }
+      attempts++;
+    }
+    console.log(`   ⚠️ Profile may not have loaded fully. Proceeding anyway...`);
+    return true;
+  };
+
+  // ── Like timeline for one account ──────────────────────────
+  const likeTimeline = async (username, maxLikes) =&gt; {
+    console.log(`\n${'═'.repeat(50)}`);
+    console.log(`  👤 @${username} — liking up to ${maxLikes} posts`);
+    console.log(`${'═'.repeat(50)}`);
+
+    let liked = 0;
+    const seen = new Set();
+    let scrollsWithoutNew = 0;
+
+    while (liked &lt; maxLikes &amp;&amp; !aborted) {
+      const articles = document.querySelectorAll(SEL.tweet);
+      let foundNew = false;
+
+      for (const article of articles) {
+        if (liked &gt;= maxLikes || aborted) break;
+
+        // Unique fingerprint
+        const link = article.querySelector('a[href*=&quot;/status/&quot;]')?.href || '';
+        const textEl = article.querySelector(SEL.tweetText);
+        const text = textEl ? textEl.textContent.trim() : '';
+        const id = link || text.slice(0, 80);
+        if (!id || seen.has(id)) continue;
+        seen.add(id);
+        foundNew = true;
+
+        // Already liked?
+        if (article.querySelector(SEL.unlikeBtn)) {
+          continue;
+        }
+
+        // Rate limit check
+        if (isRateLimited()) {
+          console.log('   🚨 Rate limited! Waiting 120s...');
+          await sleep(120000);
+          if (isRateLimited()) {
+            console.log('   🛑 Still limited. Stopping this account.');
+            return { username, liked, stopped: 'rate_limit' };
+          }
+        }
+
+        // Scroll into view
+        article.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        await sleep(400);
+
+        const likeBtn = article.querySelector(SEL.likeBtn);
+        if (!likeBtn) continue;
+
+        if (CONFIG.dryRun) {
+          console.log(`   🏃 [DRY] Would like: &quot;${text.slice(0, 50)}...&quot;`);
+        } else {
+          likeBtn.click();
+          await sleep(400);
+        }
+
+        liked++;
+        if (liked % 25 === 0 || liked === 1) {
+          console.log(`   ❤️ @${username}: ${liked}/${maxLikes} liked`);
+        }
+
+        const delay = rand(CONFIG.delayBetween[0], CONFIG.delayBetween[1]);
+        await sleep(delay);
+      }
+
+      if (liked &gt;= maxLikes || aborted) break;
+
+      // Scroll for more
+      if (foundNew) {
+        scrollsWithoutNew = 0;
+      } else {
+        scrollsWithoutNew++;
+        if (scrollsWithoutNew &gt;= CONFIG.maxScrollsWithoutNew) {
+          console.log(`   ⚠️ No new tweets after ${scrollsWithoutNew} scrolls. Moving on.`);
+          break;
+        }
+      }
+
+      window.scrollBy(0, 1200);
+      await sleep(CONFIG.scrollDelay);
+    }
+
+    return { username, liked, stopped: aborted ? 'aborted' : 'done' };
+  };
+
+  // ── Main ───────────────────────────────────────────────────
+  const run = async () =&gt; {
+    console.log('╔════════════════════════════════════════════════╗');
+    console.log('║  🔄 MULTI-ACCOUNT TIMELINE LIKER              ║');
+    console.log('║  by nichxbt — XActions                         ║');
+    console.log('╚════════════════════════════════════════════════╝');
+    console.log(`   Accounts: ${TARGETS.map(t =&gt; `@${t.username} (${t.maxLikes})`).join(', ')}`);
+    console.log(`   Dry run: ${CONFIG.dryRun}`);
+    console.log(`   ℹ️ Type XActions.stop() to abort at any time\n`);
+
+    const results = [];
+
+    for (let i = 0; i &lt; TARGETS.length; i++) {
+      if (aborted) break;
+
+      const { username, maxLikes } = TARGETS[i];
+
+      // Navigate to profile
+      await goToProfile(username);
+      await sleep(2000); // Let page settle
+
+      // Like their timeline
+      const result = await likeTimeline(username, maxLikes);
+      results.push(result);
+
+      console.log(`\n   ✅ @${username}: ${result.liked} posts liked (${result.stopped})`);
+
+      // Pause between accounts
+      if (i &lt; TARGETS.length - 1 &amp;&amp; !aborted) {
+        console.log(`\n   ⏳ Pausing ${CONFIG.pauseBetweenAccounts / 1000}s before next account...`);
+        await sleep(CONFIG.pauseBetweenAccounts);
+      }
+    }
+
+    // ── Summary ──────────────────────────────────────────────
+    const total = results.reduce((sum, r) =&gt; sum + r.liked, 0);
+    console.log('\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+    console.log('  🔄 MULTI-ACCOUNT TIMELINE LIKER — RESULTS');
+    console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+    for (const r of results) {
+      console.log(`  👤 @${r.username}: ${r.liked} liked (${r.stopped})`);
+    }
+    console.log(`  ─────────────────────────────────`);
+    console.log(`  ❤️  Total: ${total} posts liked`);
+    if (CONFIG.dryRun) console.log('  🏃 (Dry run — nothing was liked)');
+    console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n');
+  };
+
+  // ⚠️ IMPORTANT: This script navigates between pages.
+  // After navigation, the script context is lost.
+  // For multi-account, we use sessionStorage to track progress.
+
+  const STATE_KEY = 'xactions_multi_liker';
+
+  const getState = () =&gt; {
+    try { return JSON.parse(sessionStorage.getItem(STATE_KEY)); }
+    catch { return null; }
+  };
+
+  const setState = (state) =&gt; {
+    sessionStorage.setItem(STATE_KEY, JSON.stringify(state));
+  };
+
+  const clearState = () =&gt; {
+    sessionStorage.removeItem(STATE_KEY);
+  };
+
+  // ── Resume-aware runner ────────────────────────────────────
+  // Because window.location.href kills the script, we use a
+  // page-by-page approach: like one account, save state, navigate,
+  // then user re-runs the script to continue.
+
+  const runWithResume = async () =&gt; {
+    let state = getState();
+
+    if (!state) {
+      // Fresh start
+      state = {
+        currentIndex: 0,
+        results: [],
+        startedAt: new Date().toISOString(),
+      };
+    }
+
+    console.log('╔════════════════════════════════════════════════╗');
+    console.log('║  🔄 MULTI-ACCOUNT TIMELINE LIKER              ║');
+    console.log('║  by nichxbt — XActions                         ║');
+    console.log('╚════════════════════════════════════════════════╝');
+    console.log(`   Accounts: ${TARGETS.map(t =&gt; `@${t.username} (${t.maxLikes})`).join(', ')}`);
+    console.log(`   Dry run: ${CONFIG.dryRun}`);
+    console.log(`   Progress: ${state.currentIndex}/${TARGETS.length} accounts done`);
+    console.log(`   ℹ️ Type XActions.stop() to abort\n`);
+
+    if (state.currentIndex &gt;= TARGETS.length) {
+      console.log('🎉 All accounts already processed! Call clearState() or clear sessionStorage to restart.');
+      clearState();
+      return;
+    }
+
+    const target = TARGETS[state.currentIndex];
+    const currentPath = window.location.pathname.toLowerCase();
+
+    // Check if we're on the right profile
+    if (!currentPath.startsWith(`/${target.username.toLowerCase()}`)) {
+      console.log(`\n🔗 Navigate to https://x.com/${target.username} and re-run this script.`);
+      console.log(`   (Or we'll navigate now — re-paste the script after the page loads)\n`);
+      setState(state);
+      window.location.href = `https://x.com/${target.username}`;
+      return;
+    }
+
+    // We're on the right page — like away
+    await sleep(2000);
+    const result = await likeTimeline(target.username, target.maxLikes);
+    state.results.push(result);
+    state.currentIndex++;
+    setState(state);
+
+    console.log(`\n   ✅ @${target.username}: ${result.liked} posts liked`);
+
+    if (state.currentIndex &lt; TARGETS.length &amp;&amp; !aborted) {
+      const next = TARGETS[state.currentIndex];
+      console.log(`\n   ➡️ Next: @${next.username} (${next.maxLikes} likes)`);
+      console.log(`   ⏳ Navigating in ${CONFIG.pauseBetweenAccounts / 1000}s...`);
+      await sleep(CONFIG.pauseBetweenAccounts);
+      setState(state);
+      window.location.href = `https://x.com/${next.username}`;
+      console.log('\n   📋 Re-paste this script after the page loads to continue!\n');
+    } else {
+      // All done
+      const total = state.results.reduce((sum, r) =&gt; sum + r.liked, 0);
+      console.log('\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+      console.log('  🔄 MULTI-ACCOUNT TIMELINE LIKER — FINAL RESULTS');
+      console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+      for (const r of state.results) {
+        console.log(`  👤 @${r.username}: ${r.liked} liked (${r.stopped})`);
+      }
+      console.log(`  ─────────────────────────────────`);
+      console.log(`  ❤️  Total: ${total} posts liked`);
+      if (CONFIG.dryRun) console.log('  🏃 (Dry run — nothing was liked)');
+      console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n');
+      clearState();
+    }
+  };
+
+  runWithResume();
+})();
+</code></pre>
+          </div>
+        </section>
+
+        <div class="cta-box">
+          <h3>⚡ More XActions Scripts</h3>
+          <p>Browse 300+ free browser scripts for X/Twitter automation. No API keys, no fees.</p>
+          <a href="/scripts">Browse All Scripts</a>
+        </div>
+      </article>
+    </main>
+
+    <aside class="sidebar-right">
+      <div class="sidebar-card">
+        <h3>❤️ Engagement</h3>
+        <a href="/scripts/auto-commenter">💬 Auto Commenter</a>
+<a href="/scripts/auto-engage">⚡ Auto Engage</a>
+<a href="/scripts/auto-liker">❤️ Auto Liker</a>
+<a href="/scripts/auto-reply-mentions">📨 Auto Reply Mentions - XActions</a>
+<a href="/scripts/auto-repost">🔁 Auto Repost</a>
+<a href="/scripts/auto-plug-replies">🔌 Auto-Plug Replies</a>
+<a href="/scripts/auto-reply">💬 Auto-Reply / Auto-Respond</a>
+<a href="/scripts/engagement-booster">🚀 Engagement Booster v2</a>
+<a href="/scripts/engagement-leaderboard">🏆 Engagement Leaderboard</a>
+<a href="/scripts/engagement-manager">⚡ Engagement Manager - Likes</a>
+      </div>
+      <div class="sidebar-card">
+        <h3>🔗 Quick Links</h3>
+        <a href="/scripts">All Scripts</a>
+        <a href="/features">Features</a>
+        <a href="/docs">Documentation</a>
+        <a href="/tutorials">Tutorials</a>
+        <a href="/mcp">MCP Server</a>
+        <a href="https://github.com/nirholas/XActions" rel="noopener">GitHub</a>
+      </div>
+    </aside>
+  </div>
+</body>
+</html>

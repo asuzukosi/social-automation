@@ -1,0 +1,18 @@
+{
+  "compilerOptions": {
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "target": "ES2022",
+    "strict": true,
+    "checkJs": true,
+    "resolveJsonModule": true,
+    "skipLibCheck": true,
+    "baseUrl": ".",
+    "paths": {
+      "xactions": ["./src/index.js"],
+      "xactions/*": ["./src/*"]
+    }
+  },
+  "include": ["src/**/*.js", "api/**/*.js", "tests/**/*.js", "types/**/*.d.ts"],
+  "exclude": ["node_modules", "archive", "dist", "dashboard", "site"]
+}

@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Smart Unfollow — Free X/Twitter Script | XActions</title>
+  <meta name="description" content="XActions Automation - Smart Unfollow (Time-Based)">
+  <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, smart, unfollow, unfollow tools">
+  <meta name="author" content="nich (@nichxbt)">
+  <meta name="robots" content="index, follow">
+
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Smart Unfollow — XActions">
+  <meta property="og:description" content="XActions Automation - Smart Unfollow (Time-Based)">
+  <meta property="og:url" content="https://xactions.app/scripts/smart-unfollow">
+  <meta property="og:site_name" content="XActions">
+  <meta property="og:image" content="https://xactions.app/og-image.png">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@nichxbt">
+  <meta name="twitter:title" content="Smart Unfollow — XActions">
+  <meta name="twitter:description" content="XActions Automation - Smart Unfollow (Time-Based)">
+
+  <link rel="canonical" href="https://xactions.app/scripts/smart-unfollow">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "Smart Unfollow — Free X/Twitter Script | XActions",
+    "description": "XActions Automation - Smart Unfollow (Time-Based)",
+    "url": "https://xactions.app/scripts/smart-unfollow",
+    "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
+    "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
+    "datePublished": "2026-03-30",
+    "dateModified": "2026-03-30",
+    "articleSection": "Unfollow Tools",
+    "keywords": "xactions, twitter automation, x automation, browser script, devtools console, free, open source, smart, unfollow, unfollow tools"
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
+      { "@type": "ListItem", "position": 2, "name": "Scripts", "item": "https://xactions.app/scripts" },
+      { "@type": "ListItem", "position": 3, "name": "Unfollow Tools", "item": "https://xactions.app/scripts#unfollow-tools" },
+      { "@type": "ListItem", "position": 4, "name": "Smart Unfollow", "item": "https://xactions.app/scripts/smart-unfollow" }
+    ]
+  }
+  </script>
+
+  <link rel="stylesheet" href="/css/common.css">
+  <style>
+    .article { padding: 24px 20px; }
+    .article h1 { font-size: 1.75rem; font-weight: 800; margin-bottom: 8px; line-height: 1.2; }
+    .article h2 { font-size: 1.375rem; font-weight: 700; margin: 32px 0 12px; padding-top: 16px; border-top: 1px solid var(--border); }
+    .article h3 { font-size: 1.125rem; font-weight: 600; margin: 24px 0 8px; color: var(--accent); }
+    .article p { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 16px; }
+    .article a { color: var(--accent); text-decoration: none; }
+    .article a:hover { text-decoration: underline; }
+    .article strong { color: var(--text-primary); }
+    .article code { background: var(--bg-tertiary); padding: 2px 6px; border-radius: 4px; font-family: 'Monaco','Menlo','Consolas', monospace; font-size: 0.875rem; color: var(--accent); }
+    .article pre { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 16px; overflow-x: auto; margin: 16px 0; }
+    .article pre code { background: none; padding: 0; color: var(--text-primary); font-size: 0.8125rem; display: block; }
+    .article table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 0.875rem; }
+    .article th { background: var(--bg-secondary); padding: 10px 12px; text-align: left; border: 1px solid var(--border); font-weight: 600; }
+    .article td { padding: 10px 12px; border: 1px solid var(--border); color: var(--text-secondary); }
+    .cat-badge { display: inline-block; background: var(--accent-light); color: var(--accent); padding: 4px 12px; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; margin-bottom: 16px; }
+    .meta-row { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 16px; font-size: 0.8125rem; color: var(--text-secondary); }
+    .meta-row span { display: flex; align-items: center; gap: 4px; }
+    .usage-steps { margin-left: 24px; margin-bottom: 16px; }
+    .usage-steps li { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 8px; padding-left: 4px; }
+    .warning-box { background: rgba(244, 33, 46, 0.1); border: 1px solid var(--error); border-radius: 12px; padding: 16px; margin: 16px 0; }
+    .warning-box p { color: var(--error); margin: 0; font-size: 0.875rem; }
+    .controls-box { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 16px; margin: 16px 0; }
+    .controls-box h3 { margin: 0 0 8px; font-size: 1rem; }
+    .code-block { position: relative; }
+    .copy-btn { position: absolute; top: 8px; right: 8px; background: var(--bg-tertiary); color: var(--text-secondary); border: 1px solid var(--border); border-radius: 8px; padding: 6px 12px; cursor: pointer; font-size: 0.75rem; z-index: 10; transition: all .2s; }
+    .copy-btn:hover { background: var(--accent); color: #fff; }
+    .full-code { margin-top: 32px; }
+    .full-code pre { max-height: 600px; overflow-y: auto; }
+    .cta-box { background: linear-gradient(135deg, var(--bg-secondary), var(--bg-tertiary)); border: 1px solid var(--border); border-radius: 16px; padding: 24px; margin: 32px 0; text-align: center; }
+    .cta-box h3 { font-size: 1.25rem; margin-bottom: 8px; color: var(--text-primary); }
+    .cta-box p { color: var(--text-secondary); margin-bottom: 16px; }
+    .cta-box a { display: inline-block; padding: 12px 24px; background: var(--accent); color: #fff; border-radius: 9999px; text-decoration: none; font-weight: 700; transition: background .2s; }
+    .cta-box a:hover { background: var(--accent-hover); }
+    .sidebar-right { width: 350px; padding: 16px 24px; position: sticky; top: 0; height: 100vh; overflow-y: auto; }
+    .sidebar-card { background: var(--bg-secondary); border-radius: 16px; padding: 16px; margin-bottom: 16px; }
+    .sidebar-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 12px; }
+    .sidebar-card a { display: block; color: var(--text-secondary); text-decoration: none; font-size: 0.875rem; padding: 6px 0; border-bottom: 1px solid var(--border); transition: color .2s; }
+    .sidebar-card a:last-child { border-bottom: none; }
+    .sidebar-card a:hover { color: var(--accent); }
+    .breadcrumb { font-size: 0.8125rem; color: var(--text-secondary); margin-top: 4px; }
+    .breadcrumb a { color: var(--accent); text-decoration: none; }
+    .breadcrumb a:hover { text-decoration: underline; }
+    .source-badge { display: inline-block; background: var(--bg-tertiary); color: var(--text-secondary); padding: 2px 8px; border-radius: 6px; font-size: 0.6875rem; margin-left: 8px; }
+    @media (max-width: 1024px) { .sidebar-right { display: none; } }
+    @media (max-width: 768px) {
+      .article pre { font-size: 0.75rem; }
+      .meta-row { flex-direction: column; gap: 4px; }
+    }
+  </style>
+</head>
+<body>
+  <a href="#main-content" class="skip-nav">Skip to main content</a>
+  <div class="layout">
+    <aside class="sidebar-left" aria-label="Main navigation"></aside>
+    <script src="/js/sidebar.js"></script>
+
+    <main class="main-content" id="main-content">
+      <header class="main-header">
+        <h1>🧠 Smart Unfollow</h1>
+        <div class="breadcrumb">
+          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#unfollow-tools">Unfollow Tools</a> › Smart Unfollow
+        </div>
+      </header>
+
+      <article class="article">
+        <span class="cat-badge">Unfollow Tools</span>
+        <span class="source-badge">src/automation</span>
+
+        <div class="meta-row">
+          
+          
+          <span>270 lines</span>
+          <span>by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></span>
+        </div>
+
+        <p>XActions Automation - Smart Unfollow (Time-Based)</p>
+
+        
+
+        <h2>How to Use</h2>
+        <ol class="usage-steps"><li>Go to x.com/YOUR_USERNAME/following</li>
+<li>Paste core.js, then paste this script</li>
+<li>Configure options below and run!</li></ol>
+        <p><strong>Note:</strong> This script requires pasting <code>src/automation/core.js</code> first for shared utilities.</p>
+
+        
+        <section class="config-section">
+        <h2>Configuration Options</h2>
+        <table>
+          <thead><tr><th>Option</th><th>Default</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td><code>DAYS_TO_WAIT</code></td><td><code>3</code></td><td>Unfollow if not followed back within X days</td></tr>
+<tr><td><code>MAX_UNFOLLOWS</code></td><td><code>50</code></td><td>Max unfollows per session</td></tr>
+<tr><td><code>DRY_RUN</code></td><td><code>false</code></td><td>Set to true to preview without actually unfollowing</td></tr>
+<tr><td><code>ONLY_TRACKED</code></td><td><code>true</code></td><td>Only unfollow users we previously tracked from keywordFollow</td></tr>
+          </tbody>
+        </table>
+      </section>
+        <section class="config-code">
+        <h2>Default Configuration</h2>
+        <div class="code-block">
+          <button class="copy-btn" onclick="navigator.clipboard.writeText(this.nextElementSibling.querySelector('code').textContent).then(()=>{this.textContent='Copied!';setTimeout(()=>this.textContent='Copy',2000)})">Copy</button>
+          <pre><code>const OPTIONS = {
+    // Time settings
+    DAYS_TO_WAIT: 3,              // Unfollow if not followed back within X days
+    
+    // Limits
+    MAX_UNFOLLOWS: 50,            // Max unfollows per session
+    
+    // Whitelist (never unfollow these)
+    WHITELIST: [
+      // 'username1',
+      // 'username2',
+    ],
+    
+    // Behavior
+    DRY_RUN: false,               // Set to true to preview without actually unfollowing
+    ONLY_TRACKED: true,           // Only unfollow users we previously tracked from keywordFollow
+    
+    // Timing
+    DELAY_BETWEEN_UNFOLLOWS: 2000,
+  };</code></pre>
+        </div>
+      </section>
+
+        <section class="full-code">
+          <h2>Full Script</h2>
+          <p>Copy and paste this entire script into your browser DevTools console on <a href="https://x.com" rel="noopener">x.com</a>.</p>
+          <div class="code-block">
+            <button class="copy-btn" onclick="navigator.clipboard.writeText(this.nextElementSibling.querySelector('code').textContent).then(()=>{this.textContent='Copied!';setTimeout(()=>this.textContent='Copy Script',2000)})">Copy Script</button>
+            <pre><code>// Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
+// XActions Automation - Smart Unfollow (Time-Based)
+// https://github.com/nirholas/XActions
+//
+// REQUIRES: Paste core.js first!
+//
+// Unfollows users who didn't follow you back within X days.
+// Works with the keywordFollow.js tracking data.
+//
+// HOW TO USE:
+// 1. Go to x.com/YOUR_USERNAME/following
+// 2. Paste core.js, then paste this script
+// 3. Configure options below and run!
+
+(() =&gt; {
+  if (!window.XActions?.Core) {
+    console.error('❌ Core module not loaded! Paste core.js first.');
+    return;
+  }
+
+  const { log, sleep, randomDelay, scrollBy, clickElement, waitForElement, storage, rateLimit, SELECTORS } = window.XActions.Core;
+
+  // ============================================
+  // CONFIGURATION
+  // ============================================
+  const OPTIONS = {
+    // Time settings
+    DAYS_TO_WAIT: 3,              // Unfollow if not followed back within X days
+    
+    // Limits
+    MAX_UNFOLLOWS: 50,            // Max unfollows per session
+    
+    // Whitelist (never unfollow these)
+    WHITELIST: [
+      // 'username1',
+      // 'username2',
+    ],
+    
+    // Behavior
+    DRY_RUN: false,               // Set to true to preview without actually unfollowing
+    ONLY_TRACKED: true,           // Only unfollow users we previously tracked from keywordFollow
+    
+    // Timing
+    DELAY_BETWEEN_UNFOLLOWS: 2000,
+  };
+
+  // ============================================
+  // STATE
+  // ============================================
+  let unfollowCount = 0;
+  const followedUsers = new Map(Object.entries(storage.get('followed_users') || {}));
+  const unfollowedLog = [];
+
+  // ============================================
+  // HELPERS
+  // ============================================
+  const isExpired = (followedAt) =&gt; {
+    const daysAgo = (Date.now() - followedAt) / (1000 * 60 * 60 * 24);
+    return daysAgo &gt;= OPTIONS.DAYS_TO_WAIT;
+  };
+
+  const isWhitelisted = (username) =&gt; {
+    return OPTIONS.WHITELIST.some(w =&gt; w.toLowerCase() === username.toLowerCase());
+  };
+
+  const updateUserRecord = (username, updates) =&gt; {
+    const user = followedUsers.get(username.toLowerCase()) || {};
+    Object.assign(user, updates);
+    followedUsers.set(username.toLowerCase(), user);
+    storage.set('followed_users', Object.fromEntries(followedUsers));
+  };
+
+  // ============================================
+  // SCRAPE CURRENT FOLLOWERS
+  // ============================================
+  const scrapeFollowers = async () =&gt; {
+    log('Scraping your current followers to check who follows back...', 'action');
+    
+    // Navigate to followers if not there
+    const username = window.location.pathname.split('/')[1];
+    const followersUrl = `https://x.com/${username}/followers`;
+    
+    if (!window.location.href.includes('/followers')) {
+      window.open(followersUrl, '_blank');
+      log('Opened followers page in new tab. Run the scraper there, then come back.', 'warning');
+      return new Set();
+    }
+
+    const followers = new Set();
+    let prevSize = 0;
+    let retries = 0;
+
+    while (retries &lt; 5) {
+      window.scrollTo(0, document.body.scrollHeight);
+      await sleep(1500);
+
+      document.querySelectorAll(SELECTORS.userCell).forEach(cell =&gt; {
+        const link = cell.querySelector('a[href^=&quot;/&quot;]');
+        if (link) {
+          const user = link.getAttribute('href').replace('/', '').toLowerCase();
+          if (user) followers.add(user);
+        }
+      });
+
+      if (followers.size === prevSize) retries++;
+      else { retries = 0; prevSize = followers.size; }
+    }
+
+    log(`Found ${followers.size} followers`, 'success');
+    return followers;
+  };
+
+  // ============================================
+  // FIND NON-FOLLOWERS
+  // ============================================
+  const findNonFollowers = (currentFollowers) =&gt; {
+    const nonFollowers = [];
+
+    for (const [username, data] of followedUsers) {
+      // Skip if whitelisted
+      if (isWhitelisted(username)) {
+        log(`Skipping whitelisted: @${username}`, 'info');
+        continue;
+      }
+
+      // Skip if not expired yet
+      if (!isExpired(data.followedAt)) {
+        const daysLeft = OPTIONS.DAYS_TO_WAIT - ((Date.now() - data.followedAt) / (1000 * 60 * 60 * 24));
+        log(`@${username} - ${daysLeft.toFixed(1)} days left to follow back`, 'info');
+        continue;
+      }
+
+      // Check if they followed back
+      if (currentFollowers.has(username)) {
+        updateUserRecord(username, { followedBack: true, checkedAt: Date.now() });
+        log(`@${username} followed back! ✅`, 'success');
+        continue;
+      }
+
+      // They didn't follow back in time
+      nonFollowers.push(username);
+    }
+
+    return nonFollowers;
+  };
+
+  // ============================================
+  // UNFOLLOW ON FOLLOWING PAGE
+  // ============================================
+  const unfollowFromPage = async (targetUsers) =&gt; {
+    log(`Looking for ${targetUsers.length} users to unfollow...`, 'action');
+    
+    const targetSet = new Set(targetUsers.map(u =&gt; u.toLowerCase()));
+    let scrolls = 0;
+    const maxScrolls = 100;
+
+    while (unfollowCount &lt; OPTIONS.MAX_UNFOLLOWS &amp;&amp; 
+           unfollowCount &lt; targetUsers.length &amp;&amp;
+           scrolls &lt; maxScrolls) {
+      
+      const userCells = document.querySelectorAll(SELECTORS.userCell);
+      
+      for (const cell of userCells) {
+        if (unfollowCount &gt;= OPTIONS.MAX_UNFOLLOWS) break;
+
+        const link = cell.querySelector('a[href^=&quot;/&quot;]');
+        if (!link) continue;
+        
+        const username = link.getAttribute('href').replace('/', '').toLowerCase();
+        if (!targetSet.has(username)) continue;
+        if (unfollowedLog.includes(username)) continue;
+
+        const unfollowBtn = cell.querySelector(SELECTORS.unfollowButton);
+        if (!unfollowBtn) continue;
+
+        log(`Unfollowing @${username} (didn't follow back in ${OPTIONS.DAYS_TO_WAIT} days)`, 'action');
+
+        if (!OPTIONS.DRY_RUN) {
+          await clickElement(unfollowBtn);
+          await sleep(500);
+          
+          const confirmBtn = await waitForElement(SELECTORS.confirmButton, 3000);
+          if (confirmBtn) {
+            await clickElement(confirmBtn);
+          }
+          
+          // Remove from tracked
+          followedUsers.delete(username);
+          storage.set('followed_users', Object.fromEntries(followedUsers));
+        }
+
+        unfollowCount++;
+        unfollowedLog.push(username);
+        rateLimit.increment('unfollow', 'day');
+        
+        await randomDelay(OPTIONS.DELAY_BETWEEN_UNFOLLOWS, OPTIONS.DELAY_BETWEEN_UNFOLLOWS * 1.5);
+      }
+
+      scrollBy(600);
+      scrolls++;
+      await sleep(1500);
+    }
+  };
+
+  // ============================================
+  // MAIN RUN
+  // ============================================
+  const run = async () =&gt; {
+    log('🧹 Starting Smart Unfollow...', 'info');
+    log(`Wait period: ${OPTIONS.DAYS_TO_WAIT} days`, 'info');
+    log(`Tracking ${followedUsers.size} previously followed users`, 'info');
+    log(`Dry run: ${OPTIONS.DRY_RUN}`, 'info');
+
+    if (followedUsers.size === 0 &amp;&amp; OPTIONS.ONLY_TRACKED) {
+      log('No tracked users found. Run keywordFollow.js first to track who you follow.', 'warning');
+      log('Or set ONLY_TRACKED: false to unfollow any non-follower.', 'info');
+      return;
+    }
+
+    // First, get current followers to see who followed back
+    const path = window.location.pathname;
+    
+    if (path.includes('/followers')) {
+      // We're on followers page - scrape and store
+      const followers = await scrapeFollowers();
+      storage.set('my_followers', Array.from(followers));
+      log('Followers scraped and saved! Now go to your /following page and run again.', 'success');
+      return;
+    }
+    
+    if (path.includes('/following')) {
+      // We're on following page - do the unfollowing
+      const savedFollowers = new Set(storage.get('my_followers') || []);
+      
+      if (savedFollowers.size === 0) {
+        log('No followers data. Go to your /followers page first and run this script to scrape.', 'warning');
+        return;
+      }
+
+      log(`Loaded ${savedFollowers.size} followers from previous scrape`, 'info');
+      
+      const nonFollowers = findNonFollowers(savedFollowers);
+      log(`Found ${nonFollowers.length} non-followers past the ${OPTIONS.DAYS_TO_WAIT}-day threshold`, 'info');
+
+      if (nonFollowers.length === 0) {
+        log('No one to unfollow! Everyone either followed back or is still in grace period.', 'success');
+        return;
+      }
+
+      await unfollowFromPage(nonFollowers);
+      
+      log(`\n✅ Done! Unfollowed ${unfollowCount} users.`, 'success');
+      if (OPTIONS.DRY_RUN) {
+        log('(Dry run - no actual unfollows performed)', 'warning');
+      }
+    } else {
+      log('Please navigate to either:', 'warning');
+      log('  1. /followers - to scrape who follows you', 'info');
+      log('  2. /following - to unfollow non-followers', 'info');
+    }
+  };
+
+  run();
+
+  window.stopSmartUnfollow = () =&gt; {
+    OPTIONS.MAX_UNFOLLOWS = 0;
+    log('Stopping...', 'warning');
+  };
+})();
+</code></pre>
+          </div>
+        </section>
+
+        <div class="cta-box">
+          <h3>⚡ More XActions Scripts</h3>
+          <p>Browse 300+ free browser scripts for X/Twitter automation. No API keys, no fees.</p>
+          <a href="/scripts">Browse All Scripts</a>
+        </div>
+      </article>
+    </main>
+
+    <aside class="sidebar-right">
+      <div class="sidebar-card">
+        <h3>🧠 Unfollow Tools</h3>
+        <a href="/scripts/follow-ratio-manager">⚖️ Follow Ratio Manager</a>
+<a href="/scripts/unfollow-everyone">👋 Unfollow Everyone</a>
+<a href="/scripts/unfollowback">🧹 Unfollow Non-Followers</a>
+<a href="/scripts/unfollow-non-followers">🧹 Unfollow Non-Followers</a>
+<a href="/scripts/unfollow-with-log">📋 Unfollow Non-Followers With Log</a>
+      </div>
+      <div class="sidebar-card">
+        <h3>🔗 Quick Links</h3>
+        <a href="/scripts">All Scripts</a>
+        <a href="/features">Features</a>
+        <a href="/docs">Documentation</a>
+        <a href="/tutorials">Tutorials</a>
+        <a href="/mcp">MCP Server</a>
+        <a href="https://github.com/nirholas/XActions" rel="noopener">GitHub</a>
+      </div>
+    </aside>
+  </div>
+</body>
+</html>

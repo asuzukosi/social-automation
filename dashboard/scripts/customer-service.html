@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Customer Service — Free X/Twitter Script | XActions</title>
+  <meta name="description" content="XActions Automation - Customer Service Bot">
+  <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, customer, service, automation">
+  <meta name="author" content="nich (@nichxbt)">
+  <meta name="robots" content="index, follow">
+
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Customer Service — XActions">
+  <meta property="og:description" content="XActions Automation - Customer Service Bot">
+  <meta property="og:url" content="https://xactions.app/scripts/customer-service">
+  <meta property="og:site_name" content="XActions">
+  <meta property="og:image" content="https://xactions.app/og-image.png">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@nichxbt">
+  <meta name="twitter:title" content="Customer Service — XActions">
+  <meta name="twitter:description" content="XActions Automation - Customer Service Bot">
+
+  <link rel="canonical" href="https://xactions.app/scripts/customer-service">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "Customer Service — Free X/Twitter Script | XActions",
+    "description": "XActions Automation - Customer Service Bot",
+    "url": "https://xactions.app/scripts/customer-service",
+    "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
+    "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
+    "datePublished": "2026-03-30",
+    "dateModified": "2026-03-30",
+    "articleSection": "Automation",
+    "keywords": "xactions, twitter automation, x automation, browser script, devtools console, free, open source, customer, service, automation"
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
+      { "@type": "ListItem", "position": 2, "name": "Scripts", "item": "https://xactions.app/scripts" },
+      { "@type": "ListItem", "position": 3, "name": "Automation", "item": "https://xactions.app/scripts#automation" },
+      { "@type": "ListItem", "position": 4, "name": "Customer Service", "item": "https://xactions.app/scripts/customer-service" }
+    ]
+  }
+  </script>
+
+  <link rel="stylesheet" href="/css/common.css">
+  <style>
+    .article { padding: 24px 20px; }
+    .article h1 { font-size: 1.75rem; font-weight: 800; margin-bottom: 8px; line-height: 1.2; }
+    .article h2 { font-size: 1.375rem; font-weight: 700; margin: 32px 0 12px; padding-top: 16px; border-top: 1px solid var(--border); }
+    .article h3 { font-size: 1.125rem; font-weight: 600; margin: 24px 0 8px; color: var(--accent); }
+    .article p { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 16px; }
+    .article a { color: var(--accent); text-decoration: none; }
+    .article a:hover { text-decoration: underline; }
+    .article strong { color: var(--text-primary); }
+    .article code { background: var(--bg-tertiary); padding: 2px 6px; border-radius: 4px; font-family: 'Monaco','Menlo','Consolas', monospace; font-size: 0.875rem; color: var(--accent); }
+    .article pre { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 16px; overflow-x: auto; margin: 16px 0; }
+    .article pre code { background: none; padding: 0; color: var(--text-primary); font-size: 0.8125rem; display: block; }
+    .article table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 0.875rem; }
+    .article th { background: var(--bg-secondary); padding: 10px 12px; text-align: left; border: 1px solid var(--border); font-weight: 600; }
+    .article td { padding: 10px 12px; border: 1px solid var(--border); color: var(--text-secondary); }
+    .cat-badge { display: inline-block; background: var(--accent-light); color: var(--accent); padding: 4px 12px; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; margin-bottom: 16px; }
+    .meta-row { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 16px; font-size: 0.8125rem; color: var(--text-secondary); }
+    .meta-row span { display: flex; align-items: center; gap: 4px; }
+    .usage-steps { margin-left: 24px; margin-bottom: 16px; }
+    .usage-steps li { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 8px; padding-left: 4px; }
+    .warning-box { background: rgba(244, 33, 46, 0.1); border: 1px solid var(--error); border-radius: 12px; padding: 16px; margin: 16px 0; }
+    .warning-box p { color: var(--error); margin: 0; font-size: 0.875rem; }
+    .controls-box { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 16px; margin: 16px 0; }
+    .controls-box h3 { margin: 0 0 8px; font-size: 1rem; }
+    .code-block { position: relative; }
+    .copy-btn { position: absolute; top: 8px; right: 8px; background: var(--bg-tertiary); color: var(--text-secondary); border: 1px solid var(--border); border-radius: 8px; padding: 6px 12px; cursor: pointer; font-size: 0.75rem; z-index: 10; transition: all .2s; }
+    .copy-btn:hover { background: var(--accent); color: #fff; }
+    .full-code { margin-top: 32px; }
+    .full-code pre { max-height: 600px; overflow-y: auto; }
+    .cta-box { background: linear-gradient(135deg, var(--bg-secondary), var(--bg-tertiary)); border: 1px solid var(--border); border-radius: 16px; padding: 24px; margin: 32px 0; text-align: center; }
+    .cta-box h3 { font-size: 1.25rem; margin-bottom: 8px; color: var(--text-primary); }
+    .cta-box p { color: var(--text-secondary); margin-bottom: 16px; }
+    .cta-box a { display: inline-block; padding: 12px 24px; background: var(--accent); color: #fff; border-radius: 9999px; text-decoration: none; font-weight: 700; transition: background .2s; }
+    .cta-box a:hover { background: var(--accent-hover); }
+    .sidebar-right { width: 350px; padding: 16px 24px; position: sticky; top: 0; height: 100vh; overflow-y: auto; }
+    .sidebar-card { background: var(--bg-secondary); border-radius: 16px; padding: 16px; margin-bottom: 16px; }
+    .sidebar-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 12px; }
+    .sidebar-card a { display: block; color: var(--text-secondary); text-decoration: none; font-size: 0.875rem; padding: 6px 0; border-bottom: 1px solid var(--border); transition: color .2s; }
+    .sidebar-card a:last-child { border-bottom: none; }
+    .sidebar-card a:hover { color: var(--accent); }
+    .breadcrumb { font-size: 0.8125rem; color: var(--text-secondary); margin-top: 4px; }
+    .breadcrumb a { color: var(--accent); text-decoration: none; }
+    .breadcrumb a:hover { text-decoration: underline; }
+    .source-badge { display: inline-block; background: var(--bg-tertiary); color: var(--text-secondary); padding: 2px 8px; border-radius: 6px; font-size: 0.6875rem; margin-left: 8px; }
+    @media (max-width: 1024px) { .sidebar-right { display: none; } }
+    @media (max-width: 768px) {
+      .article pre { font-size: 0.75rem; }
+      .meta-row { flex-direction: column; gap: 4px; }
+    }
+  </style>
+</head>
+<body>
+  <a href="#main-content" class="skip-nav">Skip to main content</a>
+  <div class="layout">
+    <aside class="sidebar-left" aria-label="Main navigation"></aside>
+    <script src="/js/sidebar.js"></script>
+
+    <main class="main-content" id="main-content">
+      <header class="main-header">
+        <h1>🤝 Customer Service</h1>
+        <div class="breadcrumb">
+          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#automation">Automation</a> › Customer Service
+        </div>
+      </header>
+
+      <article class="article">
+        <span class="cat-badge">Automation</span>
+        <span class="source-badge">src/automation</span>
+
+        <div class="meta-row">
+          
+          
+          <span>512 lines</span>
+          <span>by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></span>
+        </div>
+
+        <p>XActions Automation - Customer Service Bot</p>
+
+        
+
+        <h2>How to Use</h2>
+        <ol class="usage-steps"><li>Open X home page</li>
+<li>Paste core.js, then paste this script</li>
+<li>Configure your accounts and response templates below</li>
+<li>Run and let it handle customer inquiries!</li></ol>
+        <p><strong>Note:</strong> This script requires pasting <code>src/automation/core.js</code> first for shared utilities.</p>
+
+        
+        <section class="config-section">
+        <h2>Configuration Options</h2>
+        <table>
+          <thead><tr><th>Option</th><th>Default</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td><code>mentions</code></td><td><code>true</code></td><td>Monitor @mentions</td></tr>
+<tr><td><code>dms</code></td><td><code>true</code></td><td>Monitor DMs (requires manual navigation)</td></tr>
+<tr><td><code>replies</code></td><td><code>true</code></td><td>Monitor replies to your posts</td></tr>
+<tr><td><code>keywords</code></td><td><code>true</code></td><td>Monitor keywords related to your business</td></tr>
+<tr><td><code>autoReply</code></td><td><code>true</code></td><td>Automatically reply to mentions</td></tr>
+<tr><td><code>autoReplyDM</code></td><td><code>false</code></td><td>Auto-reply to DMs (use with caution!)</td></tr>
+<tr><td><code>requireApproval</code></td><td><code>true</code></td><td>Show response before sending (recommended)</td></tr>
+<tr><td><code>markAsRead</code></td><td><code>true</code></td><td>Mark notifications as read after responding</td></tr>
+<tr><td><code>start</code></td><td><code>9</code></td><td>9 AM</td></tr>
+<tr><td><code>end</code></td><td><code>17</code></td><td>5 PM</td></tr>
+<tr><td><code>RESPONSE_DELAY_SECONDS</code></td><td><code>5</code></td><td>Wait before responding (looks more natural)</td></tr>
+          </tbody>
+        </table>
+      </section>
+        <section class="config-code">
+        <h2>Default Configuration</h2>
+        <div class="code-block">
+          <button class="copy-btn" onclick="navigator.clipboard.writeText(this.nextElementSibling.querySelector('code').textContent).then(()=>{this.textContent='Copied!';setTimeout(()=>this.textContent='Copy',2000)})">Copy</button>
+          <pre><code>const CONFIG = {
+    // Which account to use for customer service (must be in ACCOUNTS list)
+    ACTIVE_ACCOUNT: 'business_account',
+    
+    // -------- MONITORING --------
+    MONITOR: {
+      mentions: true,           // Monitor @mentions
+      dms: true,                // Monitor DMs (requires manual navigation)
+      replies: true,            // Monitor replies to your posts
+      keywords: true,           // Monitor keywords related to your business
+    },
+    
+    // Keywords to monitor (for proactive customer service)
+    BRAND_KEYWORDS: [
+      // 'your_brand_name',
+      // 'your_product_name',
+    ],
+    
+    // -------- RESPONSE SETTINGS --------
+    RESPONSE: {
+      autoReply: true,          // Automatically reply to mentions
+      autoReplyDM: false,       // Auto-reply to DMs (use with caution!)
+      requireApproval: true,    // Show response before sending (recommended)
+      markAsRead: true,         // Mark notifications as read after responding
+    },
+    
+    // -------- BUSINESS HOURS --------
+    BUSINESS_HOURS: {
+      enabled: true,
+      timezone: 'America/New_York',
+      start: 9,                 // 9 AM
+      end: 17,                  // 5 PM
+      days: [1, 2, 3, 4, 5],    // Monday-Friday (0=Sunday)
+      outsideHoursMessage: &quot;Thanks for reaching out! We're currently outside business hours (Mon-Fri 9AM-5PM ET). We'll respond first thing next business day! 🙏&quot;,
+    },
+    
+    // -------- TIMING --------
+    CHECK_INTERVAL_SECONDS: 60,
+    RESPONSE_DELAY_SECONDS: 5,  // Wait before responding (looks more natural)
+    
+    // -------- LIMITS --------
+    MAX_RESPONSES_PER_HOUR: 20,
+    MAX_RESPONSES_PER_DAY: 100,
+  };</code></pre>
+        </div>
+      </section>
+
+        <section class="full-code">
+          <h2>Full Script</h2>
+          <p>Copy and paste this entire script into your browser DevTools console on <a href="https://x.com" rel="noopener">x.com</a>.</p>
+          <div class="code-block">
+            <button class="copy-btn" onclick="navigator.clipboard.writeText(this.nextElementSibling.querySelector('code').textContent).then(()=>{this.textContent='Copied!';setTimeout(()=>this.textContent='Copy Script',2000)})">Copy Script</button>
+            <pre><code>// Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
+// XActions Automation - Customer Service Bot
+// https://github.com/nirholas/XActions
+//
+// REQUIRES: Paste core.js first!
+//
+// Automate customer service responses on X for business accounts
+// Monitor mentions, DMs, and provide templated responses
+//
+// HOW TO USE:
+// 1. Open X home page
+// 2. Paste core.js, then paste this script
+// 3. Configure your accounts and response templates below
+// 4. Run and let it handle customer inquiries!
+
+(() =&gt; {
+  if (!window.XActions?.Core) {
+    console.error('❌ Core module not loaded! Paste core.js first.');
+    return;
+  }
+
+  const { log, sleep, randomDelay, scrollBy, clickElement, waitForElement, storage, SELECTORS } = window.XActions.Core;
+
+  // ============================================
+  // ACCOUNT CONFIGURATION
+  // ============================================
+  // Format: 'username:password' or just 'username' if already logged in
+  // You can paste these from a txt file
+  const ACCOUNTS = `
+personal_account
+business_account
+  `.trim().split('\n').map(line =&gt; {
+    const [username, password] = line.trim().split(':');
+    return { username: username?.toLowerCase(), password };
+  }).filter(a =&gt; a.username);
+
+  // ============================================
+  // CUSTOMER SERVICE CONFIGURATION
+  // ============================================
+  const CONFIG = {
+    // Which account to use for customer service (must be in ACCOUNTS list)
+    ACTIVE_ACCOUNT: 'business_account',
+    
+    // -------- MONITORING --------
+    MONITOR: {
+      mentions: true,           // Monitor @mentions
+      dms: true,                // Monitor DMs (requires manual navigation)
+      replies: true,            // Monitor replies to your posts
+      keywords: true,           // Monitor keywords related to your business
+    },
+    
+    // Keywords to monitor (for proactive customer service)
+    BRAND_KEYWORDS: [
+      // 'your_brand_name',
+      // 'your_product_name',
+    ],
+    
+    // -------- RESPONSE SETTINGS --------
+    RESPONSE: {
+      autoReply: true,          // Automatically reply to mentions
+      autoReplyDM: false,       // Auto-reply to DMs (use with caution!)
+      requireApproval: true,    // Show response before sending (recommended)
+      markAsRead: true,         // Mark notifications as read after responding
+    },
+    
+    // -------- BUSINESS HOURS --------
+    BUSINESS_HOURS: {
+      enabled: true,
+      timezone: 'America/New_York',
+      start: 9,                 // 9 AM
+      end: 17,                  // 5 PM
+      days: [1, 2, 3, 4, 5],    // Monday-Friday (0=Sunday)
+      outsideHoursMessage: &quot;Thanks for reaching out! We're currently outside business hours (Mon-Fri 9AM-5PM ET). We'll respond first thing next business day! 🙏&quot;,
+    },
+    
+    // -------- TIMING --------
+    CHECK_INTERVAL_SECONDS: 60,
+    RESPONSE_DELAY_SECONDS: 5,  // Wait before responding (looks more natural)
+    
+    // -------- LIMITS --------
+    MAX_RESPONSES_PER_HOUR: 20,
+    MAX_RESPONSES_PER_DAY: 100,
+  };
+
+  // ============================================
+  // RESPONSE TEMPLATES
+  // ============================================
+  // Use {customer} placeholder for their username
+  // Use {original} placeholder to reference their message
+  const TEMPLATES = {
+    // Default greeting
+    greeting: [
+      &quot;Hi {customer}! Thanks for reaching out. How can I help you today? 😊&quot;,
+      &quot;Hey {customer}! We're here to help. What can we assist you with?&quot;,
+      &quot;Hello {customer}! Thanks for your message. What can we do for you?&quot;,
+    ],
+    
+    // When customer mentions a problem/issue
+    issue: [
+      &quot;Hi {customer}, I'm sorry to hear you're experiencing issues. Could you please DM us more details so we can help resolve this?&quot;,
+      &quot;Hey {customer}, we want to make this right! Please send us a DM with your order details and we'll look into it right away.&quot;,
+      &quot;Hi {customer}, thanks for letting us know. Can you share more details via DM so we can investigate?&quot;,
+    ],
+    
+    // Positive feedback
+    thanks: [
+      &quot;Thank you so much {customer}! We really appreciate your kind words! 🙏❤️&quot;,
+      &quot;Wow, thanks {customer}! Comments like yours make our day! 🌟&quot;,
+      &quot;Thanks for the love {customer}! We're so glad you're happy! 😊&quot;,
+    ],
+    
+    // Questions about products/services
+    question: [
+      &quot;Great question {customer}! Let me help you with that. [CUSTOMIZE RESPONSE]&quot;,
+      &quot;Hi {customer}! I'd be happy to help answer that. [CUSTOMIZE RESPONSE]&quot;,
+    ],
+    
+    // Pricing inquiries
+    pricing: [
+      &quot;Hi {customer}! For pricing info, please check our website or DM us for a personalized quote! 💰&quot;,
+      &quot;Hey {customer}! We'd love to discuss pricing with you. Send us a DM and we'll get you sorted!&quot;,
+    ],
+    
+    // General support
+    support: [
+      &quot;Hi {customer}! For the fastest support, please DM us or email support@yourcompany.com 📧&quot;,
+      &quot;Hey {customer}! We're here to help. Please DM us your details and we'll assist you right away!&quot;,
+    ],
+    
+    // Out of stock / availability
+    availability: [
+      &quot;Hi {customer}! Thanks for your interest. Let us check availability and get back to you via DM!&quot;,
+      &quot;Hey {customer}! We'll check on that for you. Expect a DM from us shortly!&quot;,
+    ],
+    
+    // Escalation to DM
+    escalate: [
+      &quot;Hi {customer}! To better assist you, please send us a DM with your details. We'll take care of you! 🙌&quot;,
+      &quot;Hey {customer}! Let's continue this in DMs so we can help you properly. Send us a message!&quot;,
+    ],
+  };
+
+  // ============================================
+  // KEYWORD DETECTION FOR AUTO-CATEGORIZATION
+  // ============================================
+  const KEYWORD_CATEGORIES = {
+    issue: ['problem', 'issue', 'broken', 'doesn\'t work', 'not working', 'error', 'bug', 'complaint', 'disappointed', 'frustrated', 'terrible', 'awful', 'worst', 'refund', 'cancel'],
+    thanks: ['thank', 'thanks', 'awesome', 'amazing', 'love', 'great', 'excellent', 'perfect', 'best', 'fantastic', 'wonderful', 'appreciate'],
+    pricing: ['price', 'cost', 'how much', 'pricing', 'discount', 'coupon', 'deal', 'sale', 'expensive', 'cheap', 'afford'],
+    availability: ['available', 'in stock', 'restock', 'when', 'back in stock', 'sold out', 'inventory'],
+    question: ['?', 'how do', 'how can', 'what is', 'where', 'when', 'why', 'can you', 'could you', 'does it', 'is it'],
+  };
+
+  // ============================================
+  // STATE
+  // ============================================
+  const state = {
+    isRunning: true,
+    responsesToday: 0,
+    responsesThisHour: 0,
+    hourReset: Date.now(),
+    dayReset: Date.now(),
+    processedIds: new Set(storage.get('cs_processed') || []),
+    interactions: [],
+  };
+
+  const saveState = () =&gt; {
+    storage.set('cs_processed', Array.from(state.processedIds));
+    storage.set('cs_interactions', state.interactions.slice(-100)); // Keep last 100
+  };
+
+  // ============================================
+  // BUSINESS HOURS CHECK
+  // ============================================
+  const isBusinessHours = () =&gt; {
+    if (!CONFIG.BUSINESS_HOURS.enabled) return true;
+    
+    const now = new Date();
+    const day = now.getDay();
+    const hour = now.getHours();
+    
+    if (!CONFIG.BUSINESS_HOURS.days.includes(day)) return false;
+    if (hour &lt; CONFIG.BUSINESS_HOURS.start || hour &gt;= CONFIG.BUSINESS_HOURS.end) return false;
+    
+    return true;
+  };
+
+  // ============================================
+  // RATE LIMIT CHECK
+  // ============================================
+  const canRespond = () =&gt; {
+    const now = Date.now();
+    
+    // Reset hourly counter
+    if (now - state.hourReset &gt; 60 * 60 * 1000) {
+      state.responsesThisHour = 0;
+      state.hourReset = now;
+    }
+    
+    // Reset daily counter
+    if (now - state.dayReset &gt; 24 * 60 * 60 * 1000) {
+      state.responsesToday = 0;
+      state.dayReset = now;
+    }
+    
+    return (
+      state.responsesThisHour &lt; CONFIG.MAX_RESPONSES_PER_HOUR &amp;&amp;
+      state.responsesToday &lt; CONFIG.MAX_RESPONSES_PER_DAY
+    );
+  };
+
+  // ============================================
+  // DETECT MESSAGE CATEGORY
+  // ============================================
+  const detectCategory = (message) =&gt; {
+    const lower = message.toLowerCase();
+    
+    for (const [category, keywords] of Object.entries(KEYWORD_CATEGORIES)) {
+      for (const keyword of keywords) {
+        if (lower.includes(keyword)) {
+          return category;
+        }
+      }
+    }
+    
+    return 'greeting'; // Default to greeting
+  };
+
+  // ============================================
+  // GET RESPONSE FOR CATEGORY
+  // ============================================
+  const getResponse = (category, customer, originalMessage) =&gt; {
+    // Check business hours first
+    if (!isBusinessHours()) {
+      return CONFIG.BUSINESS_HOURS.outsideHoursMessage
+        .replace('{customer}', `@${customer}`)
+        .replace('{original}', originalMessage);
+    }
+    
+    const templates = TEMPLATES[category] || TEMPLATES.greeting;
+    const template = templates[Math.floor(Math.random() * templates.length)];
+    
+    return template
+      .replace('{customer}', `@${customer}`)
+      .replace('{original}', originalMessage);
+  };
+
+  // ============================================
+  // SEND REPLY
+  // ============================================
+  const sendReply = async (tweetElement, response) =&gt; {
+    // Find reply button
+    const replyBtn = tweetElement.querySelector('[data-testid=&quot;reply&quot;]');
+    if (!replyBtn) {
+      log('Reply button not found', 'error');
+      return false;
+    }
+    
+    await clickElement(replyBtn);
+    await sleep(1500);
+    
+    // Find the reply input
+    const input = await waitForElement('[data-testid=&quot;tweetTextarea_0&quot;]', 5000);
+    if (!input) {
+      log('Reply input not found', 'error');
+      return false;
+    }
+    
+    // Type the response
+    input.focus();
+    document.execCommand('insertText', false, response);
+    await sleep(500);
+    
+    // If requiring approval, wait for user confirmation
+    if (CONFIG.RESPONSE.requireApproval) {
+      log(`📝 Response ready: &quot;${response.substring(0, 50)}...&quot;`, 'info');
+      log('Press Enter in the tweet box to send, or Escape to cancel', 'info');
+      return true; // User will manually send
+    }
+    
+    // Find and click send button
+    const sendBtn = document.querySelector('[data-testid=&quot;tweetButton&quot;]');
+    if (sendBtn) {
+      await clickElement(sendBtn);
+      await sleep(1000);
+      return true;
+    }
+    
+    return false;
+  };
+
+  // ============================================
+  // PROCESS MENTION
+  // ============================================
+  const processMention = async (notification) =&gt; {
+    const id = notification.getAttribute('data-testid') || 
+               notification.querySelector('a[href*=&quot;/status/&quot;]')?.href;
+    
+    if (!id || state.processedIds.has(id)) return;
+    
+    // Extract customer username and message
+    const userLink = notification.querySelector('a[href^=&quot;/&quot;]');
+    const customer = userLink?.getAttribute('href')?.replace('/', '');
+    
+    const messageEl = notification.querySelector('[data-testid=&quot;tweetText&quot;]');
+    const message = messageEl?.textContent || '';
+    
+    if (!customer || !message) return;
+    
+    // Skip if it's our own account
+    if (customer.toLowerCase() === CONFIG.ACTIVE_ACCOUNT.toLowerCase()) return;
+    
+    log(`📩 New mention from @${customer}: &quot;${message.substring(0, 50)}...&quot;`, 'info');
+    
+    // Detect category and get response
+    const category = detectCategory(message);
+    const response = getResponse(category, customer, message);
+    
+    log(`Category: ${category}`, 'action');
+    log(`Suggested response: ${response}`, 'info');
+    
+    // Check rate limits
+    if (!canRespond()) {
+      log('Rate limit reached, skipping response', 'warning');
+      return;
+    }
+    
+    // Send response if auto-reply is enabled
+    if (CONFIG.RESPONSE.autoReply) {
+      await sleep(CONFIG.RESPONSE_DELAY_SECONDS * 1000);
+      
+      // Click on the notification to open the tweet
+      const tweetLink = notification.querySelector('a[href*=&quot;/status/&quot;]');
+      if (tweetLink) {
+        await clickElement(tweetLink);
+        await sleep(2000);
+        
+        // Find the tweet and reply
+        const tweet = document.querySelector('[data-testid=&quot;tweet&quot;]');
+        if (tweet) {
+          const sent = await sendReply(tweet, response);
+          if (sent) {
+            state.responsesThisHour++;
+            state.responsesToday++;
+            
+            // Log interaction
+            state.interactions.push({
+              timestamp: Date.now(),
+              customer,
+              message: message.substring(0, 200),
+              category,
+              response,
+              sent: !CONFIG.RESPONSE.requireApproval,
+            });
+            
+            log(`✅ Response ${CONFIG.RESPONSE.requireApproval ? 'prepared' : 'sent'} to @${customer}`, 'success');
+          }
+        }
+        
+        // Go back to notifications
+        window.history.back();
+        await sleep(1500);
+      }
+    }
+    
+    state.processedIds.add(id);
+    saveState();
+  };
+
+  // ============================================
+  // CHECK NOTIFICATIONS
+  // ============================================
+  const checkNotifications = async () =&gt; {
+    log('📬 Checking notifications...', 'action');
+    
+    // Navigate to notifications
+    window.location.href = 'https://x.com/notifications/mentions';
+    await sleep(3000);
+    
+    // Get notification items
+    const notifications = document.querySelectorAll('[data-testid=&quot;cellInnerDiv&quot;]');
+    
+    for (const notification of notifications) {
+      if (!state.isRunning) break;
+      await processMention(notification);
+      await randomDelay(2000, 4000);
+    }
+  };
+
+  // ============================================
+  // MAIN LOOP
+  // ============================================
+  const run = async () =&gt; {
+    console.log(`
+╔═══════════════════════════════════════════════════════════╗
+║  🎧 XActions Customer Service Bot                        ║
+╠═══════════════════════════════════════════════════════════╣
+║  Active Account: @${CONFIG.ACTIVE_ACCOUNT.padEnd(20)}                ║
+║  Accounts Loaded: ${String(ACCOUNTS.length).padEnd(5)}                               ║
+║                                                           ║
+║  Monitoring:                                              ║
+║    Mentions: ${CONFIG.MONITOR.mentions ? '✅' : '❌'}  │  DMs: ${CONFIG.MONITOR.dms ? '✅' : '❌'}  │  Replies: ${CONFIG.MONITOR.replies ? '✅' : '❌'}    ║
+║                                                           ║
+║  Auto-Reply: ${CONFIG.RESPONSE.autoReply ? '✅' : '❌'}  │  Approval: ${CONFIG.RESPONSE.requireApproval ? '✅' : '❌'}              ║
+║  Business Hours: ${CONFIG.BUSINESS_HOURS.enabled ? '✅' : '❌'} (${CONFIG.BUSINESS_HOURS.start}:00-${CONFIG.BUSINESS_HOURS.end}:00)                 ║
+║                                                           ║
+║  Run stopCS() to stop the bot.                            ║
+║  Run csStats() to see statistics.                         ║
+╚═══════════════════════════════════════════════════════════╝
+    `);
+
+    if (ACCOUNTS.length === 0) {
+      log('⚠️ No accounts configured! Add accounts to the ACCOUNTS section.', 'warning');
+      return;
+    }
+
+    // Initial check
+    await checkNotifications();
+    
+    // Continuous monitoring loop
+    while (state.isRunning) {
+      await sleep(CONFIG.CHECK_INTERVAL_SECONDS * 1000);
+      
+      if (!state.isRunning) break;
+      
+      await checkNotifications();
+    }
+  };
+
+  // ============================================
+  // STATS
+  // ============================================
+  const printStats = () =&gt; {
+    const interactions = state.interactions;
+    const categories = {};
+    
+    for (const int of interactions) {
+      categories[int.category] = (categories[int.category] || 0) + 1;
+    }
+    
+    console.log(`
+╔═══════════════════════════════════════════════════════════╗
+║  📊 Customer Service Stats                                ║
+╠═══════════════════════════════════════════════════════════╣
+║  Total Interactions: ${String(interactions.length).padEnd(5)}                            ║
+║  Today: ${String(state.responsesToday).padEnd(5)}  │  This Hour: ${String(state.responsesThisHour).padEnd(5)}             ║
+╠───────────────────────────────────────────────────────────╣
+║  By Category:                                             ║
+${Object.entries(categories).map(([cat, count]) =&gt; 
+  `║    ${cat.padEnd(15)}: ${String(count).padEnd(5)}                            ║`
+).join('\n')}
+╚═══════════════════════════════════════════════════════════╝
+    `);
+    
+    // Show recent interactions
+    if (interactions.length &gt; 0) {
+      console.log('\n📜 Recent Interactions:');
+      interactions.slice(-5).forEach(int =&gt; {
+        console.log(`  @${int.customer} (${int.category}): &quot;${int.message.substring(0, 40)}...&quot;`);
+      });
+    }
+  };
+
+  // ============================================
+  // MANUAL RESPONSE HELPER
+  // ============================================
+  const respond = (category, customMessage) =&gt; {
+    // For manual use when you want to respond with a specific template
+    const templates = TEMPLATES[category];
+    if (!templates) {
+      console.log('Available categories:', Object.keys(TEMPLATES).join(', '));
+      return;
+    }
+    
+    const response = customMessage || templates[Math.floor(Math.random() * templates.length)];
+    console.log(`📝 Response: ${response}`);
+    
+    // Copy to clipboard
+    navigator.clipboard.writeText(response);
+    console.log('(Copied to clipboard!)');
+  };
+
+  run();
+
+  // ============================================
+  // EXPORTS
+  // ============================================
+  window.stopCS = () =&gt; {
+    state.isRunning = false;
+    log('Stopping customer service bot...', 'warning');
+  };
+  
+  window.csStats = printStats;
+  window.csRespond = respond;
+  window.csTemplates = () =&gt; {
+    console.log('📋 Available Templates:');
+    Object.entries(TEMPLATES).forEach(([cat, temps]) =&gt; {
+      console.log(`\n${cat.toUpperCase()}:`);
+      temps.forEach((t, i) =&gt; console.log(`  ${i + 1}. ${t}`));
+    });
+  };
+
+  window.XActions.CustomerService = {
+    state: () =&gt; state,
+    config: CONFIG,
+    templates: TEMPLATES,
+    accounts: ACCOUNTS,
+    respond,
+    printStats,
+  };
+})();
+</code></pre>
+          </div>
+        </section>
+
+        <div class="cta-box">
+          <h3>⚡ More XActions Scripts</h3>
+          <p>Browse 300+ free browser scripts for X/Twitter automation. No API keys, no fees.</p>
+          <a href="/scripts">Browse All Scripts</a>
+        </div>
+      </article>
+    </main>
+
+    <aside class="sidebar-right">
+      <div class="sidebar-card">
+        <h3>🤝 Automation</h3>
+        <a href="/scripts/actions">⚡ Actions</a>
+<a href="/scripts/control-panel">🎛️ Control Panel</a>
+<a href="/scripts/core">⚙️ Core</a>
+<a href="/scripts/protect-active-users">🛡️ Protect Active Users</a>
+<a href="/scripts/quota-supervisor">⚠️ Quota Supervisor</a>
+<a href="/scripts/rate-limiter">⏱️ Rate Limiter</a>
+<a href="/scripts/session-logger">📋 Session Logger</a>
+<a href="/scripts/rss-monitor">📡 XActions RSS &amp; Webhook Content Ingestion</a>
+      </div>
+      <div class="sidebar-card">
+        <h3>🔗 Quick Links</h3>
+        <a href="/scripts">All Scripts</a>
+        <a href="/features">Features</a>
+        <a href="/docs">Documentation</a>
+        <a href="/tutorials">Tutorials</a>
+        <a href="/mcp">MCP Server</a>
+        <a href="https://github.com/nirholas/XActions" rel="noopener">GitHub</a>
+      </div>
+    </aside>
+  </div>
+</body>
+</html>

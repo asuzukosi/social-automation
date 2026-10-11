@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Guides and reference — XActions</title>
+<meta name="description" content="Reference pages for the CLI, the library, the API and the pieces underneath them. 72 pages in the XActions documentation.">
+<meta name="keywords" content="xactions, twitter automation, x automation, open source, free">
+<meta name="author" content="nich (@nichxbt)">
+<meta name="robots" content="index, follow, max-image-preview:large">
+<meta name="color-scheme" content="light dark">
+
+<meta property="og:type" content="website">
+<meta property="og:title" content="Guides and reference — XActions">
+<meta property="og:description" content="Reference pages for the CLI, the library, the API and the pieces underneath them. 72 pages in the XActions documentation.">
+<meta property="og:url" content="https://xactions.app/docs/guides">
+<meta property="og:image" content="https://xactions.app/og-docs.png">
+<meta property="og:site_name" content="XActions">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@nichxbt">
+<meta name="twitter:title" content="Guides and reference — XActions">
+<meta name="twitter:description" content="Reference pages for the CLI, the library, the API and the pieces underneath them. 72 pages in the XActions documentation.">
+<meta name="twitter:image" content="https://xactions.app/og-docs.png">
+
+<link rel="canonical" href="https://xactions.app/docs/guides">
+<link rel="manifest" href="/manifest.json">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+<link rel="stylesheet" href="/docs/assets/docs.css">
+
+<script>
+/* Applied before first paint so a dark-theme reader never sees a white flash. */
+(function(){try{var t=localStorage.getItem('xactions-theme');if(t==='light'||t==='dark'){document.documentElement.setAttribute('data-theme',t);}}catch(e){}})();
+</script>
+
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header class="topbar">
+  <button class="icon-btn menu-toggle" data-menu-toggle aria-expanded="false" aria-label="Open navigation">☰</button>
+  <a class="topbar__brand" href="/">⚡ XActions</a>
+  <div class="topbar__spacer"></div>
+  <button class="search-trigger" data-search-trigger aria-label="Search documentation">
+    <span aria-hidden="true">🔍</span><span class="search-trigger__label">Search docs</span><kbd>⌘K</kbd>
+  </button>
+  <nav class="topbar__nav" aria-label="Main">
+    <a class="topbar__link" href="/docs" aria-current="page">Docs</a>
+    <a class="topbar__link" href="/tutorials">Tutorials</a>
+    <a class="topbar__link" href="/examples">Examples</a>
+    <a class="topbar__link" href="https://github.com/nirholas/XActions" target="_blank" rel="noopener">GitHub</a>
+  </nav>
+  <button class="icon-btn" data-theme-toggle aria-label="Switch theme">☾</button>
+</header>
+
+<div class="scrim" data-scrim></div>
+
+<main class="content content--wide" id="main">
+  <div class="prose">
+    <span class="eyebrow">📘 Documentation</span>
+    <h1>Guides and reference</h1>
+    <p class="hero__lede">Reference pages for the CLI, the library, the API and the pieces underneath them. 72 pages.</p>
+
+    <div class="quick-links">
+      <a class="btn btn--ghost" href="/docs">← All documentation</a>
+    </div>
+
+    <div class="card-grid">
+      <a class="card" href="/docs/guides/a2a-api-reference">
+        
+        <span class="card__title">A2A API Reference — XActions — XActions Docs</span>
+        <span class="card__desc">Complete HTTP API reference for the XActions A2A server.</span>
+        <span class="card__meta">2 min read</span>
+      </a>
+      <a class="card" href="/docs/guides/a2a-protocol">
+        
+        <span class="card__title">A2A Protocol — XActions — XActions Docs</span>
+        <span class="card__desc">Google&amp;#39;s Agent-to-Agent (A2A) protocol implementation for XActions, enabling inter-agent communication, task delegation, and multi-agent orchestration.</span>
+        <span class="card__meta">1 min read</span>
+      </a>
+      <a class="card" href="/docs/guides/agent-advanced">
+        
+        <span class="card__title">Thought Leader Agent — Advanced Features — XActions Docs</span>
+        <span class="card__desc">Content Calendar, Multi-Account support, Engagement Network, and dashboard monitoring.</span>
+        <span class="card__meta">4 min read</span>
+      </a>
+      <a class="card" href="/docs/guides/agent-api-reference">
+        
+        <span class="card__title">Thought Leader Agent — API Reference — XActions Docs</span>
+        <span class="card__desc">REST API for monitoring, controlling, and configuring the autonomous agent.</span>
+        <span class="card__meta">3 min read</span>
+      </a>
+      <a class="card" href="/docs/guides/agent-architecture">
+        
+        <span class="card__title">Thought Leader Agent — Architecture — XActions Docs</span>
+        <span class="card__desc">Deep dive into every module, how they compose together, and design decisions.</span>
+        <span class="card__meta">6 min read</span>
+      </a>
+      <a class="card" href="/docs/guides/agent-config-reference">
+        
+        <span class="card__title">Thought Leader Agent — Configuration Reference — XActions Docs</span>
+        <span class="card__desc">Every configuration option for the agent, with defaults and examples.</span>
+        <span class="card__meta">6 min read</span>
+      </a>
+      <a class="card" href="/docs/guides/agent-getting-started">
+        
+        <span class="card__title">Thought Leader Agent — Getting Started — XActions Docs</span>
+        <span class="card__desc">24/7 autonomous X/Twitter growth agent powered by LLMs. No API fees. Open source.</span>
+        <span class="card__meta">4 min read</span>
+      </a>
+      <a class="card" href="/docs/guides/agent-system">
+        
+        <span class="card__title">Thought Leader Agent System — XActions Docs</span>
+        <span class="card__desc">24/7 LLM-powered autonomous agent for X/Twitter thought leadership growth. Runs headless with Puppeteer, generates content with LLMs, and behaves like a real</span>
+        <span class="card__meta">7 min read</span>
+      </a>
+      <a class="card" href="/docs/guides/agents">
+        
+        <span class="card__title">Thought Leader Agent — XActions Docs</span>
+        <span class="card__desc">Autonomous AI agent that grows your X/Twitter account 24/7 — LLM-powered content creation, human-like engagement, circadian scheduling, anti-detection, and mu</span>
+        <span class="card__meta">7 min read</span>
+      </a>
+      <a class="card" href="/docs/guides/ai-api">
+        
+        <span class="card__title">XActions AI API Documentation — XActions Docs</span>
+        <span class="card__desc">Free &amp;amp; open-source API for AI agents. Use locally with Puppeteer (free, no limits) or self-host the remote API with optional x402 micropayments.</span>
+        <span class="card__meta">5 min read</span>
+      </a>
+      <a class="card" href="/docs/guides/algorithm-builder">
+        
+        <span class="card__title">Algorithm Builder — 24/7 Niche Growth Automation — XActions Docs</span>
+        <span class="card__desc">Train your X algorithm around specific topics by mimicking natural human behavior — with optional LLM-powered comments.</span>
+        <span class="card__meta">4 min read</span>
+      </a>
+      <a class="card" href="/docs/guides/analytics-advanced">
+        
+        <span class="card__title">Analytics &amp;amp; Sentiment Analysis — XActions Docs</span>
+        <span class="card__desc">Built-in sentiment analysis, reputation monitoring, audience insights, price correlation, and automated reporting — all without external APIs.</span>
+        <span class="card__meta">3 min read</span>
+      </a>
+      <a class="card" href="/docs/guides/analytics">
+        
+        <span class="card__title">Sentiment Analysis &amp;amp; Reputation Monitoring — XActions Docs</span>
+        <span class="card__desc">Real-time sentiment analysis, reputation monitoring, alerting, and reporting for X/Twitter — no API fees.</span>
+        <span class="card__meta">4 min read</span>
+      </a>
+      <a class="card" href="/docs/guides/api-reference">
+        
+        <span class="card__title">XActions — API Reference — XActions Docs</span>
+        <span class="card__desc">Complete function reference for the xactions npm package.</span>
+        <span class="card__meta">3 min read</span>
+      </a>
+      <a class="card" href="/docs/guides/architecture">
+        
+        <span class="card__title">Architecture — XActions Docs</span>
+        <span class="card__desc">XActions v3.5.0 — System architecture, project structure, and design decisions.</span>
+        <span class="card__meta">3 min read</span>
+      </a>
+      <a class="card" href="/docs/guides/ask">
+        
+        <span class="card__title">Ask XActions — XActions Docs</span>
+        <span class="card__desc">Ask how to do anything with XActions in plain language and get a sourced answer. Live at xactions.app/ask. Free, no account, no API key.</span>
+        <span class="card__meta">5 min read</span>
+      </a>
+      <a class="card" href="/docs/guides/audience-overlap">
+        
+        <span class="card__title">Audience Overlap Analysis — XActions Docs</span>
+        <span class="card__desc">Find shared followers between accounts, rank audience similarity, and discover niche communities. Competes with SparkToro and Audiense.</span>
+        <span class="card__meta">2 min read</span>
+      </a>
+      <a class="card" href="/docs/guides/automation">
+        
+        <span class="card__title">XActions Automation Framework Guide — XActions Docs</span>
+        <span class="card__desc">A complete browser automation toolkit for X (Twitter) growth and engagement.</span>
+        <span class="card__meta">25 min read</span>
+      </a>
+      <a class="card" href="/docs/guides/browser-extension">
+        
+        <span class="card__title">Browser Extension — XActions Docs</span>
+        <span class="card__desc">Chrome/Edge extension for XActions. Run automation directly from the browser toolbar — no DevTools console needed.</span>
+        <span class="card__meta">2 min read</span>
+      </a>
+      <a class="card" href="/docs/guides/browser-scripts">
+        
+        <span class="card__title">Browser Scripts — XActions Docs</span>
+        <span class="card__desc">The zero-install surface. Copy a script, paste it into your browser&amp;#39;s DevTools console on x.com, and it runs against the page you already have open, using the</span>
+        <span class="card__meta">10 min read</span>
+      </a>
+      <a class="card" href="/docs/guides/bulk-operations">
+        
+        <span class="card__title">Bulk Operations — XActions Docs</span>
+        <span class="card__desc">CSV/JSON/TXT import for batch follow, unfollow, block, mute, DM, and scrape — with safety caps, retries, and resume. Competes with Phantombuster and Circleboo</span>
+        <span class="card__meta">3 min read</span>
+      </a>
+      <a class="card" href="/docs/guides/cli-reference">
+        
+        <span class="card__title">XActions CLI Reference — XActions Docs</span>
+        <span class="card__desc">The Complete X/Twitter Automation Toolkit</span>
+        <span class="card__meta">32 min read</span>
+      </a>
+      <a class="card" href="/docs/guides/configuration">
+        
+        <span class="card__title">Configuration — XActions Docs</span>
+        <span class="card__desc">XActions is configured in four places, and which ones you need depends entirely on which surface you use.</span>
+        <span class="card__meta">4 min read</span>
+      </a>
+      <a class="card" href="/docs/guides/content-calendar">
+        
+        <span class="card__title">Content Calendar — XActions Docs</span>
+        <span class="card__desc">Visual drag-and-drop content calendar for planning, scheduling, and managing posts. Competes with Hypefury, Buffer, and Hootsuite.</span>
+        <span class="card__meta">1 min read</span>
+      </a>
+      <a class="card" href="/docs/guides/control-panel">
+        
+        <span class="card__title">Control Panel — Browser Automation UI — XActions Docs</span>
+        <span class="card__desc">A floating, draggable control panel for running XActions automations directly on x.com — no terminal needed.</span>
+        <span class="card__meta">3 min read</span>
+      </a>
+      <a class="card" href="/docs/guides/cryptocurrency-api-guide">
+        
+        <span class="card__title">The Complete Guide to Cryptocurrency APIs in 2026 — XActions Docs</span>
+        <span class="card__desc">A cryptocurrency API (Application Programming Interface) is a bridge between your application and live blockchain or market data.</span>
+        <span class="card__meta">6 min read</span>
+      </a>
+      <a class="card" href="/docs/guides/dashboard">
+        
+        <span class="card__title">Dashboard — XActions Docs</span>
+        <span class="card__desc">XActions includes a web dashboard with 30+ pages for managing automations, analytics, and tools — all with a dark theme matching X/Twitter&amp;#39;s UI.</span>
+        <span class="card__meta">4 min read</span>
+      </a>
+      <a class="card" href="/docs/guides/database">
+        
+        <span class="card__title">Database Schema — XActions Docs</span>
+        <span class="card__desc">and the browser console scripts all run with no database at all.</span>
+        <span class="card__meta">3 min read</span>
+      </a>
+      <a class="card" href="/docs/guides/deployment">
+        
+        <span class="card__title">Deployment Guide — XActions Docs</span>
+        <span class="card__desc">Deploy XActions anywhere — Cloudflare, Railway, Fly.io, Render, Docker, or self-host. All free tiers supported.</span>
+        <span class="card__meta">6 min read</span>
+      </a>
+      <a class="card" href="/docs/guides/dom-selectors">
+        
+        <span class="card__title">X/Twitter DOM Selector Reference — XActions Docs</span>
+        <span class="card__desc">Last verified: February 2026. Twitter frequently changes their DOM — always verify selectors before use.</span>
+        <span class="card__meta">18 min read</span>
+      </a>
+      <a class="card" href="/docs/guides/engage">
+        
+        <span class="card__title">Engage a whole profile: like, repost, and reply to every post — XActions Docs</span>
+        <span class="card__desc">Sweep an account&amp;#39;s entire timeline in one go, from the browser console or the terminal, with replies written by you or by an LLM from a one-line brief.</span>
+        <span class="card__meta">7 min read</span>
+      </a>
+      <a class="card" href="/docs/guides/engagement-booster">
+        
+        <span class="card__title">Engagement Booster — Smart Tweet Engagement — XActions Docs</span>
+        <span class="card__desc">Systematically engage with tweets from target accounts using smart scoring, speed presets, drip scheduling, and undo rollback — no API fees.</span>
+        <span class="card__meta">3 min read</span>
+      </a>
+      <a class="card" href="/docs/guides/evergreen-recycler">
+        
+        <span class="card__title">Evergreen Content Recycler — XActions Docs</span>
+        <span class="card__desc">Identify top-performing tweets and automatically re-post them on a schedule with content variation. Competes with Hypefury and Publer.</span>
+        <span class="card__meta">2 min read</span>
+      </a>
+      <a class="card" href="/docs/guides/examples">
+        
+        <span class="card__title">Examples — XActions Docs</span>
+        <span class="card__desc">Copy-paste snippets for the four ways to use XActions. For complete programs you can run and edit, see examples/ — eight of them, each verified against the li</span>
+        <span class="card__meta">1 min read</span>
+      </a>
+      <a class="card" href="/docs/guides/extension-api">
+        
+        <span class="card__title">XActions Extension — Internal API Reference — XActions Docs</span>
+        <span class="card__desc">Technical documentation of the extension&amp;#39;s message protocol, storage schema, service worker API, and event lifecycle.</span>
+        <span class="card__meta">5 min read</span>
+      </a>
+      <a class="card" href="/docs/guides/extension">
+        
+        <span class="card__title">XActions Extension — User Guide — XActions Docs</span>
+        <span class="card__desc">Complete guide to installing and using the XActions browser extension for X/Twitter automation.</span>
+        <span class="card__meta">14 min read</span>
+      </a>
+      <a class="card" href="/docs/guides/feature_inventory">
+        
+        <span class="card__title">XActions v3.5.0 — Complete Feature Inventory — XActions Docs</span>
+        <span class="card__desc">Generated by deep codebase analysis. For tutorial creation.</span>
+        <span class="card__meta">21 min read</span>
+      </a>
+      <a class="card" href="/docs/guides/follower-crm">
+        
+        <span class="card__title">Follower CRM — XActions Docs</span>
+        <span class="card__desc">Tag, score, segment, and manage followers as contacts — a full customer relationship manager for X/Twitter. Competes with Audiense and Hypefury.</span>
+        <span class="card__meta">3 min read</span>
+      </a>
+      <a class="card" href="/docs/guides/getting-started">
+        
+        <span class="card__title">Getting Started with XActions — XActions Docs</span>
+        <span class="card__desc">XActions is the complete X/Twitter automation toolkit. Browser scripts, CLI, Node.js library, MCP server for AI agents, and a web dashboard — all without Twit</span>
+        <span class="card__meta">4 min read</span>
+      </a>
+      <a class="card" href="/docs/guides/graph-system">
+        
+        <span class="card__title">Social Graph System — XActions Docs</span>
+        <span class="card__desc">Build, analyze, and visualize social network graphs from X/Twitter follower relationships.</span>
+        <span class="card__meta">3 min read</span>
+      </a>
+      <a class="card" href="/docs/guides/graph">
+        
+        <span class="card__title">Social Graph — Network Analysis &amp;amp; Visualization — XActions Docs</span>
+        <span class="card__desc">Map your X/Twitter social network, analyze influence, find clusters, and get actionable follow/engage recommendations — no API fees.</span>
+        <span class="card__meta">3 min read</span>
+      </a>
+      <a class="card" href="/docs/guides/growth_strategy">
+        
+        <span class="card__title">XActions Growth Strategy: 76 → 100,000 Stars — XActions Docs</span>
+        <span class="card__desc">For context, repos with 100k+ stars: freeCodeCamp, vue, react, tensorflow, bootstrap.</span>
+        <span class="card__meta">5 min read</span>
+      </a>
+      <a class="card" href="/docs/guides/history-store">
+        
+        <span class="card__title">History Store &amp;amp; Auto-Snapshots — XActions Docs</span>
+        <span class="card__desc">Time-series account metrics — track followers, engagement, and growth over days, weeks, or months. Competes with Circleboom and SocialBlade.</span>
+        <span class="card__meta">3 min read</span>
+      </a>
+      <a class="card" href="/docs/guides/mcp-setup">
+        
+        <span class="card__title">XActions MCP Server Setup Guide — XActions Docs</span>
+        <span class="card__desc">Use AI agents (Claude, Cursor, Windsurf, GPT) to automate X/Twitter — for free.</span>
+        <span class="card__meta">10 min read</span>
+      </a>
+      <a class="card" href="/docs/guides/monitoring">
+        
+        <span class="card__title">Monitoring Guide — XActions Docs</span>
+        <span class="card__desc">Track followers, unfollowers, and account activity on X (Twitter).</span>
+        <span class="card__meta">3 min read</span>
+      </a>
+      <a class="card" href="/docs/guides/notifications">
+        
+        <span class="card__title">Notifications — XActions Docs</span>
+        <span class="card__desc">Multi-channel notification hub for XActions alerts. Send notifications via Email, Slack, Discord, and Telegram when events occur — follower changes, workflow</span>
+        <span class="card__meta">2 min read</span>
+      </a>
+      <a class="card" href="/docs/guides/plugins">
+        
+        <span class="card__title">Plugin System — XActions Docs</span>
+        <span class="card__desc">Extend XActions with community plugins — add scrapers, MCP tools, automation actions, and API routes via npm packages.</span>
+        <span class="card__meta">3 min read</span>
+      </a>
+      <a class="card" href="/docs/guides/portability">
+        
+        <span class="card__title">Account Portability — Export, Migrate &amp;amp; Diff — XActions Docs</span>
+        <span class="card__desc">Export your full X/Twitter account, migrate to Bluesky/Mastodon, and track changes over time — no API fees.</span>
+        <span class="card__meta">4 min read</span>
+      </a>
+      <a class="card" href="/docs/guides/price-correlation">
+        
+        <span class="card__title">Tweet-Price Correlation — XActions Docs</span>
+        <span class="card__desc">Analyze how crypto founder tweets correlate with token price movements. Interactive candlestick charts with tweet markers, impact statistics, and CSV export.</span>
+        <span class="card__meta">2 min read</span>
+      </a>
+      <a class="card" href="/docs/guides/readme">
+        
+        <span class="card__title">XActions Documentation — XActions Docs</span>
+        <span class="card__desc">Complete documentation for XActions v3.5.0 — The X/Twitter Automation Toolkit</span>
+        <span class="card__meta">2 min read</span>
+      </a>
+      <a class="card" href="/docs/guides/rest-api">
+        
+        <span class="card__title">XActions REST API Reference — XActions Docs</span>
+        <span class="card__desc">Complete reference for the XActions Express.js API server. 175+ endpoints for Twitter automation, scraping, analytics, AI agents, and more.</span>
+        <span class="card__meta">4 min read</span>
+      </a>
+      <a class="card" href="/docs/guides/rss-monitor">
+        
+        <span class="card__title">Rss Monitor — XActions Docs</span>
+        <span class="card__desc">Rss Monitor — XActions documentation</span>
+        <span class="card__meta">1 min read</span>
+      </a>
+      <a class="card" href="/docs/guides/scheduler">
+        
+        <span class="card__title">⏰ Scheduler &amp;amp; Webhook Triggers — XActions Docs</span>
+        <span class="card__desc">Cron-based task scheduling with job history, retries, templates, and external webhook triggers. Competes with Hypefury, Buffer, and Zapier.</span>
+        <span class="card__meta">2 min read</span>
+      </a>
+      <a class="card" href="/docs/guides/scheduling">
+        
+        <span class="card__title">Task Scheduling — XActions Docs</span>
+        <span class="card__desc">Cron-based local task scheduler for automating XActions operations on a recurring basis. Replaces cloud scheduling services like Phantombuster or Apify schedu</span>
+        <span class="card__meta">1 min read</span>
+      </a>
+      <a class="card" href="/docs/guides/scrapers">
+        
+        <span class="card__title">Scrapers — XActions Docs</span>
+        <span class="card__desc">Multi-platform, multi-framework scraping system. Supports Twitter/X, Bluesky, Threads, and Mastodon with pluggable browser backends.</span>
+        <span class="card__meta">5 min read</span>
+      </a>
+      <a class="card" href="/docs/guides/scraping-infrastructure">
+        
+        <span class="card__title">Scraping Infrastructure — XActions Docs</span>
+        <span class="card__desc">Enterprise-grade scraping toolkit: proxy rotation, stealth browser, pagination engine, retry policies, and dataset storage — replaces Phantombuster, Apify, an</span>
+        <span class="card__meta">7 min read</span>
+      </a>
+      <a class="card" href="/docs/guides/scraping">
+        
+        <span class="card__title">Scraping Infrastructure — XActions Docs</span>
+        <span class="card__desc">Low-level scraping modules for anti-detection browsing, smart pagination with resume, and proxy rotation.</span>
+        <span class="card__meta">2 min read</span>
+      </a>
+      <a class="card" href="/docs/guides/skills">
+        
+        <span class="card__title">Skills Reference — XActions Docs</span>
+        <span class="card__desc">do one job with XActions. Each is a markdown file with YAML frontmatter, written for a model to read rather than a human: it names the scripts to run, the pag</span>
+        <span class="card__meta">7 min read</span>
+      </a>
+      <a class="card" href="/docs/guides/social-graph">
+        
+        <span class="card__title">Social Graph — XActions Docs</span>
+        <span class="card__desc">Map and analyze X/Twitter social networks. Build graphs from seed accounts, detect clusters, find mutual connections, identify influencers, and get actionable</span>
+        <span class="card__meta">2 min read</span>
+      </a>
+      <a class="card" href="/docs/guides/spaces-agent">
+        
+        <span class="card__title">Autonomous Space Agent — XActions Docs</span>
+        <span class="card__desc">Let AI agents join, listen, and speak in X/Twitter Spaces — powered by voice AI.</span>
+        <span class="card__meta">5 min read</span>
+      </a>
+      <a class="card" href="/docs/guides/stealth-scraping">
+        
+        <span class="card__title">Stealth Scraping &amp;amp; Proxy Rotation — XActions Docs</span>
+        <span class="card__desc">Anti-detection browser automation with proxy rotation and fingerprint randomization. Competes with Apify anti-bot evasion.</span>
+        <span class="card__meta">2 min read</span>
+      </a>
+      <a class="card" href="/docs/guides/streaming">
+        
+        <span class="card__title">Real-Time Streaming — XActions Docs</span>
+        <span class="card__desc">Subscribe to live tweet, follower, and mention events via polling + Socket.IO. No API keys needed.</span>
+        <span class="card__meta">3 min read</span>
+      </a>
+      <a class="card" href="/docs/guides/streams">
+        
+        <span class="card__title">Real-time Streams — Live Twitter Monitoring — XActions Docs</span>
+        <span class="card__desc">Monitor tweets, followers, and mentions in real-time with persistent polling, deduplication, and live Socket.IO events.</span>
+        <span class="card__meta">2 min read</span>
+      </a>
+      <a class="card" href="/docs/guides/teams">
+        
+        <span class="card__title">Team Management — XActions Docs</span>
+        <span class="card__desc">Create teams, invite members, assign roles with granular permissions, and track activity across shared XActions workspaces.</span>
+        <span class="card__meta">1 min read</span>
+      </a>
+      <a class="card" href="/docs/guides/troubleshooting">
+        
+        <span class="card__title">Troubleshooting — XActions Docs</span>
+        <span class="card__desc">Symptoms in the left column, causes and fixes below. If your problem is not here, open an issue with the command you ran and its full output.</span>
+        <span class="card__meta">6 min read</span>
+      </a>
+      <a class="card" href="/docs/guides/usage">
+        
+        <span class="card__title">Usage — XActions Docs</span>
+        <span class="card__desc">Usage — XActions documentation</span>
+        <span class="card__meta">1 min read</span>
+      </a>
+      <a class="card" href="/docs/guides/video-downloader">
+        
+        <span class="card__title">Video Downloader — XActions Docs</span>
+        <span class="card__desc">XActions v3.5.0 — Download videos from X/Twitter tweets.</span>
+        <span class="card__meta">3 min read</span>
+      </a>
+      <a class="card" href="/docs/guides/video-generation">
+        
+        <span class="card__title">Video Generation — XActions Docs</span>
+        <span class="card__desc">Generate promotional and content videos from X/Twitter data using Remotion.</span>
+        <span class="card__meta">1 min read</span>
+      </a>
+      <a class="card" href="/docs/guides/video">
+        
+        <span class="card__title">Video Engine — Programmatic Video Generation — XActions Docs</span>
+        <span class="card__desc">Generate animated tweet cards, thread previews, analytics dashboards, and promo videos using Remotion.</span>
+        <span class="card__meta">2 min read</span>
+      </a>
+      <a class="card" href="/docs/guides/workflows">
+        
+        <span class="card__title">Workflow Engine — XActions Docs</span>
+        <span class="card__desc">Declarative JSON pipelines with triggers, conditions, and chained actions. Automate multi-step Twitter operations without code.</span>
+        <span class="card__meta">3 min read</span>
+      </a>
+      <a class="card" href="/docs/guides/x-developer-api-crypto-guide-2026">
+        
+        <span class="card__title">X Developer API in 2026: The Complete Guide for Crypto Builders — XActions Docs</span>
+        <span class="card__desc">X (formerly Twitter) remains the nerve center of crypto discourse.</span>
+        <span class="card__meta">6 min read</span>
+      </a>
+      <a class="card" href="/docs/guides/xactions-reference">
+        
+        <span class="card__title">XActions Complete Function Reference — XActions Docs</span>
+        <span class="card__desc">Every function with real, working examples.</span>
+        <span class="card__meta">4 min read</span>
+      </a>
+    </div>
+  </div>
+</main>
+
+<dialog class="search-dialog" data-search-dialog aria-label="Search documentation">
+  <input class="search-dialog__input" data-search-input type="search" placeholder="Search the documentation…" aria-label="Search query" autocomplete="off" spellcheck="false">
+  <div class="search-dialog__results" data-search-results role="listbox" aria-label="Search results"></div>
+  <div class="search-dialog__footer">
+    <span><kbd>↑</kbd><kbd>↓</kbd> navigate</span>
+    <span><kbd>↵</kbd> open</span>
+    <span><kbd>esc</kbd> close</span>
+  </div>
+</dialog>
+
+<footer class="site-footer">
+  <div class="site-footer__inner">
+    <div>
+      <h4>XActions</h4>
+      <p>Free, open-source X/Twitter automation.</p>
+      <p>Built by <a href="https://x.com/nichxbt" target="_blank" rel="noopener">@nichxbt</a></p>
+    </div>
+    <div>
+      <h4>Learn</h4>
+      <a href="/docs/learn/your-first-scrape">Your first scrape</a>
+      <a href="/docs/learn/mcp-with-claude">MCP with Claude</a>
+      <a href="/examples">Examples</a>
+      <a href="/docs/guides/troubleshooting">Troubleshooting</a>
+    </div>
+    <div>
+      <h4>Reference</h4>
+      <a href="/docs/guides/cli-reference">CLI</a>
+      <a href="/docs/guides/api-reference">API</a>
+      <a href="/docs/guides/mcp-setup">MCP server</a>
+      <a href="/docs/guides/browser-scripts">Browser scripts</a>
+    </div>
+    <div>
+      <h4>Project</h4>
+      <a href="https://github.com/nirholas/XActions" target="_blank" rel="noopener">GitHub</a>
+      <a href="/docs/project/contributing">Contributing</a>
+      <a href="/docs/project/changelog">Changelog</a>
+      <a href="/docs/project/security">Security</a>
+    </div>
+  </div>
+  <div class="site-footer__bottom">
+    <p>© 2024–2026 XActions. Apache-2.0 licensed. No API fees.</p>
+  </div>
+</footer>
+
+<script src="/docs/assets/docs.js" defer></script>
+</body>
+</html>

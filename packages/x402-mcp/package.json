@@ -1,0 +1,52 @@
+{
+  "name": "@xactions/x402-mcp",
+  "version": "1.0.0",
+  "description": "Charge for MCP tools. Agents pay per call in USDC over x402: no API key, no account, no signup.",
+  "homepage": "https://xactions.app/mcp",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nirholas/XActions.git",
+    "directory": "packages/x402-mcp"
+  },
+  "bugs": {
+    "url": "https://github.com/nirholas/XActions/issues"
+  },
+  "license": "Apache-2.0",
+  "author": "nichxbt",
+  "type": "module",
+  "main": "./src/index.js",
+  "exports": {
+    ".": "./src/index.js",
+    "./server": "./src/server.js",
+    "./gate": "./src/gate.js",
+    "./client": "./src/client.js",
+    "./x402": "./src/x402.js"
+  },
+  "files": [
+    "src",
+    "example",
+    "README.md"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "sideEffects": false,
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "x402",
+    "payments",
+    "usdc",
+    "solana",
+    "base",
+    "agent",
+    "ai",
+    "monetization",
+    "pay-per-call",
+    "micropayments",
+    "cloudflare-workers"
+  ],
+  "scripts": {
+    "test": "cd ../.. && vitest run tests/x402-mcp"
+  }
+}

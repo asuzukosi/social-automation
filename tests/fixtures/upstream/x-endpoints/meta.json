@@ -1,0 +1,7 @@
+{
+  "_comment": "Trimmed excerpt of fa0311/TwitterInternalAPIDocument (MIT, (c) fa0311), docs/json/GraphQL.json and docs/json/v1.1.json, taken verbatim from the commit below. Six operations are kept out of 325, chosen to cover a query, a mutation, an operation named under a different key by XActions, a Community Notes operation with its own feature family, and operations that appear in more than one bundle; seven v1.1 entries are kept out of 110, including a path dispatched under two methods. See THIRD-PARTY-NOTICES.md.",
+  "repo": "fa0311/TwitterInternalAPIDocument",
+  "ref": "develop",
+  "commit": "09d3ae0c48b12b2d24e5ae7a82b75606253fd7fd",
+  "committedAt": "2026-08-27T01:26:28Z"
+}

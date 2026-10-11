@@ -1,0 +1,853 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Thought Leader Cultivator — Free X/Twitter Script | XActions</title>
+  <meta name="description" content="XActions - Thought Leader Algorithm Cultivator (Standalone)">
+  <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, thought, leader, cultivator, growth">
+  <meta name="author" content="nich (@nichxbt)">
+  <meta name="robots" content="index, follow">
+
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Thought Leader Cultivator — XActions">
+  <meta property="og:description" content="XActions - Thought Leader Algorithm Cultivator (Standalone)">
+  <meta property="og:url" content="https://xactions.app/scripts/thought-leader-cultivator">
+  <meta property="og:site_name" content="XActions">
+  <meta property="og:image" content="https://xactions.app/og-image.png">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@nichxbt">
+  <meta name="twitter:title" content="Thought Leader Cultivator — XActions">
+  <meta name="twitter:description" content="XActions - Thought Leader Algorithm Cultivator (Standalone)">
+
+  <link rel="canonical" href="https://xactions.app/scripts/thought-leader-cultivator">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "Thought Leader Cultivator — Free X/Twitter Script | XActions",
+    "description": "XActions - Thought Leader Algorithm Cultivator (Standalone)",
+    "url": "https://xactions.app/scripts/thought-leader-cultivator",
+    "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
+    "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
+    "datePublished": "2026-03-30",
+    "dateModified": "2026-03-30",
+    "articleSection": "Growth",
+    "keywords": "xactions, twitter automation, x automation, browser script, devtools console, free, open source, thought, leader, cultivator, growth"
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
+      { "@type": "ListItem", "position": 2, "name": "Scripts", "item": "https://xactions.app/scripts" },
+      { "@type": "ListItem", "position": 3, "name": "Growth", "item": "https://xactions.app/scripts#growth" },
+      { "@type": "ListItem", "position": 4, "name": "Thought Leader Cultivator", "item": "https://xactions.app/scripts/thought-leader-cultivator" }
+    ]
+  }
+  </script>
+
+  <link rel="stylesheet" href="/css/common.css">
+  <style>
+    .article { padding: 24px 20px; }
+    .article h1 { font-size: 1.75rem; font-weight: 800; margin-bottom: 8px; line-height: 1.2; }
+    .article h2 { font-size: 1.375rem; font-weight: 700; margin: 32px 0 12px; padding-top: 16px; border-top: 1px solid var(--border); }
+    .article h3 { font-size: 1.125rem; font-weight: 600; margin: 24px 0 8px; color: var(--accent); }
+    .article p { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 16px; }
+    .article a { color: var(--accent); text-decoration: none; }
+    .article a:hover { text-decoration: underline; }
+    .article strong { color: var(--text-primary); }
+    .article code { background: var(--bg-tertiary); padding: 2px 6px; border-radius: 4px; font-family: 'Monaco','Menlo','Consolas', monospace; font-size: 0.875rem; color: var(--accent); }
+    .article pre { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 16px; overflow-x: auto; margin: 16px 0; }
+    .article pre code { background: none; padding: 0; color: var(--text-primary); font-size: 0.8125rem; display: block; }
+    .article table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 0.875rem; }
+    .article th { background: var(--bg-secondary); padding: 10px 12px; text-align: left; border: 1px solid var(--border); font-weight: 600; }
+    .article td { padding: 10px 12px; border: 1px solid var(--border); color: var(--text-secondary); }
+    .cat-badge { display: inline-block; background: var(--accent-light); color: var(--accent); padding: 4px 12px; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; margin-bottom: 16px; }
+    .meta-row { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 16px; font-size: 0.8125rem; color: var(--text-secondary); }
+    .meta-row span { display: flex; align-items: center; gap: 4px; }
+    .usage-steps { margin-left: 24px; margin-bottom: 16px; }
+    .usage-steps li { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 8px; padding-left: 4px; }
+    .warning-box { background: rgba(244, 33, 46, 0.1); border: 1px solid var(--error); border-radius: 12px; padding: 16px; margin: 16px 0; }
+    .warning-box p { color: var(--error); margin: 0; font-size: 0.875rem; }
+    .controls-box { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 16px; margin: 16px 0; }
+    .controls-box h3 { margin: 0 0 8px; font-size: 1rem; }
+    .code-block { position: relative; }
+    .copy-btn { position: absolute; top: 8px; right: 8px; background: var(--bg-tertiary); color: var(--text-secondary); border: 1px solid var(--border); border-radius: 8px; padding: 6px 12px; cursor: pointer; font-size: 0.75rem; z-index: 10; transition: all .2s; }
+    .copy-btn:hover { background: var(--accent); color: #fff; }
+    .full-code { margin-top: 32px; }
+    .full-code pre { max-height: 600px; overflow-y: auto; }
+    .cta-box { background: linear-gradient(135deg, var(--bg-secondary), var(--bg-tertiary)); border: 1px solid var(--border); border-radius: 16px; padding: 24px; margin: 32px 0; text-align: center; }
+    .cta-box h3 { font-size: 1.25rem; margin-bottom: 8px; color: var(--text-primary); }
+    .cta-box p { color: var(--text-secondary); margin-bottom: 16px; }
+    .cta-box a { display: inline-block; padding: 12px 24px; background: var(--accent); color: #fff; border-radius: 9999px; text-decoration: none; font-weight: 700; transition: background .2s; }
+    .cta-box a:hover { background: var(--accent-hover); }
+    .sidebar-right { width: 350px; padding: 16px 24px; position: sticky; top: 0; height: 100vh; overflow-y: auto; }
+    .sidebar-card { background: var(--bg-secondary); border-radius: 16px; padding: 16px; margin-bottom: 16px; }
+    .sidebar-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 12px; }
+    .sidebar-card a { display: block; color: var(--text-secondary); text-decoration: none; font-size: 0.875rem; padding: 6px 0; border-bottom: 1px solid var(--border); transition: color .2s; }
+    .sidebar-card a:last-child { border-bottom: none; }
+    .sidebar-card a:hover { color: var(--accent); }
+    .breadcrumb { font-size: 0.8125rem; color: var(--text-secondary); margin-top: 4px; }
+    .breadcrumb a { color: var(--accent); text-decoration: none; }
+    .breadcrumb a:hover { text-decoration: underline; }
+    .source-badge { display: inline-block; background: var(--bg-tertiary); color: var(--text-secondary); padding: 2px 8px; border-radius: 6px; font-size: 0.6875rem; margin-left: 8px; }
+    @media (max-width: 1024px) { .sidebar-right { display: none; } }
+    @media (max-width: 768px) {
+      .article pre { font-size: 0.75rem; }
+      .meta-row { flex-direction: column; gap: 4px; }
+    }
+  </style>
+</head>
+<body>
+  <a href="#main-content" class="skip-nav">Skip to main content</a>
+  <div class="layout">
+    <aside class="sidebar-left" aria-label="Main navigation"></aside>
+    <script src="/js/sidebar.js"></script>
+
+    <main class="main-content" id="main-content">
+      <header class="main-header">
+        <h1>🧠 Thought Leader Cultivator</h1>
+        <div class="breadcrumb">
+          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#growth">Growth</a> › Thought Leader Cultivator
+        </div>
+      </header>
+
+      <article class="article">
+        <span class="cat-badge">Growth</span>
+        <span class="source-badge">scripts</span>
+
+        <div class="meta-row">
+          
+          
+          <span>663 lines</span>
+          <span>by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></span>
+        </div>
+
+        <p>XActions - Thought Leader Algorithm Cultivator (Standalone)</p>
+
+        
+
+        <h2>How to Use</h2>
+        <ol class="usage-steps"><li>Log into x.com on the account you want to train</li>
+<li>Open DevTools (F12), paste this entire script into Console</li>
+<li>Configure YOUR_NICHE, YOUR_PERSONA, and TARGETS below</li>
+<li>Press Enter — the trainer starts automatically</li>
+<li>Leave the tab open and active</li></ol>
+        
+
+        
+        
+        
+
+        <section class="full-code">
+          <h2>Full Script</h2>
+          <p>Copy and paste this entire script into your browser DevTools console on <a href="https://x.com" rel="noopener">x.com</a>.</p>
+          <div class="code-block">
+            <button class="copy-btn" onclick="navigator.clipboard.writeText(this.nextElementSibling.querySelector('code').textContent).then(()=>{this.textContent='Copied!';setTimeout(()=>this.textContent='Copy Script',2000)})">Copy Script</button>
+            <pre><code>// Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
+// XActions - Thought Leader Algorithm Cultivator (Standalone)
+// https://github.com/nirholas/XActions
+// by nichxbt
+//
+// STANDALONE VERSION — no dependencies required.
+// Paste this directly into DevTools console on x.com
+//
+// Trains your X/Twitter algorithm to surface content in your target niche.
+// Simulates human browsing: search → scroll → like → follow → comment → repeat.
+// Designed for fresh accounts to build up algorithmic feed + niche authority.
+//
+// HOW TO USE:
+// 1. Log into x.com on the account you want to train
+// 2. Open DevTools (F12), paste this entire script into Console
+// 3. Configure YOUR_NICHE, YOUR_PERSONA, and TARGETS below
+// 4. Press Enter — the trainer starts automatically
+// 5. Leave the tab open and active
+//
+// STOP: Type stopCultivator() in console
+// STATUS: Type cultivatorStatus() in console
+// RESET: Type cultivatorReset() in console
+//
+// ⚠️ Start slow on new accounts. Use 'gentle' mode for the first week.
+// ⚠️ Never run on multiple tabs simultaneously.
+
+(() =&gt; {
+  'use strict';
+
+  // ============================================================
+  // 🎯 YOUR NICHE — Edit these to match your target topics
+  // ============================================================
+  const YOUR_NICHE = {
+    // Primary topics the algorithm should learn
+    searchTerms: [
+      'AI agents',
+      'LLM engineering',
+      'developer tools',
+      'open source AI',
+      'machine learning engineering',
+      'AI startups',
+      'prompt engineering',
+      'RAG retrieval augmented generation',
+    ],
+
+    // Comments rotated when engaging. Keep them varied and natural.
+    // The script picks randomly + adds slight variation.
+    comments: [
+      '🔥 solid take',
+      'this is it',
+      'underrated perspective',
+      'been thinking about this a lot',
+      'great breakdown',
+      'saving this for later',
+      '💯 agree',
+      'this needs more visibility',
+      'super insightful',
+      'the builders always win',
+      'needed to hear this',
+      'exactly right',
+      'interesting angle',
+      'more people need to see this',
+      'bookmarking this thread',
+      'great thread 🧵',
+      'really well said',
+      'this is underrated',
+    ],
+
+    // Niche influencers to prioritize engaging with (optional)
+    // Add their handles WITHOUT the @ symbol
+    influencers: [
+      // 'karpathy',
+      // 'AndrewYNg',
+      // 'ylecun',
+    ],
+  };
+
+  // ============================================================
+  // 👤 YOUR PERSONA — How aggressive should the trainer be?
+  // ============================================================
+  const YOUR_PERSONA = {
+    // Your username (auto-detected if empty)
+    username: '',
+
+    // 'gentle'  → First week of a new account (mostly browsing)
+    // 'normal'  → Daily balanced engagement
+    // 'active'  → Building momentum, higher engagement
+    // 'grind'   → Maximum growth mode (use with caution)
+    mode: 'normal',
+  };
+
+  // ============================================================
+  // ⚙️ TARGETS — Per-session and daily limits
+  // ============================================================
+  const TARGETS = {
+    // Session duration in minutes before auto-stop
+    SESSION_MINUTES: 60,
+
+    // Per-session limits
+    MAX_LIKES: 30,
+    MAX_FOLLOWS: 15,
+    MAX_COMMENTS: 5,
+    MAX_BOOKMARKS: 10,
+    MAX_RETWEETS: 3,
+    MAX_SEARCHES: 8,
+
+    // Daily safety limits (tracked in localStorage)
+    DAILY_LIKES: 150,
+    DAILY_FOLLOWS: 80,
+    DAILY_COMMENTS: 25,
+  };
+
+  // Mode presets (override engagement probabilities)
+  const MODES = {
+    gentle:  { likePct: 15, followPct: 8,  commentPct: 2,  bookmarkPct: 8,  rtPct: 1  },
+    normal:  { likePct: 35, followPct: 20, commentPct: 7,  bookmarkPct: 12, rtPct: 4  },
+    active:  { likePct: 55, followPct: 35, commentPct: 12, bookmarkPct: 20, rtPct: 8  },
+    grind:   { likePct: 70, followPct: 45, commentPct: 18, bookmarkPct: 30, rtPct: 12 },
+  };
+
+  const mode = MODES[YOUR_PERSONA.mode] || MODES.normal;
+
+  // ============================================================
+  // INTERNALS — Don't edit below unless you know what you're doing
+  // ============================================================
+
+  // DOM Selectors (verified Jan 2026)
+  const S = {
+    tweet:       'article[data-testid=&quot;tweet&quot;]',
+    tweetText:   '[data-testid=&quot;tweetText&quot;]',
+    like:        '[data-testid=&quot;like&quot;]',
+    unlike:      '[data-testid=&quot;unlike&quot;]',
+    reply:       '[data-testid=&quot;reply&quot;]',
+    retweet:     '[data-testid=&quot;retweet&quot;]',
+    rtConfirm:   '[data-testid=&quot;retweetConfirm&quot;]',
+    bookmark:    '[data-testid=&quot;bookmark&quot;]',
+    follow:      '[data-testid$=&quot;-follow&quot;]',
+    unfollow:    '[data-testid$=&quot;-unfollow&quot;]',
+    userCell:    '[data-testid=&quot;UserCell&quot;]',
+    searchInput: '[data-testid=&quot;SearchBox_Search_Input&quot;]',
+    tweetInput:  '[data-testid=&quot;tweetTextarea_0&quot;]',
+    tweetBtn:    '[data-testid=&quot;tweetButton&quot;]',
+    confirm:     '[data-testid=&quot;confirmationSheetConfirm&quot;]',
+    primaryCol:  '[data-testid=&quot;primaryColumn&quot;]',
+    trend:       '[data-testid=&quot;trend&quot;]',
+    profileLink: 'a[data-testid=&quot;AppTabBar_Profile_Link&quot;]',
+  };
+
+  // Utility functions
+  const sleep = (ms) =&gt; new Promise(r =&gt; setTimeout(r, ms));
+  const rand = (min, max) =&gt; Math.floor(Math.random() * (max - min + 1)) + min;
+  const chance = (pct) =&gt; Math.random() * 100 &lt; pct;
+  const pick = (arr) =&gt; arr[Math.floor(Math.random() * arr.length)];
+  const shuffle = (arr) =&gt; [...arr].sort(() =&gt; Math.random() - 0.5);
+
+  // Human-like delays (Gaussian-ish via multiple randoms)
+  const humanDelay = () =&gt; sleep(rand(2000, 6000));
+  const scrollPause = () =&gt; sleep(rand(1500, 4000));
+  const readPause = () =&gt; sleep(rand(3000, 8000));
+  const quickPause = () =&gt; sleep(rand(500, 1500));
+
+  // Logging
+  const ICONS = { info: 'ℹ️', ok: '✅', warn: '⚠️', err: '❌', act: '🎯' };
+  const log = (msg, type = 'info') =&gt; {
+    const ts = new Date().toLocaleTimeString();
+    const icon = ICONS[type] || '•';
+    console.log(`${icon} [${ts}] ${msg}`);
+  };
+
+  // Storage helpers
+  const STORE_PREFIX = 'xc_';
+  const store = {
+    get: (k) =&gt; { try { return JSON.parse(localStorage.getItem(STORE_PREFIX + k)); } catch { return null; } },
+    set: (k, v) =&gt; localStorage.setItem(STORE_PREFIX + k, JSON.stringify(v)),
+    rm: (k) =&gt; localStorage.removeItem(STORE_PREFIX + k),
+  };
+
+  // Daily rate tracker
+  const dailyKey = (action) =&gt; `daily_${action}_${new Date().toDateString().replace(/\s/g, '_')}`;
+  const getDailyCount = (action) =&gt; store.get(dailyKey(action)) || 0;
+  const incDaily = (action) =&gt; store.set(dailyKey(action), getDailyCount(action) + 1);
+  const canDoDaily = (action, limit) =&gt; getDailyCount(action) &lt; limit;
+
+  // State
+  const state = {
+    running: true,
+    phase: 'init',
+    startTime: Date.now(),
+    likes: 0, follows: 0, comments: 0, bookmarks: 0, retweets: 0, searches: 0,
+    scrolls: 0, profileVisits: 0,
+  };
+
+  // Persistent tracking (across sessions)
+  const liked = new Set(store.get('liked') || []);
+  const followed = new Set(store.get('followed') || []);
+  const commented = new Set(store.get('commented') || []);
+  const bookmarked = new Set(store.get('bookmarked') || []);
+
+  const saveSets = () =&gt; {
+    store.set('liked', [...liked].slice(-2000));
+    store.set('followed', [...followed].slice(-2000));
+    store.set('commented', [...commented].slice(-500));
+    store.set('bookmarked', [...bookmarked].slice(-1000));
+  };
+
+  // ============================================================
+  // DOM HELPERS
+  // ============================================================
+
+  const waitFor = (selector, timeout = 10000) =&gt; new Promise((resolve) =&gt; {
+    const el = document.querySelector(selector);
+    if (el) return resolve(el);
+    const interval = setInterval(() =&gt; {
+      const el = document.querySelector(selector);
+      if (el) { clearInterval(interval); resolve(el); }
+    }, 200);
+    setTimeout(() =&gt; { clearInterval(interval); resolve(null); }, timeout);
+  });
+
+  const scrollBy = (px) =&gt; {
+    window.scrollBy({ top: px, behavior: 'smooth' });
+    state.scrolls++;
+  };
+
+  const clickEl = async (el) =&gt; {
+    if (!el) return false;
+    el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    await quickPause();
+    el.click();
+    return true;
+  };
+
+  const getTweetId = (tweet) =&gt; {
+    const link = tweet.querySelector('a[href*=&quot;/status/&quot;]');
+    return link?.href?.match(/status\/(\d+)/)?.[1] || null;
+  };
+
+  const isAd = (tweet) =&gt; {
+    return !!tweet.querySelector('[data-testid=&quot;placementTracking&quot;]') ||
+           tweet.textContent?.includes('Promoted');
+  };
+
+  const getMyUsername = () =&gt; {
+    if (YOUR_PERSONA.username) return YOUR_PERSONA.username.toLowerCase();
+    const link = document.querySelector(S.profileLink);
+    return link?.getAttribute('href')?.replace('/', '').toLowerCase() || '';
+  };
+
+  const isExpired = () =&gt; (Date.now() - state.startTime) / 60000 &gt;= TARGETS.SESSION_MINUTES;
+
+  const canLike = () =&gt; state.likes &lt; TARGETS.MAX_LIKES &amp;&amp; canDoDaily('likes', TARGETS.DAILY_LIKES);
+  const canFollow = () =&gt; state.follows &lt; TARGETS.MAX_FOLLOWS &amp;&amp; canDoDaily('follows', TARGETS.DAILY_FOLLOWS);
+  const canComment = () =&gt; state.comments &lt; TARGETS.MAX_COMMENTS &amp;&amp; canDoDaily('comments', TARGETS.DAILY_COMMENTS);
+  const canBookmark = () =&gt; state.bookmarks &lt; TARGETS.MAX_BOOKMARKS;
+  const canRetweet = () =&gt; state.retweets &lt; TARGETS.MAX_RETWEETS;
+
+  // ============================================================
+  // NAVIGATION
+  // ============================================================
+
+  const nav = async (url) =&gt; {
+    log(`🧭 → ${url}`, 'act');
+    window.location.href = url;
+    await sleep(3500);
+    await waitFor(S.primaryCol, 15000);
+    await sleep(1500);
+  };
+
+  const goHome = () =&gt; nav('https://x.com/home');
+  const goExplore = () =&gt; nav('https://x.com/explore');
+  const goProfile = (user) =&gt; { state.profileVisits++; return nav(`https://x.com/${user}`); };
+
+  const goSearch = async (query, tab = 'top') =&gt; {
+    const encoded = encodeURIComponent(query);
+    const suffix = tab === 'latest' ? '&amp;f=live' : tab === 'people' ? '&amp;f=user' : '';
+    await nav(`https://x.com/search?q=${encoded}&amp;src=typed_query${suffix}`);
+    state.searches++;
+  };
+
+  // ============================================================
+  // ACTIONS
+  // ============================================================
+
+  const doLike = async (tweet) =&gt; {
+    const id = getTweetId(tweet);
+    if (!id || liked.has(id) || !canLike()) return false;
+    const btn = tweet.querySelector(S.like);
+    if (!btn) return false;
+    await clickEl(btn);
+    liked.add(id);
+    state.likes++;
+    incDaily('likes');
+    saveSets();
+    log(`❤️ Liked ${id} (${state.likes}/${TARGETS.MAX_LIKES})`, 'ok');
+    return true;
+  };
+
+  const doBookmark = async (tweet) =&gt; {
+    const id = getTweetId(tweet);
+    if (!id || bookmarked.has(id) || !canBookmark()) return false;
+    const btn = tweet.querySelector(S.bookmark);
+    if (!btn) return false;
+    await clickEl(btn);
+    bookmarked.add(id);
+    state.bookmarks++;
+    saveSets();
+    log(`🔖 Bookmarked ${id}`, 'ok');
+    return true;
+  };
+
+  const doRetweet = async (tweet) =&gt; {
+    if (!canRetweet()) return false;
+    const btn = tweet.querySelector(S.retweet);
+    if (!btn) return false;
+    await clickEl(btn);
+    await sleep(700);
+    const confirm = await waitFor(S.rtConfirm, 2000);
+    if (confirm) {
+      await clickEl(confirm);
+      state.retweets++;
+      log(`🔁 Retweeted`, 'ok');
+      return true;
+    }
+    document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
+    return false;
+  };
+
+  const doComment = async (tweet) =&gt; {
+    const id = getTweetId(tweet);
+    if (!id || commented.has(id) || !canComment()) return false;
+
+    // Only comment on substantial posts
+    const text = tweet.querySelector(S.tweetText)?.textContent || '';
+    if (text.length &lt; 30) return false;
+
+    const replyBtn = tweet.querySelector(S.reply);
+    if (!replyBtn) return false;
+    await clickEl(replyBtn);
+    await sleep(1500);
+
+    const input = await waitFor(S.tweetInput, 5000);
+    if (!input) {
+      document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
+      return false;
+    }
+
+    // Pick a comment and add slight variation
+    let comment = pick(YOUR_NICHE.comments);
+    // 30% chance to add a period or extra emoji
+    if (chance(30)) comment += pick(['.', '!', ' 👀', ' 🙌', ' 💪', '']);
+
+    input.focus();
+    await sleep(300);
+    document.execCommand('insertText', false, comment);
+    await sleep(800);
+
+    const postBtn = await waitFor(S.tweetBtn, 3000);
+    if (!postBtn || postBtn.disabled || postBtn.getAttribute('aria-disabled') === 'true') {
+      document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
+      return false;
+    }
+
+    await clickEl(postBtn);
+    await sleep(1200);
+
+    commented.add(id);
+    state.comments++;
+    incDaily('comments');
+    saveSets();
+    log(`💬 Commented &quot;${comment}&quot; on ${id} (${state.comments}/${TARGETS.MAX_COMMENTS})`, 'ok');
+    return true;
+  };
+
+  const doFollowFromCell = async (cell) =&gt; {
+    if (!canFollow()) return false;
+
+    const link = cell.querySelector('a[href^=&quot;/&quot;]');
+    const username = link?.getAttribute('href')?.replace('/', '').toLowerCase();
+    if (!username || followed.has(username)) return false;
+    if (username === getMyUsername()) return false;
+
+    // Already following?
+    if (cell.querySelector(S.unfollow)) return false;
+
+    // Must have a bio
+    const bio = cell.querySelector('[data-testid=&quot;UserDescription&quot;]')?.textContent || '';
+    if (!bio.trim()) return false;
+
+    const followBtn = cell.querySelector(S.follow);
+    if (!followBtn) return false;
+
+    await clickEl(followBtn);
+    followed.add(username);
+    state.follows++;
+    incDaily('follows');
+    saveSets();
+    log(`➕ Followed @${username} (${state.follows}/${TARGETS.MAX_FOLLOWS})`, 'ok');
+    return true;
+  };
+
+  // ============================================================
+  // SCROLL &amp; ENGAGE ENGINE
+  // ============================================================
+
+  const scrollAndEngage = async ({ maxScrolls = 10, boostEngagement = false } = {}) =&gt; {
+    const seen = new Set();
+    const engageMult = boostEngagement ? 1.8 : 1.0;
+
+    for (let s = 0; s &lt; maxScrolls &amp;&amp; state.running &amp;&amp; !isExpired(); s++) {
+      const tweets = document.querySelectorAll(S.tweet);
+
+      for (const tweet of tweets) {
+        if (!state.running || isExpired()) break;
+
+        const id = getTweetId(tweet);
+        if (!id || seen.has(id)) continue;
+        seen.add(id);
+
+        if (isAd(tweet)) continue;
+
+        // Simulate reading — scroll tweet into view and pause
+        tweet.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        await readPause();
+
+        // Probabilistic engagement
+        if (canLike() &amp;&amp; chance(mode.likePct * engageMult)) {
+          await doLike(tweet);
+          await humanDelay();
+        }
+
+        if (canBookmark() &amp;&amp; chance(mode.bookmarkPct * engageMult)) {
+          await doBookmark(tweet);
+          await humanDelay();
+        }
+
+        if (canComment() &amp;&amp; chance(mode.commentPct * engageMult)) {
+          await doComment(tweet);
+          await humanDelay();
+        }
+
+        if (canRetweet() &amp;&amp; chance(mode.rtPct * engageMult)) {
+          await doRetweet(tweet);
+          await humanDelay();
+        }
+      }
+
+      // Scroll down
+      scrollBy(rand(400, 800));
+      await scrollPause();
+
+      // Occasional longer pause (real reading behavior)
+      if (chance(20)) await readPause();
+    }
+  };
+
+  // ============================================================
+  // TRAINING PHASES
+  // ============================================================
+
+  // Phase: Search top results for a niche term
+  const phaseSearchTop = async () =&gt; {
+    const term = pick(YOUR_NICHE.searchTerms);
+    log(`🔍 Search (Top): &quot;${term}&quot;`, 'act');
+    state.phase = `search-top: ${term}`;
+    await goSearch(term, 'top');
+    await scrollAndEngage({ maxScrolls: rand(8, 15) });
+  };
+
+  // Phase: Search latest/most recent results
+  const phaseSearchLatest = async () =&gt; {
+    const term = pick(YOUR_NICHE.searchTerms);
+    log(`🕐 Search (Latest): &quot;${term}&quot;`, 'act');
+    state.phase = `search-latest: ${term}`;
+    await goSearch(term, 'latest');
+    await scrollAndEngage({ maxScrolls: rand(6, 12) });
+  };
+
+  // Phase: Search people and follow qualifying accounts
+  const phaseSearchPeople = async () =&gt; {
+    const term = pick(YOUR_NICHE.searchTerms);
+    log(`👥 Search People: &quot;${term}&quot;`, 'act');
+    state.phase = `search-people: ${term}`;
+    await goSearch(term, 'people');
+    await sleep(2000);
+
+    for (let i = 0; i &lt; rand(5, 10) &amp;&amp; state.running &amp;&amp; !isExpired(); i++) {
+      const cells = document.querySelectorAll(S.userCell);
+      for (const cell of cells) {
+        if (!canFollow()) break;
+        if (chance(mode.followPct)) {
+          await doFollowFromCell(cell);
+          await humanDelay();
+        }
+      }
+      scrollBy(rand(400, 700));
+      await scrollPause();
+    }
+  };
+
+  // Phase: Scroll home feed (reinforces algorithm training)
+  const phaseHomeFeed = async () =&gt; {
+    log('🏠 Home Feed', 'act');
+    state.phase = 'home-feed';
+    await goHome();
+    await scrollAndEngage({ maxScrolls: rand(10, 20) });
+  };
+
+  // Phase: Visit an influencer's profile and engage heavily
+  const phaseInfluencer = async () =&gt; {
+    if (!YOUR_NICHE.influencers?.length) return;
+    const user = pick(YOUR_NICHE.influencers);
+    log(`⭐ Influencer: @${user}`, 'act');
+    state.phase = `influencer: @${user}`;
+    await goProfile(user);
+    await scrollAndEngage({ maxScrolls: rand(5, 10), boostEngagement: true });
+  };
+
+  // Phase: Visit own profile (active user signal)
+  const phaseOwnProfile = async () =&gt; {
+    const me = getMyUsername();
+    if (!me) return;
+    log('👤 Own Profile', 'act');
+    state.phase = 'own-profile';
+    await goProfile(me);
+    for (let i = 0; i &lt; rand(3, 5); i++) {
+      scrollBy(rand(300, 600));
+      await scrollPause();
+    }
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    await readPause();
+  };
+
+  // Phase: Browse explore/trending
+  const phaseExplore = async () =&gt; {
+    log('🌍 Explore', 'act');
+    state.phase = 'explore';
+    await goExplore();
+    await sleep(2000);
+
+    const trends = document.querySelectorAll(S.trend);
+    if (trends.length &gt; 0) {
+      const trend = pick([...trends]);
+      await clickEl(trend);
+      await sleep(2000);
+      await scrollAndEngage({ maxScrolls: rand(4, 8) });
+    } else {
+      for (let i = 0; i &lt; rand(3, 6); i++) {
+        scrollBy(rand(400, 700));
+        await scrollPause();
+      }
+    }
+  };
+
+  // Phase: Idle dwell (humans do this — just sits)
+  const phaseIdle = async () =&gt; {
+    const secs = rand(15, 45);
+    log(`😴 Idle ${secs}s`, 'info');
+    state.phase = 'idle';
+    await sleep(secs * 1000);
+  };
+
+  // ============================================================
+  // MAIN SESSION RUNNER
+  // ============================================================
+
+  const run = async () =&gt; {
+    log('', 'info');
+    log('══════════════════════════════════════════════════', 'info');
+    log('🧠 THOUGHT LEADER CULTIVATOR — Starting', 'info');
+    log(`📋 Niche: ${YOUR_NICHE.searchTerms.length} search terms`, 'info');
+    log(`⚡ Mode: ${YOUR_PERSONA.mode}`, 'info');
+    log(`⏱️  Session: ${TARGETS.SESSION_MINUTES} min`, 'info');
+    log(`🛑 Stop: stopCultivator()`, 'info');
+    log('══════════════════════════════════════════════════', 'info');
+    log('', 'info');
+
+    // Build randomized phase sequence
+    while (state.running &amp;&amp; !isExpired()) {
+      // Core: always do at least one search
+      const phases = [phaseSearchTop];
+
+      // Randomize the rest
+      if (chance(75)) phases.push(phaseSearchLatest);
+      if (chance(60)) phases.push(phaseSearchPeople);
+      if (chance(80)) phases.push(phaseHomeFeed);
+      if (YOUR_NICHE.influencers?.length &amp;&amp; chance(50)) phases.push(phaseInfluencer);
+      if (chance(40)) phases.push(phaseOwnProfile);
+      if (chance(30)) phases.push(phaseExplore);
+
+      // Add idle breaks between phases
+      const withIdles = [];
+      for (const phase of shuffle(phases)) {
+        withIdles.push(phase);
+        if (chance(35)) withIdles.push(phaseIdle);
+      }
+
+      // Execute
+      for (const phase of withIdles) {
+        if (!state.running || isExpired()) break;
+        try {
+          await phase();
+        } catch (e) {
+          log(`Phase error: ${e.message}`, 'err');
+          await sleep(3000);
+        }
+      }
+
+      // After a full rotation, take a brief break
+      if (state.running &amp;&amp; !isExpired()) {
+        const breakMin = rand(2, 8);
+        log(`☕ Break: ${breakMin} min`, 'info');
+        await sleep(breakMin * 60000);
+      }
+    }
+
+    // Session complete
+    log('', 'info');
+    log('══════════════════════════════════════════════════', 'info');
+    log('🏁 SESSION COMPLETE', 'info');
+    printStats();
+    log('══════════════════════════════════════════════════', 'info');
+  };
+
+  // ============================================================
+  // REPORTING
+  // ============================================================
+
+  const printStats = () =&gt; {
+    const elapsed = ((Date.now() - state.startTime) / 60000).toFixed(1);
+    log(`⏱️  Duration: ${elapsed} min`, 'info');
+    log(`❤️  Likes: ${state.likes}  |  ➕ Follows: ${state.follows}  |  💬 Comments: ${state.comments}`, 'info');
+    log(`🔖 Bookmarks: ${state.bookmarks}  |  🔁 Retweets: ${state.retweets}`, 'info');
+    log(`🔍 Searches: ${state.searches}  |  👤 Profile visits: ${state.profileVisits}  |  📜 Scrolls: ${state.scrolls}`, 'info');
+    log(`📦 All-time: ${liked.size} liked, ${followed.size} followed, ${commented.size} commented`, 'info');
+  };
+
+  // ============================================================
+  // CONTROL API
+  // ============================================================
+
+  window.stopCultivator = () =&gt; {
+    state.running = false;
+    log('🛑 Stopping after current action...', 'warn');
+  };
+
+  window.cultivatorStatus = () =&gt; {
+    log(`📡 Running: ${state.running} | Phase: ${state.phase}`, 'info');
+    printStats();
+    return state;
+  };
+
+  window.cultivatorReset = () =&gt; {
+    ['liked', 'followed', 'commented', 'bookmarked'].forEach(k =&gt; store.rm(k));
+    log('🧹 All tracking data cleared', 'warn');
+  };
+
+  // ============================================================
+  // START
+  // ============================================================
+  run();
+
+})();
+</code></pre>
+          </div>
+        </section>
+
+        <div class="cta-box">
+          <h3>⚡ More XActions Scripts</h3>
+          <p>Browse 300+ free browser scripts for X/Twitter automation. No API keys, no fees.</p>
+          <a href="/scripts">Browse All Scripts</a>
+        </div>
+      </article>
+    </main>
+
+    <aside class="sidebar-right">
+      <div class="sidebar-card">
+        <h3>🧠 Growth</h3>
+        <a href="/scripts/follow-list">📋 Follow &amp; Manage Lists</a>
+<a href="/scripts/follow-account">➕ Follow Account</a>
+<a href="/scripts/follow-back">🔗 Follow Back - XActions</a>
+<a href="/scripts/follow-engagers">🎯 Follow Engagers</a>
+<a href="/scripts/follow-target-users">🎯 Follow Target Users</a>
+<a href="/scripts/growth-suite">🚀 Growth Suite</a>
+<a href="/scripts/keyword-follow">🔑 Keyword Follow</a>
+<a href="/scripts/natural-flow">🌊 Natural Flow</a>
+<a href="/scripts/algorithm-trainer">🧠 Phase 1</a>
+<a href="/scripts/algorithm-builder">🧠 XActions Algorithm Builder</a>
+      </div>
+      <div class="sidebar-card">
+        <h3>🔗 Quick Links</h3>
+        <a href="/scripts">All Scripts</a>
+        <a href="/features">Features</a>
+        <a href="/docs">Documentation</a>
+        <a href="/tutorials">Tutorials</a>
+        <a href="/mcp">MCP Server</a>
+        <a href="https://github.com/nirholas/XActions" rel="noopener">GitHub</a>
+      </div>
+    </aside>
+  </div>
+</body>
+</html>

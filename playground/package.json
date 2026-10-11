@@ -1,0 +1,23 @@
+{
+  "name": "xactions-playground",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Guest-tier XActions demo service: runs real X queries with no login, no key and no database.",
+  "type": "module",
+  "main": "server.mjs",
+  "scripts": {
+    "start": "node server.mjs"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "compression": "^1.8.1",
+    "cors": "^2.8.5",
+    "express": "^4.18.2",
+    "express-rate-limit": "^7.1.5",
+    "helmet": "^7.1.0"
+  },
+  "author": "nich (@nichxbt)",
+  "license": "Apache-2.0"
+}

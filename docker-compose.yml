@@ -1,0 +1,119 @@
+# ═══════════════════════════════════════════════════════════════════════════════
+# XActions — Docker Compose (Full Stack)
+# Runs: API + Worker + PostgreSQL + Redis
+# Usage: docker compose up -d
+# by nichxbt
+# ═══════════════════════════════════════════════════════════════════════════════
+
+services:
+  # ─────────────────────────────────────────────────────────────────────────────
+  # PostgreSQL Database
+  # ─────────────────────────────────────────────────────────────────────────────
+  postgres:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: xactions
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-xactions_dev_password}
+      POSTGRES_DB: xactions
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    # Loopback only: reachable from this machine for local tools, never from
+    # the network. The API and worker reach it over the compose network.
+    ports:
+      - "127.0.0.1:5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U xactions"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ─────────────────────────────────────────────────────────────────────────────
+  # Redis (Job Queue + Caching)
+  # ─────────────────────────────────────────────────────────────────────────────
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    # Set REDIS_PASSWORD in .env to require one.
+    command: redis-server --appendonly yes --maxmemory 128mb --maxmemory-policy allkeys-lru ${REDIS_PASSWORD:+--requirepass ${REDIS_PASSWORD}}
+    volumes:
+      - redis_data:/data
+    ports:
+      - "127.0.0.1:6379:6379"
+    healthcheck:
+      test: ["CMD-SHELL", "redis-cli ${REDIS_PASSWORD:+-a ${REDIS_PASSWORD}} ping | grep -q PONG"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ─────────────────────────────────────────────────────────────────────────────
+  # XActions API Server
+  # ─────────────────────────────────────────────────────────────────────────────
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    ports:
+      - "${PORT:-3001}:3001"
+    environment:
+      NODE_ENV: production
+      PORT: 3001
+      DATABASE_URL: postgresql://xactions:${POSTGRES_PASSWORD:-xactions_dev_password}@postgres:5432/xactions?schema=public
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_PASSWORD: ${REDIS_PASSWORD:-}
+      JWT_SECRET: ${JWT_SECRET:?Set JWT_SECRET in .env}
+      # Encrypts saved X sessions. Compose does not run shell commands in
+      # defaults, so a default here would be one public string: set it
+      # (openssl rand -hex 32) and keep it, or saved sessions stop decrypting.
+      SESSION_SECRET: ${SESSION_SECRET:?Set SESSION_SECRET in .env (openssl rand -hex 32)}
+      COOKIE_ENCRYPTION_KEY: ${COOKIE_ENCRYPTION_KEY:-}
+      PUPPETEER_EXECUTABLE_PATH: /usr/bin/chromium
+      PUPPETEER_HEADLESS: "true"
+      PUPPETEER_NO_SANDBOX: "true"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    command: >
+      sh -c "npx prisma migrate deploy && node api/server.js"
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3001/api/health"]
+      interval: 30s
+      timeout: 10s
+      start_period: 30s
+      retries: 3
+
+  # ─────────────────────────────────────────────────────────────────────────────
+  # XActions Background Worker (Job Queue Processor)
+  # ─────────────────────────────────────────────────────────────────────────────
+  worker:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+      DATABASE_URL: postgresql://xactions:${POSTGRES_PASSWORD:-xactions_dev_password}@postgres:5432/xactions?schema=public
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_PASSWORD: ${REDIS_PASSWORD:-}
+      JWT_SECRET: ${JWT_SECRET:?Set JWT_SECRET in .env}
+      # The worker decrypts the sessions the API saved, so it needs the same keys.
+      SESSION_SECRET: ${SESSION_SECRET:?Set SESSION_SECRET in .env (openssl rand -hex 32)}
+      COOKIE_ENCRYPTION_KEY: ${COOKIE_ENCRYPTION_KEY:-}
+      PUPPETEER_EXECUTABLE_PATH: /usr/bin/chromium
+      PUPPETEER_HEADLESS: "true"
+      PUPPETEER_NO_SANDBOX: "true"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    command: ["node", "api/services/jobQueue.js"]
+
+volumes:
+  postgres_data:
+  redis_data:

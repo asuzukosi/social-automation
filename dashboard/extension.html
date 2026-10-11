@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Browser Extension — Run X Automations Locally | XActions</title>
+  <meta name="description" content="The XActions browser extension runs mass unfollow, auto-follow, auto-like and 8 more X/Twitter automations directly in your own browser. Your login never leaves your machine — no passwords, no session tokens, no server.">
+  <meta name="keywords" content="XActions extension, twitter automation extension, chrome unfollow extension, mass unfollow browser, X automation local, twitter growth extension">
+  <meta name="author" content="nich (@nichxbt)">
+  <meta name="robots" content="index, follow">
+
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="XActions Browser Extension — Automations That Run In Your Browser">
+  <meta property="og:description" content="Mass unfollow, auto-follow, auto-like and 8 more automations run locally in your browser. Your X login never leaves your machine.">
+  <meta property="og:url" content="https://xactions.app/extension">
+  <meta property="og:site_name" content="XActions">
+  <meta property="og:image" content="https://xactions.app/og-home.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:locale" content="en_US">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@nichxbt">
+  <meta name="twitter:creator" content="@nichxbt">
+  <meta name="twitter:title" content="XActions Browser Extension">
+  <meta name="twitter:description" content="11 X/Twitter automations that run locally in your browser. Your login never leaves your machine.">
+  <meta name="twitter:image" content="https://xactions.app/og-home.png">
+
+  <link rel="canonical" href="https://xactions.app/extension">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+  <link rel="manifest" href="/manifest.json">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "XActions Browser Extension",
+    "applicationCategory": "BrowserApplication",
+    "operatingSystem": "Chrome, Edge, Brave, Firefox",
+    "description": "Runs 11 X/Twitter automations locally in your browser, including mass unfollow, auto-follow, and auto-like. Your login never leaves your machine.",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+    "url": "https://xactions.app/extension"
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
+      { "@type": "ListItem", "position": 2, "name": "Extension", "item": "https://xactions.app/extension" }
+    ]
+  }
+  </script>
+
+  <link rel="stylesheet" href="/css/common.css">
+  <style>
+    .main-content { flex: 1; max-width: 760px; border-right: 1px solid var(--border); }
+    .main-header { position: sticky; top: 0; background: rgba(0,0,0,0.65); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 16px; z-index: 100; }
+    .main-header h1 { font-size: 1.25rem; font-weight: 700; }
+
+    .hero { padding: 40px 16px 28px; border-bottom: 1px solid var(--border); }
+    .hero .eyebrow { font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--accent); margin-bottom: 10px; }
+    .hero h2 { font-size: 2rem; font-weight: 800; line-height: 1.15; margin-bottom: 14px; }
+    .hero p { color: var(--text-secondary); font-size: 1rem; line-height: 1.65; max-width: 60ch; }
+    .hero-cta { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 22px; }
+    .btn { display: inline-flex; align-items: center; gap: 8px; padding: 12px 20px; border-radius: 10px; font-weight: 700; font-size: 0.9375rem; text-decoration: none; transition: all 0.2s; border: 1px solid transparent; }
+    .btn-primary { background: var(--accent); color: #fff; }
+    .btn-primary:hover { filter: brightness(1.1); transform: translateY(-1px); }
+    .btn-ghost { background: var(--bg-secondary); border-color: var(--border); color: var(--text-primary); }
+    .btn-ghost:hover { border-color: var(--accent); background: var(--bg-tertiary); }
+
+    .section { padding: 28px 16px; border-bottom: 1px solid var(--border); }
+    .section-label { font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--accent); margin-bottom: 4px; }
+    .section-title { font-size: 1.375rem; font-weight: 800; margin-bottom: 8px; }
+    .section-lead { color: var(--text-secondary); font-size: 0.9375rem; line-height: 1.6; margin-bottom: 20px; max-width: 62ch; }
+
+    /* Privacy callout — the reason this exists */
+    .privacy { display: flex; gap: 14px; align-items: flex-start; background: linear-gradient(180deg, rgba(46,204,113,0.08), transparent); border: 1px solid var(--border); border-left: 3px solid var(--success, #2ecc71); border-radius: 12px; padding: 18px; }
+    .privacy .p-icon { font-size: 1.6rem; line-height: 1; }
+    .privacy h3 { font-size: 1rem; font-weight: 800; margin-bottom: 6px; }
+    .privacy p { color: var(--text-secondary); font-size: 0.875rem; line-height: 1.6; margin: 0; }
+
+    .steps { counter-reset: step; display: grid; gap: 14px; }
+    .step { position: relative; display: flex; gap: 14px; align-items: flex-start; background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 16px 16px 16px 14px; }
+    .step .num { flex: 0 0 auto; width: 30px; height: 30px; border-radius: 8px; background: var(--bg-tertiary); color: var(--accent); font-weight: 800; display: grid; place-items: center; font-size: 0.9375rem; }
+    .step .body { flex: 1; }
+    .step h4 { font-size: 0.9375rem; font-weight: 700; margin-bottom: 3px; }
+    .step p { color: var(--text-secondary); font-size: 0.875rem; line-height: 1.55; margin: 0; }
+    .step code, .inline-code { background: var(--bg-tertiary); padding: 2px 6px; border-radius: 4px; font-size: 0.85em; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
+
+    .browser-tabs { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 18px; }
+    .browser-pill { padding: 6px 12px; border-radius: 999px; background: var(--bg-secondary); border: 1px solid var(--border); font-size: 0.8125rem; font-weight: 600; color: var(--text-secondary); }
+
+    .auto-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    @media (max-width: 560px) { .auto-grid { grid-template-columns: 1fr; } }
+    .auto-card { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 14px; }
+    .auto-card .a-icon { font-size: 1.5rem; margin-bottom: 6px; }
+    .auto-card h4 { font-size: 0.9375rem; font-weight: 700; margin-bottom: 4px; }
+    .auto-card p { color: var(--text-secondary); font-size: 0.8125rem; line-height: 1.45; margin: 0; }
+
+    .safety-list { display: grid; gap: 10px; }
+    .safety-list li { list-style: none; display: flex; gap: 10px; align-items: flex-start; color: var(--text-secondary); font-size: 0.9rem; line-height: 1.55; }
+    .safety-list .chk { color: var(--success, #2ecc71); font-weight: 800; flex: 0 0 auto; }
+
+    .site-footer { border-top: 1px solid var(--border); padding: 48px 24px; }
+    .footer-content { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 32px; }
+    .footer-brand h3 { font-size: 1.25rem; margin-bottom: 8px; }
+    .footer-brand p { color: var(--text-secondary); font-size: 0.875rem; }
+    .footer-links h4 { font-size: 0.875rem; font-weight: 700; margin-bottom: 12px; }
+    .footer-links a { display: block; color: var(--text-secondary); text-decoration: none; font-size: 0.875rem; padding: 4px 0; }
+    .footer-links a:hover { color: var(--accent); }
+    .footer-bottom { max-width: 1200px; margin: 24px auto 0; padding-top: 24px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+    .footer-bottom p { color: var(--text-secondary); font-size: 0.8125rem; }
+    .footer-bottom a { color: var(--text-secondary); }
+    .footer-bottom a:hover { color: var(--accent); }
+    @media (max-width: 768px) { .footer-content { grid-template-columns: 1fr 1fr; } }
+
+    .skip-nav { position: absolute; top: -100%; left: 16px; background: var(--accent); color: white; padding: 12px 24px; border-radius: 8px; font-weight: 700; z-index: 9999; text-decoration: none; }
+    .skip-nav:focus { top: 16px; }
+    :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  </style>
+</head>
+<body>
+  <a href="#main-content" class="skip-nav">Skip to main content</a>
+  <div class="layout">
+    <aside class="sidebar-left" aria-label="Main navigation"></aside>
+    <script src="/js/sidebar.js"></script>
+
+    <main class="main-content" id="main-content">
+      <header class="main-header"><h1>🧩 Browser Extension</h1></header>
+
+      <!-- Hero -->
+      <section class="hero">
+        <div class="eyebrow">Runs locally · Free · Open source</div>
+        <h2>Your automations run in your browser, not on our servers.</h2>
+        <p>Mass unfollow, auto-follow, auto-like, and 8 more X/Twitter automations run right inside the tab you're already logged into. Nothing is uploaded: your password and session never leave your machine, and there's no account to create.</p>
+        <div class="hero-cta">
+          <a href="https://github.com/nirholas/XActions" target="_blank" rel="noopener noreferrer" class="btn btn-primary">⬇ Get the extension</a>
+          <a href="#install" class="btn btn-ghost">Install in 30 seconds</a>
+        </div>
+      </section>
+
+      <!-- Why local -->
+      <section class="section">
+        <div class="privacy">
+          <div class="p-icon" aria-hidden="true">🔒</div>
+          <div>
+            <h3>Why it runs in your browser</h3>
+            <p>Follow, unfollow, and like actions need your logged-in X session. A hosted service would have to store your session token on a server and drive your account from a datacenter — which puts your account at risk and trips X's automation detection. The extension avoids all of that: it acts inside your own browser session, on your own IP, so the actions look exactly like you using X normally. We never see your credentials.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Install -->
+      <section class="section" id="install">
+        <div class="section-label">Install</div>
+        <h2 class="section-title">Load it in 30 seconds</h2>
+        <div class="browser-tabs">
+          <span class="browser-pill">Chrome</span>
+          <span class="browser-pill">Edge</span>
+          <span class="browser-pill">Brave</span>
+          <span class="browser-pill">Firefox</span>
+        </div>
+        <div class="steps">
+          <div class="step"><div class="num">1</div><div class="body"><h4>Download the code</h4><p>Clone or download the <a href="https://github.com/nirholas/XActions" target="_blank" rel="noopener noreferrer">XActions repository</a> — the extension lives in the <span class="inline-code">extension/</span> folder.</p></div></div>
+          <div class="step"><div class="num">2</div><div class="body"><h4>Open your extensions page</h4><p>Go to <span class="inline-code">chrome://extensions/</span> (or <span class="inline-code">edge://extensions/</span> / <span class="inline-code">brave://extensions/</span>). On Firefox, use <span class="inline-code">about:debugging#/runtime/this-firefox</span>.</p></div></div>
+          <div class="step"><div class="num">3</div><div class="body"><h4>Enable Developer mode &amp; load unpacked</h4><p>Toggle <strong>Developer mode</strong> (top-right), click <strong>Load unpacked</strong>, and select the <span class="inline-code">extension/</span> folder. On Firefox, click <strong>Load Temporary Add-on</strong> and pick <span class="inline-code">extension/manifest.json</span>.</p></div></div>
+          <div class="step"><div class="num">4</div><div class="body"><h4>Pin it and open x.com</h4><p>The <strong>XA</strong> icon appears in your toolbar. Navigate to <strong>x.com</strong> — a green dot means it's connected. Click the icon, pick an automation, and hit ▶.</p></div></div>
+        </div>
+        <p style="margin-top:16px;font-size:0.875rem;color:var(--text-secondary);">Full walkthrough with screenshots: <a href="https://github.com/nirholas/XActions/blob/main/docs/extension.md" target="_blank" rel="noopener noreferrer">extension user guide →</a></p>
+      </section>
+
+      <!-- Automations -->
+      <section class="section">
+        <div class="section-label">What's inside</div>
+        <h2 class="section-title">11 automations</h2>
+        <p class="section-lead">Everything runs from a dark-themed toolbar popup with search, category filters, live progress, and an emergency stop.</p>
+        <div class="auto-grid">
+          <div class="auto-card"><div class="a-icon">❤️</div><h4>Auto-Liker</h4><p>Like tweets matching keywords in your feed.</p></div>
+          <div class="auto-card"><div class="a-icon">👋</div><h4>Smart Unfollow</h4><p>Unfollow non-followers from your /following page, with whitelist and dry-run.</p></div>
+          <div class="auto-card"><div class="a-icon">🔍</div><h4>Keyword Follow</h4><p>Search keywords and follow matching users by min-follower threshold.</p></div>
+          <div class="auto-card"><div class="a-icon">🚀</div><h4>Growth Suite</h4><p>All-in-one: like + follow + unfollow in a single timed session.</p></div>
+          <div class="auto-card"><div class="a-icon">💬</div><h4>Auto-Commenter</h4><p>Reply to posts with rotating comments from your pool, keyword-filtered.</p></div>
+          <div class="auto-card"><div class="a-icon">👥</div><h4>Follow Engagers</h4><p>Follow the users who liked or retweeted a specific tweet.</p></div>
+          <div class="auto-card"><div class="a-icon">🎬</div><h4>Video Downloader</h4><p>Adds a ⬇ button to any tweet that has video.</p></div>
+          <div class="auto-card"><div class="a-icon">🧵</div><h4>Thread Reader</h4><p>Unrolls threads into a clean, readable overlay.</p></div>
+          <div class="auto-card"><div class="a-icon">🔔</div><h4>Who Unfollowed Me</h4><p>Snapshots your followers and flags who unfollowed.</p></div>
+          <div class="auto-card"><div class="a-icon">📊</div><h4>Best Time to Post</h4><p>Analyzes your engagement patterns by hour and day.</p></div>
+          <div class="auto-card"><div class="a-icon">⚡</div><h4>Quick Stats</h4><p>Live engagement-rate overlay while you browse.</p></div>
+        </div>
+      </section>
+
+      <!-- Safety -->
+      <section class="section">
+        <div class="section-label">Built-in safety</div>
+        <h2 class="section-title">Designed not to get you flagged</h2>
+        <ul class="safety-list">
+          <li><span class="chk">✓</span><span>Human-like randomized delays and per-action rate caps between every follow, unfollow, and like.</span></li>
+          <li><span class="chk">✓</span><span>Dry-run mode previews exactly what an automation would do before it touches your account.</span></li>
+          <li><span class="chk">✓</span><span>Pause/Resume preserves state; a one-click emergency stop halts everything instantly.</span></li>
+          <li><span class="chk">✓</span><span>Whitelists protect accounts you never want to unfollow.</span></li>
+        </ul>
+      </section>
+
+      <!-- Alternatives -->
+      <section class="section">
+        <div class="section-label">Prefer no install?</div>
+        <h2 class="section-title">Other ways to run XActions</h2>
+        <p class="section-lead">The extension is the easiest way to run account actions. If you'd rather not install anything, these run the same toolkit.</p>
+        <div class="auto-grid">
+          <a class="auto-card" style="text-decoration:none;color:inherit;display:block;" href="/run"><div class="a-icon">🖥️</div><h4>DevTools Console →</h4><p>Copy-paste a script into the browser console on x.com. Zero install.</p></a>
+          <a class="auto-card" style="text-decoration:none;color:inherit;display:block;" href="/mcp"><div class="a-icon">🔗</div><h4>MCP Server →</h4><p>Drive scrapers and analytics from Claude, Cursor, or any MCP client.</p></a>
+          <a class="auto-card" style="text-decoration:none;color:inherit;display:block;" href="/docs"><div class="a-icon">📦</div><h4>CLI →</h4><p><span class="inline-code">npx xactions</span> — 43+ commands for scraping and export.</p></a>
+          <a class="auto-card" style="text-decoration:none;color:inherit;display:block;" href="/integrations"><div class="a-icon">🔌</div><h4>All integrations →</h4><p>Every way XActions connects to your workflow.</p></a>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <footer class="site-footer">
+    <div class="footer-content">
+      <div class="footer-brand"><h3>⚡ XActions</h3><p>Free, open-source X/Twitter automation toolkit. Mass unfollow, detect unfollowers, auto-engage, and grow your audience without expensive API fees.</p></div>
+      <div class="footer-links"><h4>Product</h4><a href="/features">Features</a><a href="/extension">Extension</a><a href="/video">Video Downloader</a><a href="/pricing">Pricing</a><a href="/run">Run Scripts</a><a href="/dashboard">Dashboard</a><a href="/automations">Automations</a><a href="/analytics">Analytics</a></div>
+      <div class="footer-links"><h4>AI & Developers</h4><a href="/ai">AI Integration</a><a href="/ai-api">AI API</a><a href="/mcp">MCP Server</a><a href="/docs">Documentation</a></div>
+      <div class="footer-links"><h4>Company</h4><a href="/about">About</a><a href="https://github.com/nirholas/XActions" target="_blank" rel="noopener noreferrer">GitHub</a><a href="https://x.com/nichxbt" target="_blank" rel="noopener noreferrer">Twitter</a><a href="/terms">Terms</a><a href="/privacy">Privacy</a></div>
+    </div>
+    <div class="footer-bottom"><p>&copy; 2026 XActions. Not affiliated with X Corp.</p><p>Made with ❤️ by <a href="https://x.com/nichxbt" target="_blank" rel="noopener noreferrer">@nichxbt</a></p></div>
+  </footer>
+</body>
+</html>

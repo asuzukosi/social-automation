@@ -1,0 +1,66 @@
+# Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
+#
+# Build and deploy the XActions Playground to Cloud Run.
+#
+#   gcloud builds submit --config playground/cloudbuild.yaml \
+#     --region us-central1 \
+#     --substitutions=SHORT_SHA=manual$(date +%s)
+#
+# The service holds no secrets and no state, so it needs no Secret Manager
+# bindings and no database. Redeploying it is always safe.
+
+substitutions:
+  _SERVICE: xactions-playground
+  _REGION: us-central1
+  _REPO: xactions
+
+steps:
+  - id: build
+    name: gcr.io/cloud-builders/docker
+    args:
+      - build
+      - -f
+      - playground/Dockerfile
+      - -t
+      - ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPO}/${_SERVICE}:$SHORT_SHA
+      - -t
+      - ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPO}/${_SERVICE}:latest
+      - .
+
+  - id: push
+    name: gcr.io/cloud-builders/docker
+    args: ['push', '--all-tags', '${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPO}/${_SERVICE}']
+
+  - id: deploy
+    name: gcr.io/google.com/cloudsdktool/cloud-sdk
+    entrypoint: gcloud
+    args:
+      - run
+      - deploy
+      - ${_SERVICE}
+      - --image=${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPO}/${_SERVICE}:$SHORT_SHA
+      - --region=${_REGION}
+      - --platform=managed
+      - --allow-unauthenticated
+      - --port=8080
+      - --cpu=1
+      - --memory=512Mi
+      # One warm instance. A demo that cold-starts on the first click reads as
+      # broken, and this container boots in well under a second when warm.
+      - --min-instances=1
+      - --max-instances=10
+      # The upstream concurrency gate is per instance, so this bounds how hard
+      # a single instance can hit X.
+      - --concurrency=80
+      - --timeout=60s
+      - --set-env-vars=NODE_ENV=production
+
+images:
+  - ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPO}/${_SERVICE}:$SHORT_SHA
+  - ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPO}/${_SERVICE}:latest
+
+options:
+  logging: CLOUD_LOGGING_ONLY
+  machineType: E2_HIGHCPU_8
+
+timeout: 900s

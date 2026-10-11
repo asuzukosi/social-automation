@@ -1,0 +1,79 @@
+# ═══════════════════════════════════════════════════════════════════════════════
+# XActions — Deploy Static Frontend to Cloudflare Pages
+# Triggers on push to main when dashboard files change
+# by nichxbt
+# ═══════════════════════════════════════════════════════════════════════════════
+
+name: Deploy Frontend (Cloudflare Pages)
+
+# Requires two repository secrets: CLOUDFLARE_API_TOKEN (Account -> Cloudflare
+# Pages -> Edit) and CLOUDFLARE_ACCOUNT_ID. Without them wrangler exits 1 with
+# "it's necessary to set a CLOUDFLARE_API_TOKEN environment variable".
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'dashboard/**'
+      - 'public/**'
+      - 'site/**'
+      - 'functions/**'
+      - 'src/video/**'
+      - 'src/ask/**'
+      - 'src/edge/**'
+      - 'src/mcp/**'
+      - 'src/scrapers/twitter/http/**'
+      - 'api/openapi.js'
+      - 'api/config/**'
+      - 'packages/x402-mcp/**'
+      - 'deploy/cloudflare/**'
+      - 'llms.txt'
+      - 'llms-full.txt'
+      - '.github/workflows/deploy-cloudflare.yml'
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-cloudflare
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    name: Deploy to Cloudflare Pages
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    if: github.ref == 'refs/heads/main'
+
+    permissions:
+      contents: read
+      deployments: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      # dashboard/ alone is not the site: the root page comes from site/, the og
+      # images, icons, robots.txt and sitemap.xml come from public/, and the two
+      # llms*.txt files sit at the root. build.sh assembles all of them into
+      # pages-out/ the way the route table expects, so deploying dashboard/
+      # directly would serve the app shell at / and drop every public asset.
+      - name: Setup Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: 22
+
+      # The Ask page and the hosted MCP server both read /data/ask-index.json
+      # from the deployed assets, so a doc added without rerunning the generator
+      # would be invisible to every agent that connects. Regenerating here means
+      # production is current whether or not the artifact was committed.
+      - name: Regenerate the docs index
+        run: npm run ask:index
+
+      - name: Assemble pages-out/
+        run: bash deploy/cloudflare/build.sh
+
+      - name: Deploy to Cloudflare Pages
+        uses: cloudflare/wrangler-action@v4
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy pages-out --project-name=xactions --branch=main

@@ -1,0 +1,42 @@
+# XActions
+
+> The complete X/Twitter automation toolkit. Scrapers, an MCP server for AI agents, a CLI, browser console scripts and a browser extension. No X API key, no monthly fee, Apache-2.0. By nichxbt.
+
+XActions automates X/Twitter without official API access. It ships 152 MCP tools, a 56-command CLI, 95 browser console scripts, 50 agent skills, 40 REST route modules, a Puppeteer and HTTP scraping engine, and an Express dashboard backed by PostgreSQL.
+
+## Links
+
+- Repository: https://github.com/nirholas/XActions
+- Website: https://xactions.app
+- Author: https://github.com/nirholas
+- Agent instructions (CLI vs MCP, and which to use): https://raw.githubusercontent.com/nirholas/XActions/main/AGENTS.md
+- Full documentation for LLMs: https://raw.githubusercontent.com/nirholas/XActions/main/llms-full.txt
+
+## Key Capabilities
+
+- Public reads with no account and no browser, over X's internal GraphQL API: profiles, timelines, threads, media, hashtags
+- Logged-in reads: search, followers, following, likes, bookmarks, DMs
+- GraphQL query IDs auto-discovered from x.com's own bundles, so a rotated ID self-heals instead of returning 404
+- Requests signed with an `x-client-transaction-id` header computed the way x.com's own client computes it
+- Cookie import from a locally installed browser (`xactions login --from-browser`) or from an exported cookie file (`--cookies-file`)
+- Multi-account pool with per-account rate-limit tracking and rotation, plus resumable checkpoints for long scrapes
+- Mass unfollow, unfollower detection, follower monitoring, follower CRM
+- Auto-like, auto-follow, keyword growth automation, whole-profile and whole-search engagement sweeps
+- Post tweets, threads, polls, replies, quotes, DMs, scheduled posts
+- Scrapers for Bluesky, Mastodon and Threads behind the same normalised interface
+- Import the official X data archive (the GDPR zip) and migrate to Bluesky or Mastodon
+- MCP server over stdio or Streamable HTTP, with tool groups and allowlists so a client loads only what it needs
+- MCP draft-approval gate: every write is held for a human, plus per-account daily action caps that survive a restart
+- Live event streaming from x.com's event pipeline (a chunked newline-delimited JSON response, not a WebSocket)
+- Signed outbound webhooks (HMAC-SHA256) with retries and a delivery log
+- 50 agent skills installable into Claude Code, Cursor, Codex and Windsurf with `xactions skills install`
+- `.mcpb` bundle for one-drag install into Claude Desktop
+- Agent-friendly output: `--compact` and `--fields` on every read command, `--json` for the full object
+- Agent-to-Agent (A2A) protocol server, persona engine, workflow engine, plugin system
+- An AI voice agent that joins live X Spaces, listens and speaks
+- Browser extension for Chrome and Edge (Manifest V3)
+- Ask XActions (https://xactions.app/ask): sourced answers about the toolkit, streamed from free LLM lanes; POST /api/ask returns Server-Sent Events
+
+## Tech Stack
+
+- Node.js >= 22.12 (CI runs 22 and 24), ESM modules, Express.js, Puppeteer, Prisma (PostgreSQL), Bull (Redis), Vitest, Socket.io, Stripe
