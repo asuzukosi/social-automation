@@ -1,0 +1,41 @@
+# src/linkedin_mcp_server/__init__.py
+"""
+LinkedIn MCP Server package.
+
+A Model Context Protocol (MCP) server that provides LinkedIn integration capabilities
+for AI assistants. This package enables secure LinkedIn profile, company, and job
+data reading through a standardized MCP interface.
+
+Key Features:
+- Secure LinkedIn authentication via session files
+- Reading LinkedIn profile, company, and job data
+- MCP-compliant server implementation using FastMCP
+- Playwright browser automation with session persistence
+- Layered configuration system with secure credential storage
+- Docker containerization for easy deployment
+- Claude Desktop MCP Bundle (MCPB, formerly DXT) support
+
+Architecture:
+- Clean separation between authentication, driver management, and MCP server
+- Singleton pattern for browser session management
+- Comprehensive error handling and logging
+- Cross-platform compatibility (macOS, Windows, Linux)
+"""
+
+from importlib.metadata import PackageNotFoundError, version
+
+from linkedin_mcp_server.greenlet_runtime import explain_a_missing_runtime
+
+# Before anything reaches patchright, where the failure would otherwise surface
+# as a bare DLL error with nothing pointing at its cause. Both entry paths, the
+# console script and ``python -m``, import this module first.
+explain_a_missing_runtime()
+
+try:
+    __version__ = version("mcp-server-linkedin")
+except PackageNotFoundError:
+    try:
+        # Fallback for environments installed under the pre-rename name
+        __version__ = version("linkedin-scraper-mcp")
+    except PackageNotFoundError:
+        __version__ = "0.0.0.dev"  # Running from source without install
