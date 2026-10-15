@@ -47,7 +47,7 @@ def get_service() -> SocialService:
 
 @mcp.tool(annotations={"readOnlyHint": True})
 async def social_status() -> dict[str, object]:
-    """Report adapter availability and authentication without returning secrets."""
+    """Report adapter availability without returning secrets."""
     return await get_service().status()
 
 

@@ -67,12 +67,7 @@ class XAdapter:
         return reads + writes
 
     async def search(self, query: str, limit: int) -> ReadResult:
-        return await self._search(query, limit, None)
-
-    async def _search(self, query: str, limit: int, cursor: str | None) -> ReadResult:
         params: dict[str, object] = {"query": query, "limit": limit}
-        if cursor:
-            params["cursor"] = cursor
         rows = await self._call("search", params)
         posts = {post.native_id: post for post in (post_from_row(row) for row in rows)}
         items = list(posts.values())

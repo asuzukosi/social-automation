@@ -55,6 +55,13 @@ async def test_inspection_does_not_create_state(tmp_path) -> None:
     assert not state_path.parent.exists()
 
 
+def test_empty_adapter_map_stays_empty(tmp_path) -> None:
+    service = SocialService(tmp_path / "state.db", adapters={})
+
+    assert service.adapters == {}
+    assert service.accounts() == []
+
+
 async def test_service_closes_every_adapter(service: SocialService) -> None:
     await service.close()
 

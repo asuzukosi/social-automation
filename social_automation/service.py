@@ -30,11 +30,15 @@ class SocialService:
         state_path: Path,
         adapters: dict[Platform, PlatformAdapter] | None = None,
     ) -> None:
-        self.adapters = adapters or {
-            Platform.X: XAdapter(),
-            Platform.REDDIT: RedditAdapter(),
-            Platform.LINKEDIN: LinkedInAdapter(),
-        }
+        self.adapters: dict[Platform, PlatformAdapter] = (
+            adapters
+            if adapters is not None
+            else {
+                Platform.X: XAdapter(),
+                Platform.REDDIT: RedditAdapter(),
+                Platform.LINKEDIN: LinkedInAdapter(),
+            }
+        )
         self._state_path = state_path
         self._write_lock = asyncio.Lock()
 
@@ -90,16 +94,11 @@ class SocialService:
         }
 
     def accounts(self) -> list[dict[str, object]]:
-        authentication = {
-            Platform.X: "browser_profile",
-            Platform.REDDIT: "browser_profile",
-            Platform.LINKEDIN: "browser_profile",
-        }
         return [
             {
                 "platform": platform.value,
                 "account": "primary",
-                "authentication": authentication[platform],
+                "authentication": "browser_profile",
                 "developer_credentials_required": False,
             }
             for platform in self.adapters
