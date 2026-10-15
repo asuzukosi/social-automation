@@ -25,8 +25,8 @@ stop it with Ctrl+C. An MCP client normally starts this process itself.
 
 ## Register the MCP server
 
-Add the following server to the agent's MCP configuration. Replace the project
-path with the absolute path to this repository.
+All clients start the same local process. Replace the project path below with
+the absolute path to this repository.
 
 ```json
 {
@@ -44,9 +44,105 @@ path with the absolute path to this repository.
 }
 ```
 
-Restart the MCP client. The available tools should now begin with `social_`.
-Call `social_status` and `social_capabilities` to confirm the server and its
-platform adapters are available.
+Use the instructions for your coding agent. The CLI examples must be run from
+the repository root so `$(pwd)` resolves to the checkout's absolute path.
+
+### Codex
+
+Codex CLI, the Codex IDE extension, and the ChatGPT desktop app share the same
+local MCP configuration:
+
+```bash
+codex mcp add social -- uv run --project "$(pwd)" social
+codex mcp list
+```
+
+You can also add the STDIO server from **Settings > MCP servers** in the
+desktop app. See the [Codex MCP documentation](https://developers.openai.com/codex/mcp).
+
+### Claude Code
+
+Install the server for the current user:
+
+```bash
+claude mcp add --transport stdio --scope user social -- \
+  uv run --project "$(pwd)" social
+claude mcp list
+```
+
+Run `/mcp` inside Claude Code to inspect the connection. See the
+[Claude Code MCP documentation](https://code.claude.com/docs/en/mcp).
+
+### Cursor
+
+Add the JSON above to `~/.cursor/mcp.json` for all projects or
+`.cursor/mcp.json` for this project. Restart Cursor and open **Customize** to
+check the server. See the
+[Cursor MCP documentation](https://cursor.com/docs/mcp).
+
+### Gemini CLI
+
+Install the server for the current user:
+
+```bash
+gemini mcp add --scope user social uv run -- --project "$(pwd)" social
+gemini mcp list
+```
+
+Run `/mcp` inside Gemini CLI to inspect the connection. See the
+[Gemini CLI MCP documentation](https://geminicli.com/docs/tools/mcp-server).
+
+### GitHub Copilot in VS Code
+
+Open the Command Palette, run **MCP: Add Server**, choose **Command (stdio)**,
+and enter the command and arguments from the JSON above. Choose the user scope
+to use the server in every workspace, or the workspace scope to add it only to
+this repository. See the
+[VS Code MCP documentation](https://code.visualstudio.com/docs/agent-customization/mcp-servers).
+
+### OpenCode
+
+Add this entry to the `mcp` object in your OpenCode configuration:
+
+```json
+{
+  "$schema": "https://opencode.ai/config.json",
+  "mcp": {
+    "social": {
+      "type": "local",
+      "command": [
+        "uv",
+        "run",
+        "--project",
+        "/absolute/path/to/social-automation",
+        "social"
+      ],
+      "enabled": true
+    }
+  }
+}
+```
+
+See the [OpenCode MCP documentation](https://opencode.ai/docs/mcp-servers/).
+
+### Windsurf Cascade
+
+Open the Cascade panel's **Actions** menu, select **Open MCP config file**, and
+add the shared `mcpServers` JSON above. Current Windsurf releases describe this
+as the legacy Cascade configuration; Devin Local uses its own configuration.
+See the [Windsurf Cascade MCP documentation](https://docs.windsurf.com/windsurf/cascade/mcp).
+
+### Other MCP clients
+
+Use STDIO transport with `uv` as the command and these arguments:
+
+```text
+run --project /absolute/path/to/social-automation social
+```
+
+After registration, restart the MCP client. The available tools should begin
+with `social_`. Call `social_status` and `social_capabilities` to confirm the
+server and its platform adapters are available.
 
 ## Connect social accounts
 

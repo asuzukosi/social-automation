@@ -1,9 +1,9 @@
 # Social Automation
 
-A local MCP server for reading and writing on X, Reddit, and LinkedIn through
-one `social_*` toolset. It uses the user's own browser sessions, requires no
-developer API keys, and puts every external write behind an exact preview and
-explicit confirmation.
+Kosi's local MCP server for scaling outreach and customer discovery across X,
+Reddit, and LinkedIn through one `social_*` toolset. It uses the user's own
+browser sessions, requires no developer API keys, and puts every external write
+behind an exact preview and explicit confirmation.
 
 ## What it supports
 
@@ -60,27 +60,18 @@ uv run pytest
 Start the server manually with `uv run social`. An MCP client normally starts
 it on demand.
 
-## Add it to an MCP client
+## Add it to a coding agent
 
-Use the absolute path to this checkout:
+The server works with local MCP clients, including Codex, Claude Code, Cursor,
+Gemini CLI, GitHub Copilot in VS Code, OpenCode, and Windsurf Cascade. Each
+client starts the same local command:
 
-```json
-{
-  "mcpServers": {
-    "social": {
-      "command": "uv",
-      "args": [
-        "run",
-        "--project",
-        "/absolute/path/to/social-automation",
-        "social"
-      ]
-    }
-  }
-}
+```bash
+uv run --project /absolute/path/to/social-automation social
 ```
 
-Restart the client, then call `social_status` and `social_capabilities`.
+Follow the client-specific instructions in [SETUP.md](SETUP.md), then restart
+the client and call `social_status` and `social_capabilities`.
 
 ## Authenticate
 
