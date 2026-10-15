@@ -24,6 +24,13 @@ Preview every write. Confirm only after the user approves the exact account,
 target, and text. Stop on checkpoints, CAPTCHA, restrictions, or uncertain
 state, and never retry an uncertain browser write.
 
+Apply `social-engage` before commenting, reacting, connecting, or messaging.
+Verify that the profile belongs to the intended contact, honour contact
+exclusions and locks, read the full available context, and add one useful
+thought instead of generic praise or a summary. Public-action approval never
+approves a connection note or message; show and confirm its exact text
+separately.
+
 Do not scrape people or search pages in bulk. Review a bounded set of
 candidates, then handle connections, messages, comments, and reactions one at
 a time with fresh approval for each target. Leave the browser visible and stop

@@ -24,6 +24,12 @@ passing its returned cursor back to `social_get_feed` with the same community.
 Preview every write and obtain explicit confirmation. Browser writes without
 a stable response ID may return `outcome_unknown`; never retry them blindly.
 
+Apply `social-engage` before replying to or messaging a person. Read the full
+available discussion and community rules, respond to the actual point, and do
+not use generic praise or repeat what the author said. Approval of a vote or
+public comment never approves a direct message; show and confirm the exact
+message separately.
+
 Work in one community and on one approved target at a time. Do not mass-read
 communities, cross-post the same content, or rapidly submit comments, votes, or
 messages. Follow each community's rules and stop when Reddit presents login,
