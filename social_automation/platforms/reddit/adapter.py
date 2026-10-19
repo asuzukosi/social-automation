@@ -46,6 +46,7 @@ class RedditAdapter:
         return await self._browser.status()
 
     async def close(self) -> None:
+        await self._reader.close()
         await self._browser.close()
 
     async def authenticate(self, force: bool = False) -> dict[str, object]:

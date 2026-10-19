@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import os
 from collections.abc import AsyncIterator
-from contextlib import asynccontextmanager
+from contextlib import asynccontextmanager, suppress
 from functools import lru_cache
 from pathlib import Path
 from typing import Annotated, Any
@@ -190,3 +190,15 @@ def social_get_action(operation_id: str) -> dict[str, object]:
 def main() -> None:
     """Run the local stdio server used by Codex."""
     mcp.run(transport="stdio")
+
+
+def http_main() -> None:
+    """Run one loopback broker shared by every local MCP client."""
+    host = os.getenv("SOCIAL_HTTP_HOST", "127.0.0.1")
+    if host not in {"127.0.0.1", "::1", "localhost"}:
+        raise ValueError("The unauthenticated social broker must bind to loopback")
+    port = int(os.getenv("SOCIAL_HTTP_PORT", "8765"))
+    if not 1 <= port <= 65_535:
+        raise ValueError("SOCIAL_HTTP_PORT must be between 1 and 65535")
+    with suppress(KeyboardInterrupt):
+        mcp.run(transport="http", host=host, port=port, path="/mcp")

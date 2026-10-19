@@ -57,17 +57,19 @@ uv sync --group dev
 uv run pytest
 ```
 
-Start the server manually with `uv run social`. An MCP client normally starts
-it on demand.
+Start the shared broker with `uv run social-http`. It listens only on
+`http://127.0.0.1:8765/mcp` by default. Point every MCP client at that URL so
+all sessions use the same bounded platform queues. `uv run social` remains
+available as a single-client stdio compatibility mode.
 
 ## Add it to a coding agent
 
 The server works with local MCP clients, including Codex, Claude Code, Cursor,
-Gemini CLI, GitHub Copilot in VS Code, OpenCode, and Windsurf Cascade. Each
-client starts the same local command:
+Gemini CLI, GitHub Copilot in VS Code, OpenCode, and Windsurf Cascade. Clients
+that support HTTP should connect to the shared broker:
 
-```bash
-uv run --project /absolute/path/to/social-automation social
+```text
+http://127.0.0.1:8765/mcp
 ```
 
 Follow the client-specific instructions in [SETUP.md](SETUP.md), then restart
@@ -163,7 +165,7 @@ Every write is a two-step operation:
    `social_confirm_action` with `confirmed: true`.
 
 Preview tokens expire after ten minutes and can be consumed only once. The
-server permits one external write at a time and has no bulk-write tool. Never
+server permits one external write per platform at a time and has no bulk-write tool. Never
 automatically retry a result with `status: "outcome_unknown"` because the
 platform may have accepted the write without returning a stable identifier.
 
@@ -172,8 +174,10 @@ Stop on rate limits, CAPTCHA, verification, spam warnings, unexpected redirects,
 or account restrictions. These controls reduce avoidable risk but cannot
 guarantee that a platform will never restrict an automated account.
 
-Run one server process per set of local account profiles. Starting multiple
-processes against the same profiles bypasses process-local write serialization.
+Run one HTTP broker per set of local account profiles. Each platform has a
+12-job queue, five concurrent read workers, and an exclusive write lane.
+LinkedIn reuses five pages in one authenticated browser context rather than
+opening competing persistent profiles.
 
 ## Codex skills
 

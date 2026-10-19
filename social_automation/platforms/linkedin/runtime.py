@@ -10,18 +10,30 @@ from linkedin_mcp_server.authentication import clear_auth_state, get_authenticat
 from linkedin_mcp_server.dependencies import get_ready_extractor
 from linkedin_mcp_server.drivers.browser import close_browser, get_or_create_browser
 from linkedin_mcp_server.exceptions import CredentialsNotFoundError
+from linkedin_mcp_server.linkedin import LinkedInExtractor
 from linkedin_mcp_server.linkedin.navigation import PageNavigator
 from linkedin_mcp_server.linkedin.session import PageSession
 
 from social_automation.platforms.linkedin.browser_actions import LinkedInBrowserActions
+from social_automation.platforms.linkedin.page_pool import LinkedInPagePool
 from social_automation.platforms.linkedin.urls import normalize_linkedin_url
+
+_READ_OPERATIONS = {
+    "search_posts",
+    "get_feed",
+    "get_person_profile",
+    "get_company_profile",
+    "read_post",
+}
 
 
 class LinkedInRuntime:
-    """Serialize LinkedIn operations in the shared Python process."""
+    """Run bounded LinkedIn reads concurrently and serialize writes."""
 
     def __init__(self) -> None:
-        self._lock = asyncio.Lock()
+        self._lifecycle_lock = asyncio.Lock()
+        self._write_lock = asyncio.Lock()
+        self._pages = LinkedInPagePool(size=5)
 
     async def status(self) -> dict[str, object]:
         """Report whether a LinkedIn browser profile has been configured."""
@@ -32,18 +44,20 @@ class LinkedInRuntime:
         return {"available": True, "authenticated": True}
 
     async def close(self) -> None:
-        async with self._lock:
+        async with self._lifecycle_lock:
+            await self._pages.close()
             await close_browser()
 
     async def authenticate(self, force: bool = False) -> dict[str, object]:
         """Run LinkedIn's supported interactive profile login."""
-        async with self._lock:
+        async with self._lifecycle_lock:
             if not force:
                 try:
                     get_authentication_source()
                     return {"platform": "linkedin", "authenticated": True}
                 except CredentialsNotFoundError:
                     pass
+            await self._pages.close()
             await close_browser()
             if force:
                 await asyncio.to_thread(clear_auth_state)
@@ -73,33 +87,17 @@ class LinkedInRuntime:
 
     async def logout(self) -> dict[str, object]:
         """Clear the LinkedIn package's saved browser session."""
-        async with self._lock:
+        async with self._lifecycle_lock:
+            await self._pages.close()
             await close_browser()
             await asyncio.to_thread(clear_auth_state)
         return {"platform": "linkedin", "authenticated": False}
 
     async def call(self, name: str, arguments: dict[str, object]) -> dict[str, Any]:
-        async with self._lock:
+        if name in _READ_OPERATIONS:
+            return await self._read(name, arguments)
+        async with self._write_lock:
             extractor = await get_ready_extractor(None, tool_name=f"social_{name}")
-            if name == "search_posts":
-                result = await extractor.search_posts(
-                    str(arguments["keywords"]),
-                    max_pages=self._integer(arguments, "max_pages"),
-                )
-                return cast(dict[str, Any], result)
-            if name == "get_feed":
-                return await self._feed(extractor, self._integer(arguments, "num_posts"))
-            if name == "get_person_profile":
-                result = await extractor.read_person(
-                    str(arguments["linkedin_username"]), {"main_profile"}
-                )
-                return cast(dict[str, Any], result)
-            if name == "get_company_profile":
-                result = await extractor.read_company(str(arguments["company_name"]), {"about"})
-                return cast(dict[str, Any], result)
-            if name == "read_post":
-                url = str(arguments["post_url"])
-                return {"url": url, **asdict(await extractor.extract_page(url, "post", 5))}
             if name == "connect_with_person":
                 result = await extractor.connect_with_person(
                     str(arguments["linkedin_username"]), note=self._optional(arguments, "note")
@@ -127,6 +125,32 @@ class LinkedInRuntime:
                 return await actions.react(str(arguments["post_url"]))
             raise ValueError(f"Unknown LinkedIn operation: {name}")
 
+    async def _read(self, name: str, arguments: dict[str, object]) -> dict[str, Any]:
+        await get_ready_extractor(None, tool_name=f"social_{name}")
+        browser = await get_or_create_browser()
+        async with self._pages.lease(browser.context) as page:
+            extractor = LinkedInExtractor(page)
+            if name == "search_posts":
+                result = await extractor.search_posts(
+                    str(arguments["keywords"]),
+                    max_pages=self._integer(arguments, "max_pages"),
+                )
+                return cast(dict[str, Any], result)
+            if name == "get_feed":
+                return await self._feed(
+                    extractor, page, self._integer(arguments, "num_posts")
+                )
+            if name == "get_person_profile":
+                result = await extractor.read_person(
+                    str(arguments["linkedin_username"]), {"main_profile"}
+                )
+                return cast(dict[str, Any], result)
+            if name == "get_company_profile":
+                result = await extractor.read_company(str(arguments["company_name"]), {"about"})
+                return cast(dict[str, Any], result)
+            url = str(arguments["post_url"])
+            return {"url": url, **asdict(await extractor.extract_page(url, "post", 5))}
+
     @staticmethod
     async def _actions() -> LinkedInBrowserActions:
         browser = await get_or_create_browser()
@@ -134,13 +158,12 @@ class LinkedInRuntime:
         return LinkedInBrowserActions(session, PageNavigator(session))
 
     @staticmethod
-    async def _feed(extractor: Any, limit: int) -> dict[str, Any]:
+    async def _feed(extractor: Any, page: Any, limit: int) -> dict[str, Any]:
         data = asdict(await extractor.extract_feed(limit))
         references = data.get("references", [])
         if not references:
             return data
-        browser = await get_or_create_browser()
-        posts = browser.page.locator("main [data-testid='mainFeed'] [role='listitem']").filter(
+        posts = page.locator("main [data-testid='mainFeed'] [role='listitem']").filter(
             has_text="Feed post"
         )
         texts = [await posts.nth(index).inner_text() for index in range(await posts.count())]

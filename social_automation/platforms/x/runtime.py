@@ -105,3 +105,37 @@ class XRuntime:
     @property
     def _worker(self) -> Path:
         return Path(__file__).with_name("worker.mjs")
+
+
+class XRuntimePool:
+    """Lease independent X workers so read calls can run concurrently."""
+
+    def __init__(
+        self,
+        authentication: XAuthentication | None = None,
+        size: int = 5,
+        runtimes: list[XRuntime] | None = None,
+    ) -> None:
+        selected_authentication = authentication or XAuthentication()
+        self._runtimes = runtimes or [
+            XRuntime(selected_authentication) for _ in range(size)
+        ]
+        self._available: asyncio.Queue[XRuntime] = asyncio.Queue()
+        for runtime in self._runtimes:
+            self._available.put_nowait(runtime)
+
+    def status(self) -> dict[str, object]:
+        return self._runtimes[0].status()
+
+    async def call(self, method: str, params: dict[str, object]) -> Any:
+        runtime = await self._available.get()
+        try:
+            return await runtime.call(method, params)
+        finally:
+            self._available.put_nowait(runtime)
+
+    async def close(self) -> None:
+        await asyncio.gather(
+            *(runtime.close() for runtime in self._runtimes),
+            return_exceptions=True,
+        )

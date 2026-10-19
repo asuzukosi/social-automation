@@ -19,6 +19,7 @@ dependencies = [
 
 [project.scripts]
 social = "social_automation.server:main"
+social-http = "social_automation.server:http_main"
 
 [build-system]
 requires = ["setuptools>=77"]

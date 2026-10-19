@@ -9,7 +9,7 @@ import sqlite3
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
 
-from social_automation.core.models import ActionPreview, ActionResult, RenderedAction
+from social_automation.core.models import ActionPreview, ActionResult, Platform, RenderedAction
 
 
 class ActionStore:
@@ -101,6 +101,15 @@ class ActionStore:
             if updated.rowcount != 1:
                 return ActionResult.model_validate_json(self._row(db, operation_id)["result_json"])
         return action
+
+    def operation_platform(self, operation_id: str) -> Platform:
+        with self._connect() as db:
+            row = self._row(db, operation_id)
+        if row["action_json"]:
+            return RenderedAction.model_validate_json(row["action_json"]).request.platform
+        if row["result_json"]:
+            return ActionResult.model_validate_json(row["result_json"]).platform
+        raise ValueError("Action is no longer confirmable")
 
     def record_result(self, result: ActionResult) -> None:
         """Store the observed outcome before returning it to the caller."""

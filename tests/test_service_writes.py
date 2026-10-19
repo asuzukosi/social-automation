@@ -1,9 +1,11 @@
+import asyncio
 from unittest.mock import AsyncMock
 
 import pytest
 from conftest import FakeAdapter
 
 from social_automation.core.models import ActionName, ActionRequest, Platform
+from social_automation.scheduling import PlatformQueue, PlatformQueueFullError
 from social_automation.service import SocialService
 
 
@@ -94,3 +96,38 @@ async def test_unexpected_write_failure_is_durable(service: SocialService) -> No
     assert first.status == "outcome_unknown"
     assert first.retry_safe is False
     adapter.execute_action.assert_awaited_once()
+
+
+async def test_full_platform_queue_does_not_consume_preview(service: SocialService) -> None:
+    preview = await service.preview_action(
+        ActionRequest(
+            platform=Platform.X,
+            action=ActionName.CREATE_POST,
+            account="primary",
+            text="hello",
+        )
+    )
+    await service.queues[Platform.X].close()
+    service.queues[Platform.X] = PlatformQueue("x", concurrency=1, capacity=1)
+    release = asyncio.Event()
+    started = asyncio.Event()
+
+    async def blocker() -> None:
+        started.set()
+        await release.wait()
+
+    active = asyncio.create_task(service.queues[Platform.X].run(blocker))
+    await started.wait()
+    queued = asyncio.create_task(service.queues[Platform.X].run(blocker))
+    await asyncio.sleep(0)
+
+    with pytest.raises(PlatformQueueFullError):
+        await service.confirm_action(
+            preview.operation_id,
+            preview.preview_token,
+            True,
+        )
+
+    assert service.get_action(preview.operation_id)["status"] == "previewed"
+    release.set()
+    await asyncio.gather(active, queued)

@@ -20,26 +20,20 @@ uv sync --group dev
 uv run pytest
 ```
 
-No npm install is needed. To verify the server starts, run `uv run social` and
-stop it with Ctrl+C. An MCP client normally starts this process itself.
+No npm install is needed. To start the shared broker, run `uv run social-http`
+and stop it with Ctrl+C. It listens on `http://127.0.0.1:8765/mcp` by default.
 
 ## Register the MCP server
 
-All clients start the same local process. Replace the project path below with
-the absolute path to this repository.
+Point every HTTP-capable client at the same broker URL. This is what makes the
+queues and worker limits apply across sessions. The broker has one independent
+12-job queue per platform, five read workers per queue, and one exclusive write
+lane per platform.
 
 ```json
 {
   "mcpServers": {
-    "social": {
-      "command": "uv",
-      "args": [
-        "run",
-        "--project",
-        "/absolute/path/to/social-automation",
-        "social"
-      ]
-    }
+    "social": {"url": "http://127.0.0.1:8765/mcp"}
   }
 }
 ```
@@ -53,12 +47,12 @@ Codex CLI, the Codex IDE extension, and the ChatGPT desktop app share the same
 local MCP configuration:
 
 ```bash
-codex mcp add social -- uv run --project "$(pwd)" social
+codex mcp add social --url http://127.0.0.1:8765/mcp
 codex mcp list
 ```
 
-You can also add the STDIO server from **Settings > MCP servers** in the
-desktop app. See the [Codex MCP documentation](https://developers.openai.com/codex/mcp).
+You can also add the HTTP URL from **Settings > MCP servers** in the desktop
+app. See the [Codex MCP documentation](https://developers.openai.com/codex/mcp).
 
 ### Claude Code
 
@@ -134,7 +128,9 @@ See the [Windsurf Cascade MCP documentation](https://docs.windsurf.com/windsurf/
 
 ### Other MCP clients
 
-Use STDIO transport with `uv` as the command and these arguments:
+Clients without HTTP MCP support can use STDIO transport with `uv` as the
+command and these arguments. Each stdio process has its own queues, so this
+mode does not coordinate work across sessions:
 
 ```text
 run --project /absolute/path/to/social-automation social
@@ -209,9 +205,9 @@ Every write has two steps:
    `confirmed: true`.
 
 Never automatically retry `outcome_unknown` writes. Keep reads bounded, perform
-one approved write at a time, and stop on rate limits, CAPTCHA, verification,
-spam warnings, unexpected redirects, or account restrictions. Run only one
-server process against a given set of local profiles.
+one approved write per platform at a time, and stop on rate limits, CAPTCHA,
+verification, spam warnings, unexpected redirects, or account restrictions.
+Run only one HTTP broker against a given set of local profiles.
 
 ## Optional skills
 
