@@ -98,10 +98,14 @@ async def test_linkedin_force_authentication_uses_supported_login(monkeypatch) -
         "social_automation.platforms.linkedin.runtime.asyncio.create_subprocess_exec", spawn
     )
 
-    result = await LinkedInRuntime().authenticate(force=True)
+    runtime = LinkedInRuntime()
+    runtime._pages.close = AsyncMock()
+
+    result = await runtime.authenticate(force=True)
 
     assert result == {"platform": "linkedin", "authenticated": True}
     clear.assert_called_once_with()
+    runtime._pages.close.assert_awaited_once()
     spawn.assert_awaited_once()
     assert spawn.await_args.args[1:] == ("-m", "linkedin_mcp_server", "--login")
 

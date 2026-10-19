@@ -17,7 +17,7 @@ from social_automation.core.redaction import redact_error
 from social_automation.platforms.base import READ_OPERATIONS
 from social_automation.platforms.x.auth import XAuthentication
 from social_automation.platforms.x.mapping import post_from_row, thread_nodes
-from social_automation.platforms.x.runtime import XRuntime
+from social_automation.platforms.x.runtime import XRuntimePool
 from social_automation.platforms.x.urls import (
     action_result_url,
     normalize_handle,
@@ -39,7 +39,7 @@ _SUPPORTED_WRITES = {
 class XAdapter:
     def __init__(self) -> None:
         self._authentication = XAuthentication()
-        self._runtime = XRuntime(self._authentication)
+        self._runtime = XRuntimePool(self._authentication, size=5)
 
     async def status(self) -> dict[str, object]:
         return self._runtime.status()

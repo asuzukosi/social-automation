@@ -1,3 +1,4 @@
+import asyncio
 from unittest.mock import AsyncMock
 
 import pytest
@@ -12,6 +13,30 @@ async def test_search_preserves_platform_identity(service: SocialService) -> Non
 
     assert result["results"]["x"]["items"][0]["platform"] == "x"
     assert result["results"]["reddit"]["items"][0]["platform"] == "reddit"
+
+
+async def test_platform_reads_do_not_block_each_other(service: SocialService) -> None:
+    x = service.adapters[Platform.X]
+    reddit = service.adapters[Platform.REDDIT]
+    x_started = asyncio.Event()
+    release_x = asyncio.Event()
+
+    async def slow_x(query: str, limit: int):
+        x_started.set()
+        await release_x.wait()
+        return await FakeAdapter.search(x, query, limit)
+
+    x.search = AsyncMock(side_effect=slow_x)
+    reddit.search = AsyncMock(wraps=reddit.search)
+
+    x_call = asyncio.create_task(service.search("agents", [Platform.X], 10))
+    await x_started.wait()
+    await service.search("agents", [Platform.REDDIT], 10)
+
+    reddit.search.assert_awaited_once()
+    assert not x_call.done()
+    release_x.set()
+    await x_call
 
 
 async def test_search_deduplicates_platforms(service: SocialService) -> None:

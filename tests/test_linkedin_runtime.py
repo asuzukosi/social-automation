@@ -9,6 +9,25 @@ from linkedin_mcp_server.linkedin.contracts import ExtractedSection
 from social_automation.platforms.linkedin.runtime import LinkedInRuntime
 
 
+def prepare_read_runtime(monkeypatch, extractor: object) -> SimpleNamespace:
+    page = SimpleNamespace(is_closed=lambda: False)
+    context = SimpleNamespace(new_page=AsyncMock(return_value=page))
+    browser = SimpleNamespace(context=context)
+    monkeypatch.setattr(
+        "social_automation.platforms.linkedin.runtime.get_ready_extractor",
+        AsyncMock(return_value=extractor),
+    )
+    monkeypatch.setattr(
+        "social_automation.platforms.linkedin.runtime.get_or_create_browser",
+        AsyncMock(return_value=browser),
+    )
+    monkeypatch.setattr(
+        "social_automation.platforms.linkedin.runtime.LinkedInExtractor",
+        lambda selected_page: extractor,
+    )
+    return page
+
+
 def test_linkedin_activity_boost_url_yields_stable_post_url() -> None:
     url = LinkedInRuntime._post_url(
         "https://www.linkedin.com/campaignmanager/boost/?content=urn%3Ali%3Ashare%3A123"
@@ -73,8 +92,7 @@ async def test_linkedin_runtime_routes_imported_operations(
 ) -> None:
     method = AsyncMock(return_value={"status": "ok"})
     extractor = SimpleNamespace(**{method_name: method})
-    ready = AsyncMock(return_value=extractor)
-    monkeypatch.setattr("social_automation.platforms.linkedin.runtime.get_ready_extractor", ready)
+    prepare_read_runtime(monkeypatch, extractor)
 
     result = await LinkedInRuntime().call(name, arguments)
 
@@ -103,10 +121,7 @@ async def test_linkedin_runtime_serializes_extracted_sections(
 ) -> None:
     method = AsyncMock(return_value=ExtractedSection(text="content", references=[]))
     extractor = SimpleNamespace(**{method_name: method})
-    monkeypatch.setattr(
-        "social_automation.platforms.linkedin.runtime.get_ready_extractor",
-        AsyncMock(return_value=extractor),
-    )
+    prepare_read_runtime(monkeypatch, extractor)
 
     result = await LinkedInRuntime().call(name, arguments)
 
