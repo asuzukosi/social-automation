@@ -38,8 +38,8 @@ lane per platform.
 }
 ```
 
-Use the instructions for your coding agent. The CLI examples must be run from
-the repository root so `$(pwd)` resolves to the checkout's absolute path.
+Use the instructions for your coding agent. Remove any existing `social` STDIO
+entry before adding the HTTP connection, then restart the client.
 
 ### Codex
 
@@ -59,8 +59,8 @@ app. See the [Codex MCP documentation](https://developers.openai.com/codex/mcp).
 Install the server for the current user:
 
 ```bash
-claude mcp add --transport stdio --scope user social -- \
-  uv run --project "$(pwd)" social
+claude mcp add --transport http --scope user social \
+  http://127.0.0.1:8765/mcp
 claude mcp list
 ```
 
@@ -79,7 +79,8 @@ check the server. See the
 Install the server for the current user:
 
 ```bash
-gemini mcp add --scope user social uv run -- --project "$(pwd)" social
+gemini mcp add --scope user --transport http social \
+  http://127.0.0.1:8765/mcp
 gemini mcp list
 ```
 
@@ -88,10 +89,10 @@ Run `/mcp` inside Gemini CLI to inspect the connection. See the
 
 ### GitHub Copilot in VS Code
 
-Open the Command Palette, run **MCP: Add Server**, choose **Command (stdio)**,
-and enter the command and arguments from the JSON above. Choose the user scope
-to use the server in every workspace, or the workspace scope to add it only to
-this repository. See the
+Open the Command Palette, run **MCP: Add Server**, choose **HTTP (HTTP or
+Server-Sent Events)**, and enter `http://127.0.0.1:8765/mcp`. Choose the user
+scope to use the server in every workspace, or the workspace scope to add it
+only to this repository. See the
 [VS Code MCP documentation](https://code.visualstudio.com/docs/agent-customization/mcp-servers).
 
 ### OpenCode
@@ -103,14 +104,8 @@ Add this entry to the `mcp` object in your OpenCode configuration:
   "$schema": "https://opencode.ai/config.json",
   "mcp": {
     "social": {
-      "type": "local",
-      "command": [
-        "uv",
-        "run",
-        "--project",
-        "/absolute/path/to/social-automation",
-        "social"
-      ],
+      "type": "remote",
+      "url": "http://127.0.0.1:8765/mcp",
       "enabled": true
     }
   }
@@ -128,9 +123,10 @@ See the [Windsurf Cascade MCP documentation](https://docs.windsurf.com/windsurf/
 
 ### Other MCP clients
 
-Clients without HTTP MCP support can use STDIO transport with `uv` as the
-command and these arguments. Each stdio process has its own queues, so this
-mode does not coordinate work across sessions:
+Use Streamable HTTP with `http://127.0.0.1:8765/mcp` whenever the client
+supports it. Clients without HTTP support can use STDIO transport with `uv` as
+the command and the arguments below. Each STDIO process has its own queues, so
+this compatibility mode does not coordinate work across sessions:
 
 ```text
 run --project /absolute/path/to/social-automation social
@@ -223,12 +219,12 @@ skills add platform-specific operating guidance and safe write workflows.
 
 ## Troubleshooting
 
-- Missing `social_*` tools: confirm the MCP configuration uses an absolute
-  project path, then restart the client.
+- Missing `social_*` tools: confirm the shared broker is running, verify the MCP
+  URL is `http://127.0.0.1:8765/mcp`, then restart the client.
 - Chrome does not start: set `SOCIAL_BROWSER_CHANNEL` to the local Patchright
-  channel name in the MCP server environment.
-- X operations fail before starting: confirm Node.js 22 or newer is on the MCP
-  client's `PATH`.
+  channel name in the broker environment.
+- X operations fail before starting: confirm Node.js 22 or newer is on the
+  broker process's `PATH`.
 - A platform rejects a saved session: call `social_authenticate` for that
   platform with `force: true` and complete login in the visible browser.
 - To disconnect an account locally, call `social_logout` for that platform.
