@@ -102,6 +102,14 @@ class LinkedInRuntime:
                 result = await extractor.connect_with_person(
                     str(arguments["linkedin_username"]), note=self._optional(arguments, "note")
                 )
+                if result.get("status") == "connect_unavailable":
+                    actions = await self._actions()
+                    return await actions.connect_from_more(
+                        extractor,
+                        str(arguments["linkedin_username"]),
+                        self._optional(arguments, "note"),
+                        cast(dict[str, Any], result),
+                    )
                 return cast(dict[str, Any], result)
             if name == "send_message":
                 result = await extractor.send_message(

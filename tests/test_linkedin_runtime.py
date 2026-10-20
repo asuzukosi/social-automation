@@ -100,6 +100,34 @@ async def test_linkedin_runtime_routes_imported_operations(
     method.assert_awaited_once_with(*expected_args, **expected_kwargs)
 
 
+async def test_linkedin_runtime_uses_more_menu_connect_fallback(monkeypatch) -> None:
+    unavailable = {"status": "connect_unavailable"}
+    connect = AsyncMock(return_value=unavailable)
+    extractor = SimpleNamespace(connect_with_person=connect)
+    actions = SimpleNamespace(
+        connect_from_more=AsyncMock(return_value={"status": "connected"})
+    )
+    prepare_read_runtime(monkeypatch, extractor)
+    monkeypatch.setattr(
+        "social_automation.platforms.linkedin.runtime.LinkedInRuntime._actions",
+        AsyncMock(return_value=actions),
+    )
+
+    result = await LinkedInRuntime().call(
+        "connect_with_person",
+        {"linkedin_username": "reader", "note": "hello"},
+    )
+
+    assert result == {"status": "connected"}
+    connect.assert_awaited_once_with("reader", note="hello")
+    actions.connect_from_more.assert_awaited_once_with(
+        extractor,
+        "reader",
+        "hello",
+        unavailable,
+    )
+
+
 @pytest.mark.parametrize(
     ("name", "arguments", "method_name", "expected_args"),
     [
