@@ -27,8 +27,10 @@ and stop it with Ctrl+C. It listens on `http://127.0.0.1:8765/mcp` by default.
 
 Point every HTTP-capable client at the same broker URL. This is what makes the
 queues and worker limits apply across sessions. The broker has one independent
-12-job queue per platform, five read workers per queue, and one exclusive write
-lane per platform.
+12-job queue per platform. X and Reddit each have five read workers and an
+exclusive write lane. LinkedIn has one worker for all reads and writes because
+its authenticated browser profile cannot reliably drive concurrent pages.
+Queued LinkedIn work does not block X or Reddit.
 
 ```json
 {
@@ -203,7 +205,9 @@ Every write has two steps:
 Never automatically retry `outcome_unknown` writes. Keep reads bounded, perform
 one approved write per platform at a time, and stop on rate limits, CAPTCHA,
 verification, spam warnings, unexpected redirects, or account restrictions.
-Run only one HTTP broker against a given set of local profiles.
+Run only one HTTP broker against a given set of local profiles. Do not launch
+overlapping LinkedIn calls: let the broker serialize them in its dedicated
+queue. X and Reddit may continue concurrently while LinkedIn is busy.
 
 ## Optional skills
 

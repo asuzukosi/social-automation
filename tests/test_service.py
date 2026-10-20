@@ -39,6 +39,36 @@ async def test_platform_reads_do_not_block_each_other(service: SocialService) ->
     await x_call
 
 
+async def test_linkedin_work_does_not_block_x_or_reddit(service: SocialService) -> None:
+    linkedin = service.adapters[Platform.LINKEDIN]
+    linkedin_started = asyncio.Event()
+    release_linkedin = asyncio.Event()
+
+    async def slow_linkedin(query: str, limit: int):
+        linkedin_started.set()
+        await release_linkedin.wait()
+        return await FakeAdapter.search(linkedin, query, limit)
+
+    linkedin.search = AsyncMock(side_effect=slow_linkedin)
+    linkedin_call = asyncio.create_task(
+        service.search("agents", [Platform.LINKEDIN], 10)
+    )
+    await linkedin_started.wait()
+
+    result = await service.search("agents", [Platform.X, Platform.REDDIT], 10)
+
+    assert set(result["results"]) == {"x", "reddit"}
+    assert not linkedin_call.done()
+    release_linkedin.set()
+    await linkedin_call
+
+
+def test_service_uses_platform_specific_concurrency(service: SocialService) -> None:
+    assert service.queues[Platform.X].concurrency == 5
+    assert service.queues[Platform.REDDIT].concurrency == 5
+    assert service.queues[Platform.LINKEDIN].concurrency == 1
+
+
 async def test_search_deduplicates_platforms(service: SocialService) -> None:
     adapter = service.adapters[Platform.X]
     adapter.search = AsyncMock(wraps=adapter.search)

@@ -28,12 +28,12 @@ _READ_OPERATIONS = {
 
 
 class LinkedInRuntime:
-    """Run bounded LinkedIn reads concurrently and serialize writes."""
+    """Run LinkedIn operations through one authenticated browser page."""
 
     def __init__(self) -> None:
         self._lifecycle_lock = asyncio.Lock()
         self._write_lock = asyncio.Lock()
-        self._pages = LinkedInPagePool(size=5)
+        self._pages = LinkedInPagePool(size=1)
 
     async def status(self) -> dict[str, object]:
         """Report whether a LinkedIn browser profile has been configured."""
@@ -102,6 +102,14 @@ class LinkedInRuntime:
                 result = await extractor.connect_with_person(
                     str(arguments["linkedin_username"]), note=self._optional(arguments, "note")
                 )
+                if result.get("status") == "connect_unavailable":
+                    actions = await self._actions()
+                    return await actions.connect_from_more(
+                        extractor,
+                        str(arguments["linkedin_username"]),
+                        self._optional(arguments, "note"),
+                        cast(dict[str, Any], result),
+                    )
                 return cast(dict[str, Any], result)
             if name == "send_message":
                 result = await extractor.send_message(

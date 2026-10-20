@@ -1,7 +1,8 @@
 """LinkedIn routing tests that never open a browser."""
 
+from contextlib import asynccontextmanager
 from types import SimpleNamespace
-from unittest.mock import AsyncMock
+from unittest.mock import AsyncMock, Mock
 
 import pytest
 
@@ -29,6 +30,105 @@ async def test_linkedin_reaction_confirmation_requires_observed_state(monkeypatc
     observed = await LinkedInBrowserActions._attribute_becomes(locator, "aria-pressed", "true")
 
     assert observed is True
+
+
+async def test_linkedin_more_menu_connect_opens_invite_dialog(monkeypatch) -> None:
+    more = SimpleNamespace(click=AsyncMock())
+    more.first = more
+    main = SimpleNamespace(get_by_role=Mock(return_value=more))
+    page = SimpleNamespace(get_by_role=Mock(return_value=main))
+    navigator = SimpleNamespace(_navigate_to_page=AsyncMock())
+
+    @asynccontextmanager
+    async def available(element, timeout=8000):
+        del timeout
+        yield element
+
+    monkeypatch.setattr(
+        "social_automation.platforms.linkedin.browser_actions.linkedin_element",
+        available,
+    )
+    actions = LinkedInBrowserActions(SimpleNamespace(page=page), navigator)
+    monkeypatch.setattr(actions, "_click_visible_connect", AsyncMock(return_value=True))
+
+    opened = await actions._open_more_connect("reader")
+
+    assert opened is True
+    navigator._navigate_to_page.assert_awaited_once_with(
+        "https://www.linkedin.com/in/reader/"
+    )
+    page.get_by_role.assert_called_once_with("main")
+    role_call = main.get_by_role.call_args
+    assert role_call.args == ("button",)
+    assert role_call.kwargs["name"].fullmatch("More actions")
+    more.click.assert_awaited_once()
+
+
+async def test_linkedin_more_menu_accepts_connect_button_role(monkeypatch) -> None:
+    missing_menuitem = SimpleNamespace(count=AsyncMock(return_value=0))
+    connect = SimpleNamespace(
+        count=AsyncMock(return_value=1),
+        nth=Mock(),
+        is_visible=AsyncMock(return_value=True),
+        click=AsyncMock(),
+    )
+    connect.nth.return_value = connect
+    page = SimpleNamespace(
+        get_by_role=Mock(side_effect=[missing_menuitem, connect])
+    )
+
+    @asynccontextmanager
+    async def available(element, timeout=8000):
+        del timeout
+        yield element
+
+    monkeypatch.setattr(
+        "social_automation.platforms.linkedin.browser_actions.linkedin_element",
+        available,
+    )
+    actions = LinkedInBrowserActions(SimpleNamespace(page=page), SimpleNamespace())
+
+    clicked = await actions._click_visible_connect()
+
+    assert clicked is True
+    page.get_by_role.assert_any_call("button", name="Connect", exact=True)
+    connect.click.assert_awaited_once()
+
+
+async def test_linkedin_more_menu_connect_verifies_pending_state(monkeypatch) -> None:
+    submit = AsyncMock(return_value=(True, True, None))
+    signals = SimpleNamespace()
+    read_profile = AsyncMock(return_value={"sections": {"main_profile": "Reader"}})
+    read_signals = AsyncMock(return_value=signals)
+    extractor = SimpleNamespace(
+        _connection=SimpleNamespace(
+            _submit_invite_dialog=submit,
+            _read_main_profile=read_profile,
+            _read_action_signals=read_signals,
+        ),
+    )
+    actions = LinkedInBrowserActions(
+        SimpleNamespace(page=SimpleNamespace()),
+        SimpleNamespace(),
+    )
+    monkeypatch.setattr(actions, "_open_more_connect", AsyncMock(return_value=True))
+    monkeypatch.setattr(
+        "social_automation.platforms.linkedin.browser_actions.connection.detect_connection_state",
+        Mock(return_value="pending"),
+    )
+
+    result = await actions.connect_from_more(
+        extractor,
+        "reader",
+        "hello",
+        {"status": "connect_unavailable"},
+    )
+
+    assert result["status"] == "connected"
+    assert result["note_sent"] is True
+    submit.assert_awaited_once_with("hello")
+    read_profile.assert_awaited_once_with("reader")
+    read_signals.assert_awaited_once_with("reader")
 
 
 async def test_create_post_routes_to_imported_runtime() -> None:

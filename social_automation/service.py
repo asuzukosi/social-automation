@@ -43,7 +43,12 @@ class SocialService:
         )
         self._state_path = state_path
         self.queues = {
-            platform: PlatformQueue(platform.value, 5, 12) for platform in self.adapters
+            platform: PlatformQueue(
+                platform.value,
+                1 if platform is Platform.LINKEDIN else 5,
+                12,
+            )
+            for platform in self.adapters
         }
 
     @cached_property

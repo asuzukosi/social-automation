@@ -12,6 +12,12 @@ Check `social_authentication_status` first. Call `social_authenticate` for
 LinkedIn when no saved session is available. Force a fresh login only at the
 user's request or after LinkedIn rejects the saved session.
 
+LinkedIn has one dedicated queue and runs one read or write at a time through
+one authenticated browser page. Do not launch overlapping LinkedIn calls or
+try to parallelize them with multiple pages in the same profile; allow later
+calls to wait in the queue. This queue is separate from X and Reddit, which may
+continue concurrently while LinkedIn is busy.
+
 Check capabilities first. Search, post creation, comments, default reactions,
 connections, and messages are available. Single-post reads are bounded and
 partial; full discussion reads and nested reply writes remain unsupported. Use

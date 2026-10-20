@@ -1,11 +1,18 @@
 """Conservative LinkedIn writes through the imported visible browser."""
 
 import asyncio
+import re
 from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
 from typing import Any
 
+import linkedin_mcp_server.linkedin.connection as connection
 from linkedin_mcp_server.core.destination import linkedin_element
+from linkedin_mcp_server.core.exceptions import OffLinkedInLandingError
+from linkedin_mcp_server.linkedin.identifiers import (
+    normalize_person_identifier,
+    person_profile_url,
+)
 from linkedin_mcp_server.linkedin.navigation import PageNavigator
 from linkedin_mcp_server.linkedin.session import PageSession
 
@@ -70,6 +77,69 @@ class LinkedInBrowserActions:
             if not await self._attribute_becomes(button, "aria-pressed", "true"):
                 return self._unknown("Reaction click was submitted but could not be verified")
         return self._confirmed(post_url, "Reaction observed on the post")
+
+    async def connect_from_more(
+        self,
+        extractor: Any,
+        username: str,
+        note: str | None,
+        fallback: dict[str, Any],
+    ) -> dict[str, Any]:
+        username = normalize_person_identifier(username)
+        if not await self._open_more_connect(username):
+            return fallback
+
+        workflow = extractor._connection
+        submitted, note_sent, limit_message = await workflow._submit_invite_dialog(note)
+        if limit_message is not None:
+            return {
+                **fallback,
+                "status": "custom_note_limit_reached",
+                "message": limit_message,
+                "note_sent": False,
+            }
+        if not submitted:
+            return fallback
+
+        await workflow._read_main_profile(username)
+        signals = await workflow._read_action_signals(username)
+        state = connection.detect_connection_state(signals)
+        if state in {"pending", "already_connected"}:
+            return {
+                **fallback,
+                "status": "connected",
+                "message": f"Connection request sent. State after send: {state}.",
+                "note_sent": note_sent,
+            }
+        return self._unknown(
+            "Submitted the invite dialog, but the updated connection state could not be verified"
+        )
+
+    async def _open_more_connect(self, username: str) -> bool:
+        await self._navigator._navigate_to_page(person_profile_url(username, "/"))
+        try:
+            main = self._session.page.get_by_role("main")
+            more_button = main.get_by_role(
+                "button", name=re.compile(r"^More(?: actions)?$", re.IGNORECASE)
+            ).first
+            async with linkedin_element(more_button, timeout=8000) as more:
+                await more.click()
+            return await self._click_visible_connect()
+        except OffLinkedInLandingError:
+            raise
+        except Exception:
+            return False
+
+    async def _click_visible_connect(self) -> bool:
+        for role in ("menuitem", "button", "link"):
+            locator = self._session.page.get_by_role(role, name="Connect", exact=True)
+            for index in range(await locator.count()):
+                candidate = locator.nth(index)
+                if await candidate.is_visible():
+                    async with linkedin_element(candidate, timeout=8000) as connect:
+                        await connect.click()
+                    return True
+        return False
 
     async def _submit(self, selector: str, closed_selector: str) -> dict[str, Any]:
         async with self._element(selector) as button:
