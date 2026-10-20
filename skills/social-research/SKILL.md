@@ -10,6 +10,11 @@ Use `social_status` before a search when account availability matters. Call
 platform, author, context, timestamp, canonical URL, engagement, cursor, and
 completeness in notes and comparisons.
 
+Platform queues are independent, so one cross-platform request may read X,
+Reddit, and LinkedIn together. Do not start overlapping LinkedIn-only calls:
+LinkedIn runs one browser operation at a time while X and Reddit retain their
+own concurrent workers.
+
 Use `social_capabilities` before requesting a read that may not exist on every
 platform. Follow promising results with `social_get_post` or
 `social_get_thread`. Use `social_get_profile` for a named account and

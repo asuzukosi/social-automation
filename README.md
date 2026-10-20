@@ -174,10 +174,12 @@ Stop on rate limits, CAPTCHA, verification, spam warnings, unexpected redirects,
 or account restrictions. These controls reduce avoidable risk but cannot
 guarantee that a platform will never restrict an automated account.
 
-Run one HTTP broker per set of local account profiles. Each platform has a
-12-job queue, five concurrent read workers, and an exclusive write lane.
-LinkedIn reuses five pages in one authenticated browser context rather than
-opening competing persistent profiles.
+Run one HTTP broker per set of local account profiles. Each platform has its
+own 12-job queue, so slow work on one network does not occupy another network's
+workers. X and Reddit each allow five concurrent reads and use an exclusive
+write lane. LinkedIn runs one read or write at a time through one authenticated
+browser page because concurrent pages in the same profile are not reliable.
+LinkedIn requests wait in its own queue while X and Reddit continue normally.
 
 ## Codex skills
 

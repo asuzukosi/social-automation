@@ -28,12 +28,12 @@ _READ_OPERATIONS = {
 
 
 class LinkedInRuntime:
-    """Run bounded LinkedIn reads concurrently and serialize writes."""
+    """Run LinkedIn operations through one authenticated browser page."""
 
     def __init__(self) -> None:
         self._lifecycle_lock = asyncio.Lock()
         self._write_lock = asyncio.Lock()
-        self._pages = LinkedInPagePool(size=5)
+        self._pages = LinkedInPagePool(size=1)
 
     async def status(self) -> dict[str, object]:
         """Report whether a LinkedIn browser profile has been configured."""

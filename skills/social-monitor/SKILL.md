@@ -17,6 +17,10 @@ never request more than its `max_items_per_call` value.
 Report completeness and platform failures independently. Stay quiet when
 nothing meaningful changed unless the user requested periodic status.
 
+Platform queues are independent. LinkedIn runs one browser operation at a
+time, so do not overlap LinkedIn checks; let later checks wait in its queue.
+An active LinkedIn check does not prevent X or Reddit checks from proceeding.
+
 Request 10 results per platform first and never more than 25 in one check.
 Resume X and Reddit feeds only by passing the returned cursor back with the same
 feed selector. Deduplicate stored native IDs between bounded checks. LinkedIn
