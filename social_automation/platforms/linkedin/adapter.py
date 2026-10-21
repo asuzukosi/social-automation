@@ -43,6 +43,9 @@ class LinkedInAdapter:
     async def close(self) -> None:
         await self._runtime.close()
 
+    async def recover(self) -> None:
+        await self._runtime.recover()
+
     async def authenticate(self, force: bool = False) -> dict[str, object]:
         return await self._runtime.authenticate(force)
 

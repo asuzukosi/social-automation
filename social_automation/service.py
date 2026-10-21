@@ -10,17 +10,17 @@ from social_automation.core.models import (
     ActionPreview,
     ActionRequest,
     ActionResult,
-    Completeness,
     Platform,
     ReadResult,
     RenderedAction,
 )
 from social_automation.core.redaction import redact_error
+from social_automation.execution import execute_action, read_result, record_timeout
 from social_automation.platforms.base import PlatformAdapter
 from social_automation.platforms.linkedin.adapter import LinkedInAdapter
 from social_automation.platforms.reddit.adapter import RedditAdapter
 from social_automation.platforms.x.adapter import XAdapter
-from social_automation.scheduling import PlatformQueue
+from social_automation.scheduling import PlatformQueue, PlatformQueueTimeoutError
 from social_automation.storage import ActionStore
 
 T = TypeVar("T")
@@ -47,8 +47,10 @@ class SocialService:
                 platform.value,
                 1 if platform is Platform.LINKEDIN else 5,
                 12,
+                timeout_seconds=90 if platform is Platform.LINKEDIN else 60,
+                on_abort=(adapter.recover if isinstance(adapter, LinkedInAdapter) else None),
             )
-            for platform in self.adapters
+            for platform, adapter in self.adapters.items()
         }
 
     @cached_property
@@ -56,10 +58,7 @@ class SocialService:
         return ActionStore(self._state_path)
 
     async def status(self) -> dict[str, object]:
-        calls = [
-            self._run(platform, adapter.status)
-            for platform, adapter in self.adapters.items()
-        ]
+        calls = [self._run(platform, adapter.status) for platform, adapter in self.adapters.items()]
         results = await asyncio.gather(*calls, return_exceptions=True)
         platforms: dict[str, object] = {}
         for platform, result in zip(self.adapters, results, strict=True):
@@ -133,10 +132,10 @@ class SocialService:
         selected = list(dict.fromkeys(platforms))
 
         async def search_platform(platform: Platform) -> ReadResult:
-            return await self._read(self._adapter(platform).search(query, limit))
+            return await read_result(self._adapter(platform).search(query, limit))
 
         calls = [
-            self._run(platform, partial(search_platform, platform))
+            self._run(platform, partial(search_platform, platform), retry_on_timeout=True)
             for platform in selected
         ]
         results = await asyncio.gather(*calls)
@@ -147,7 +146,9 @@ class SocialService:
 
     async def get_post(self, platform: Platform, post_id: str) -> ReadResult:
         return await self._run(
-            platform, lambda: self._read(self._adapter(platform).get_post(post_id))
+            platform,
+            lambda: read_result(self._adapter(platform).get_post(post_id)),
+            retry_on_timeout=True,
         )
 
     async def get_feed(
@@ -155,17 +156,22 @@ class SocialService:
     ) -> ReadResult:
         return await self._run(
             platform,
-            lambda: self._read(self._adapter(platform).get_feed(feed, limit, cursor)),
+            lambda: read_result(self._adapter(platform).get_feed(feed, limit, cursor)),
+            retry_on_timeout=True,
         )
 
     async def get_profile(self, platform: Platform, profile_id: str) -> ReadResult:
         return await self._run(
-            platform, lambda: self._read(self._adapter(platform).get_profile(profile_id))
+            platform,
+            lambda: read_result(self._adapter(platform).get_profile(profile_id)),
+            retry_on_timeout=True,
         )
 
     async def get_thread(self, platform: Platform, post_id: str, limit: int) -> ReadResult:
         return await self._run(
-            platform, lambda: self._read(self._adapter(platform).get_thread(post_id, limit))
+            platform,
+            lambda: read_result(self._adapter(platform).get_thread(post_id, limit)),
+            retry_on_timeout=True,
         )
 
     async def preview_action(self, request: ActionRequest) -> ActionPreview:
@@ -193,11 +199,14 @@ class SocialService:
         if not confirmed:
             raise ValueError("Explicit confirmation is required")
         platform = self.store.operation_platform(operation_id)
-        return await self._run(
-            platform,
-            lambda: self._consume_and_execute(operation_id, preview_token),
-            exclusive=True,
-        )
+        try:
+            return await self._run(
+                platform,
+                lambda: self._consume_and_execute(operation_id, preview_token),
+                exclusive=True,
+            )
+        except PlatformQueueTimeoutError as error:
+            return record_timeout(self.store, operation_id, error)
 
     def list_actions(self, limit: int) -> list[dict[str, object]]:
         return self.store.list_actions(limit)
@@ -220,36 +229,18 @@ class SocialService:
         call: Callable[[], Awaitable[T]],
         *,
         exclusive: bool = False,
+        retry_on_timeout: bool = False,
     ) -> T:
-        return await self.queues[platform].run(call, exclusive=exclusive)
-
-    async def _execute_action(self, action: RenderedAction, operation_id: str) -> ActionResult:
-        adapter = self._adapter(action.request.platform)
         try:
-            result = await adapter.execute_action(action, operation_id)
-            result.operation_id = operation_id
-        except Exception as error:
-            result = ActionResult(
-                operation_id=operation_id,
-                platform=action.request.platform,
-                action=action.request.action,
-                status="outcome_unknown",
-                confirmed=False,
-                retry_safe=False,
-                detail=redact_error(error),
-            )
-        self.store.record_result(result)
-        return result
+            return await self.queues[platform].run(call, exclusive=exclusive)
+        except PlatformQueueTimeoutError:
+            if not retry_on_timeout:
+                raise
+            return await self.queues[platform].run(call, exclusive=exclusive)
 
     async def _consume_and_execute(self, operation_id: str, preview_token: str) -> ActionResult:
         consumed = self.store.consume_preview(operation_id, preview_token)
         if isinstance(consumed, ActionResult):
             return consumed
-        return await self._execute_action(consumed, operation_id)
-
-    @staticmethod
-    async def _read(call: Awaitable[ReadResult]) -> ReadResult:
-        try:
-            return await call
-        except Exception as error:
-            return ReadResult(completeness=Completeness.BLOCKED, reason=redact_error(error))
+        adapter = self._adapter(consumed.request.platform)
+        return await execute_action(self.store, adapter, consumed, operation_id)

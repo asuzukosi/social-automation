@@ -67,6 +67,21 @@ async def test_linkedin_runtime_recycles_a_detached_browser(monkeypatch) -> None
     assert ready.await_count == 2
 
 
+async def test_linkedin_runtime_recovery_closes_pages_and_browser(monkeypatch) -> None:
+    runtime = LinkedInRuntime()
+    runtime._pages.close = AsyncMock()
+    close = AsyncMock()
+    monkeypatch.setattr(
+        "social_automation.platforms.linkedin.runtime.close_browser",
+        close,
+    )
+
+    await runtime.recover()
+
+    runtime._pages.close.assert_awaited_once()
+    close.assert_awaited_once()
+
+
 def test_linkedin_activity_boost_url_yields_stable_post_url() -> None:
     url = LinkedInRuntime._post_url(
         "https://www.linkedin.com/campaignmanager/boost/?content=urn%3Ali%3Ashare%3A123"
