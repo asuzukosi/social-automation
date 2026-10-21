@@ -2,7 +2,11 @@ import asyncio
 
 import pytest
 
-from social_automation.scheduling import PlatformQueue, PlatformQueueFullError
+from social_automation.scheduling import (
+    PlatformQueue,
+    PlatformQueueFullError,
+    PlatformQueueTimeoutError,
+)
 
 
 async def test_queue_runs_up_to_five_jobs_concurrently() -> None:
@@ -133,4 +137,84 @@ async def test_cancelled_operation_does_not_remove_worker() -> None:
         await queue.run(cancelled_work)
 
     assert await queue.run(next_work) == "completed"
+    await queue.close()
+
+
+async def test_timed_out_operation_recovers_and_releases_worker() -> None:
+    release = asyncio.Event()
+    recovered = asyncio.Event()
+
+    async def stuck_work() -> None:
+        try:
+            await asyncio.Event().wait()
+        except asyncio.CancelledError:
+            await release.wait()
+
+    async def recover() -> None:
+        release.set()
+        recovered.set()
+
+    queue = PlatformQueue(
+        "linkedin",
+        concurrency=1,
+        capacity=2,
+        timeout_seconds=0.01,
+        on_abort=recover,
+    )
+
+    with pytest.raises(PlatformQueueTimeoutError, match="linkedin operation timed out"):
+        await queue.run(stuck_work)
+
+    assert recovered.is_set()
+    assert await queue.run(lambda: asyncio.sleep(0, result="completed")) == "completed"
+    await queue.close()
+
+
+async def test_cancelling_active_request_stops_work_and_releases_worker() -> None:
+    started = asyncio.Event()
+    cancelled = asyncio.Event()
+    queue = PlatformQueue("linkedin", concurrency=1, capacity=2)
+
+    async def work() -> None:
+        started.set()
+        try:
+            await asyncio.Event().wait()
+        finally:
+            cancelled.set()
+
+    request = asyncio.create_task(queue.run(work))
+    await started.wait()
+    request.cancel()
+
+    with pytest.raises(asyncio.CancelledError):
+        await request
+
+    await asyncio.wait_for(cancelled.wait(), timeout=1)
+    assert await queue.run(lambda: asyncio.sleep(0, result="completed")) == "completed"
+    await queue.close()
+
+
+async def test_cancelled_waiting_request_releases_queue_capacity() -> None:
+    release = asyncio.Event()
+    started = asyncio.Event()
+    queue = PlatformQueue("linkedin", concurrency=1, capacity=1)
+
+    async def blocker() -> None:
+        started.set()
+        await release.wait()
+
+    active = asyncio.create_task(queue.run(blocker))
+    await started.wait()
+    waiting = asyncio.create_task(queue.run(blocker))
+    await asyncio.sleep(0)
+    waiting.cancel()
+    with pytest.raises(asyncio.CancelledError):
+        await waiting
+
+    replacement = asyncio.create_task(queue.run(lambda: asyncio.sleep(0)))
+    await asyncio.sleep(0)
+    assert queue.snapshot()["queued"] == 1
+
+    release.set()
+    await asyncio.gather(active, replacement)
     await queue.close()

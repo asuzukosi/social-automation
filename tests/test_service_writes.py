@@ -4,7 +4,13 @@ from unittest.mock import AsyncMock
 import pytest
 from conftest import FakeAdapter
 
-from social_automation.core.models import ActionName, ActionRequest, Platform
+from social_automation.core.models import (
+    ActionName,
+    ActionRequest,
+    Completeness,
+    Platform,
+    ReadResult,
+)
 from social_automation.scheduling import PlatformQueue, PlatformQueueFullError
 from social_automation.service import SocialService
 
@@ -131,3 +137,76 @@ async def test_full_platform_queue_does_not_consume_preview(service: SocialServi
     assert service.get_action(preview.operation_id)["status"] == "previewed"
     release.set()
     await asyncio.gather(active, queued)
+
+
+async def test_linkedin_read_retries_once_after_timeout(service: SocialService) -> None:
+    adapter = service.adapters[Platform.LINKEDIN]
+    attempts = 0
+    recovered = 0
+
+    async def get_profile(profile_id: str) -> ReadResult:
+        nonlocal attempts
+        del profile_id
+        attempts += 1
+        if attempts == 1:
+            await asyncio.Event().wait()
+        return ReadResult(completeness=Completeness.COMPLETE)
+
+    async def recover() -> None:
+        nonlocal recovered
+        recovered += 1
+
+    adapter.get_profile = get_profile  # type: ignore[method-assign]
+    await service.queues[Platform.LINKEDIN].close()
+    service.queues[Platform.LINKEDIN] = PlatformQueue(
+        "linkedin",
+        concurrency=1,
+        capacity=12,
+        timeout_seconds=0.01,
+        on_abort=recover,
+    )
+
+    result = await service.get_profile(Platform.LINKEDIN, "reader")
+
+    assert result.completeness is Completeness.COMPLETE
+    assert attempts == 2
+    assert recovered == 1
+
+
+async def test_linkedin_write_timeout_is_not_retried(service: SocialService) -> None:
+    adapter = service.adapters[Platform.LINKEDIN]
+    attempts = 0
+
+    async def execute(*args: object) -> None:
+        nonlocal attempts
+        del args
+        attempts += 1
+        await asyncio.Event().wait()
+
+    adapter.execute_action = execute  # type: ignore[method-assign]
+    await service.queues[Platform.LINKEDIN].close()
+    service.queues[Platform.LINKEDIN] = PlatformQueue(
+        "linkedin",
+        concurrency=1,
+        capacity=12,
+        timeout_seconds=0.01,
+    )
+    preview = await service.preview_action(
+        ActionRequest(
+            platform=Platform.LINKEDIN,
+            action=ActionName.CREATE_POST,
+            account="primary",
+            text="hello",
+        )
+    )
+
+    result = await service.confirm_action(
+        preview.operation_id,
+        preview.preview_token,
+        True,
+    )
+
+    assert attempts == 1
+    assert result.status == "outcome_unknown"
+    assert result.retry_safe is False
+    assert service.get_action(preview.operation_id)["status"] == "completed"

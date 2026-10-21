@@ -44,6 +44,9 @@ class LinkedInRuntime:
         return {"available": True, "authenticated": True}
 
     async def close(self) -> None:
+        await self.recover()
+
+    async def recover(self) -> None:
         async with self._lifecycle_lock:
             await self._pages.close()
             await close_browser()
