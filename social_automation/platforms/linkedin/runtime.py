@@ -97,7 +97,7 @@ class LinkedInRuntime:
         if name in _READ_OPERATIONS:
             return await self._read(name, arguments)
         async with self._write_lock:
-            extractor = await get_ready_extractor(None, tool_name=f"social_{name}")
+            extractor = await self._ready_extractor(name)
             if name == "connect_with_person":
                 result = await extractor.connect_with_person(
                     str(arguments["linkedin_username"]), note=self._optional(arguments, "note")
@@ -134,7 +134,7 @@ class LinkedInRuntime:
             raise ValueError(f"Unknown LinkedIn operation: {name}")
 
     async def _read(self, name: str, arguments: dict[str, object]) -> dict[str, Any]:
-        await get_ready_extractor(None, tool_name=f"social_{name}")
+        await self._ready_extractor(name)
         browser = await get_or_create_browser()
         async with self._pages.lease(browser.context) as page:
             extractor = LinkedInExtractor(page)
@@ -158,6 +158,17 @@ class LinkedInRuntime:
                 return cast(dict[str, Any], result)
             url = str(arguments["post_url"])
             return {"url": url, **asdict(await extractor.extract_page(url, "post", 5))}
+
+    async def _ready_extractor(self, name: str) -> LinkedInExtractor:
+        extractor = await get_ready_extractor(None, tool_name=f"social_{name}")
+        browser = await get_or_create_browser()
+        try:
+            await browser.page.evaluate("() => true")
+        except Exception:
+            await self._pages.close()
+            await close_browser()
+            extractor = await get_ready_extractor(None, tool_name=f"social_{name}")
+        return extractor
 
     @staticmethod
     async def _actions() -> LinkedInBrowserActions:

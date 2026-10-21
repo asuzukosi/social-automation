@@ -10,9 +10,15 @@ from social_automation.platforms.linkedin.runtime import LinkedInRuntime
 
 
 def prepare_read_runtime(monkeypatch, extractor: object) -> SimpleNamespace:
-    page = SimpleNamespace(is_closed=lambda: False)
+    page = SimpleNamespace(
+        is_closed=lambda: False,
+        evaluate=AsyncMock(return_value=True),
+    )
     context = SimpleNamespace(new_page=AsyncMock(return_value=page))
-    browser = SimpleNamespace(context=context)
+    browser = SimpleNamespace(
+        context=context,
+        page=SimpleNamespace(evaluate=AsyncMock(return_value=True)),
+    )
     monkeypatch.setattr(
         "social_automation.platforms.linkedin.runtime.get_ready_extractor",
         AsyncMock(return_value=extractor),
@@ -26,6 +32,39 @@ def prepare_read_runtime(monkeypatch, extractor: object) -> SimpleNamespace:
         lambda selected_page: extractor,
     )
     return page
+
+
+async def test_linkedin_runtime_recycles_a_detached_browser(monkeypatch) -> None:
+    first = SimpleNamespace()
+    replacement = SimpleNamespace()
+    browser = SimpleNamespace(
+        page=SimpleNamespace(
+            evaluate=AsyncMock(side_effect=RuntimeError("Frame was detached"))
+        )
+    )
+    ready = AsyncMock(side_effect=[first, replacement])
+    close = AsyncMock()
+    runtime = LinkedInRuntime()
+    runtime._pages.close = AsyncMock()
+    monkeypatch.setattr(
+        "social_automation.platforms.linkedin.runtime.get_ready_extractor",
+        ready,
+    )
+    monkeypatch.setattr(
+        "social_automation.platforms.linkedin.runtime.get_or_create_browser",
+        AsyncMock(return_value=browser),
+    )
+    monkeypatch.setattr(
+        "social_automation.platforms.linkedin.runtime.close_browser",
+        close,
+    )
+
+    extractor = await runtime._ready_extractor("get_person_profile")
+
+    assert extractor is replacement
+    runtime._pages.close.assert_awaited_once()
+    close.assert_awaited_once()
+    assert ready.await_count == 2
 
 
 def test_linkedin_activity_boost_url_yields_stable_post_url() -> None:
@@ -191,7 +230,7 @@ async def test_linkedin_runtime_routes_local_browser_writes(
     method = AsyncMock(return_value={"status": "outcome_unknown"})
     actions = SimpleNamespace(**{method_name: method})
     monkeypatch.setattr(
-        "social_automation.platforms.linkedin.runtime.get_ready_extractor",
+        "social_automation.platforms.linkedin.runtime.LinkedInRuntime._ready_extractor",
         AsyncMock(return_value=SimpleNamespace()),
     )
     monkeypatch.setattr(

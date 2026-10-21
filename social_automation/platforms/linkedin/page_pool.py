@@ -21,11 +21,13 @@ class LinkedInPagePool:
         try:
             yield page
         finally:
-            if page.is_closed():
+            if await self._is_usable(page):
+                self._available.put_nowait(page)
+            else:
+                if not page.is_closed():
+                    await page.close()
                 async with self._lock:
                     self._created -= 1
-            else:
-                self._available.put_nowait(page)
 
     async def close(self) -> None:
         pages = []
@@ -54,3 +56,13 @@ class LinkedInPagePool:
             async with self._lock:
                 self._created -= 1
             raise
+
+    @staticmethod
+    async def _is_usable(page: Any) -> bool:
+        if page.is_closed():
+            return False
+        try:
+            await page.evaluate("() => true")
+            return True
+        except Exception:
+            return False
