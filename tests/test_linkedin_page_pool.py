@@ -7,7 +7,11 @@ from social_automation.platforms.linkedin.page_pool import LinkedInPagePool
 
 async def test_page_pool_limits_concurrent_page_leases() -> None:
     pages = [
-        SimpleNamespace(is_closed=lambda: False, close=AsyncMock())
+        SimpleNamespace(
+            is_closed=lambda: False,
+            evaluate=AsyncMock(return_value=True),
+            close=AsyncMock(),
+        )
         for _ in range(5)
     ]
     context = SimpleNamespace(new_page=AsyncMock(side_effect=pages))
@@ -38,3 +42,27 @@ async def test_page_pool_limits_concurrent_page_leases() -> None:
     await pool.close()
 
     assert all(page.close.await_count == 1 for page in pages)
+
+
+async def test_page_pool_replaces_a_detached_page() -> None:
+    detached = SimpleNamespace(
+        is_closed=lambda: False,
+        evaluate=AsyncMock(side_effect=RuntimeError("Frame was detached")),
+        close=AsyncMock(),
+    )
+    healthy = SimpleNamespace(
+        is_closed=lambda: False,
+        evaluate=AsyncMock(return_value=True),
+        close=AsyncMock(),
+    )
+    context = SimpleNamespace(new_page=AsyncMock(side_effect=[detached, healthy]))
+    pool = LinkedInPagePool(size=1)
+
+    async with pool.lease(context) as first:
+        assert first is detached
+
+    async with pool.lease(context) as replacement:
+        assert replacement is healthy
+
+    detached.close.assert_awaited_once()
+    assert context.new_page.await_count == 2
