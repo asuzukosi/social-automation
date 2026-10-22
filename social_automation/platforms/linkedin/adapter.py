@@ -16,6 +16,7 @@ from social_automation.core.models import (
 from social_automation.platforms.base import READ_OPERATIONS
 from social_automation.platforms.linkedin.capabilities import capability
 from social_automation.platforms.linkedin.mapping import post_page, reference_post
+from social_automation.platforms.linkedin.messaging import conversation_result, inbox_result
 from social_automation.platforms.linkedin.runtime import LinkedInRuntime
 from social_automation.platforms.linkedin.urls import (
     normalize_profile_id,
@@ -56,7 +57,14 @@ class LinkedInAdapter:
         return await self._runtime.logout()
 
     def capabilities(self) -> list[Capability]:
-        supported_reads = {"search", "get_feed", "get_profile", "get_post"}
+        supported_reads = {
+            "search",
+            "get_feed",
+            "get_profile",
+            "get_post",
+            "get_inbox",
+            "get_conversation",
+        }
         return [capability(name, False, name in supported_reads) for name in READ_OPERATIONS] + [
             capability(name.value, True, name in _SUPPORTED_WRITES) for name in ActionName
         ]
@@ -147,6 +155,19 @@ class LinkedInAdapter:
     async def get_thread(self, post_id: str, limit: int) -> ReadResult:
         del post_id, limit
         return self._unsupported("LinkedIn nested comments are not yet structurally extractable")
+
+    async def get_inbox(self, limit: int) -> ReadResult:
+        return inbox_result(await self._call("get_inbox", {"limit": limit}))
+
+    async def get_conversation(
+        self, profile_id: str | None = None, thread_id: str | None = None, index: int = 0
+    ) -> ReadResult:
+        profile_id = normalize_profile_id(profile_id) if profile_id else None
+        data = await self._call(
+            "get_conversation",
+            {"linkedin_username": profile_id, "thread_id": thread_id, "index": index},
+        )
+        return conversation_result(data, profile_id, thread_id)
 
     async def render_action(self, action: RenderedAction) -> RenderedAction:
         if action.request.action not in _SUPPORTED_WRITES:

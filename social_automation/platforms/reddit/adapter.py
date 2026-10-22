@@ -14,7 +14,7 @@ from social_automation.core.models import (
     RenderedAction,
 )
 from social_automation.core.redaction import redact_error
-from social_automation.platforms.base import READ_OPERATIONS
+from social_automation.platforms.base import CONTENT_READ_OPERATIONS, READ_OPERATIONS
 from social_automation.platforms.reddit import mapping
 from social_automation.platforms.reddit.browser import RedditBrowser
 from social_automation.platforms.reddit.reader import RedditReader
@@ -28,14 +28,9 @@ from social_automation.platforms.reddit.urls import (
 )
 
 _SUPPORTED_WRITES = {
-    ActionName.CREATE_POST,
-    ActionName.REPLY,
-    ActionName.COMMENT,
-    ActionName.REACT,
-    ActionName.DELETE_POST,
-    ActionName.FOLLOW,
+    ActionName.CREATE_POST, ActionName.REPLY, ActionName.COMMENT,
+    ActionName.REACT, ActionName.DELETE_POST, ActionName.FOLLOW,
 }
-
 
 class RedditAdapter:
     def __init__(self, browser: RedditBrowser | None = None) -> None:
@@ -59,7 +54,11 @@ class RedditAdapter:
         return await self._browser.logout()
 
     def capabilities(self) -> list[Capability]:
-        return [self._capability(name, False, True) for name in READ_OPERATIONS] + [
+        reads = [
+            self._capability(name, False, name in CONTENT_READ_OPERATIONS)
+            for name in READ_OPERATIONS
+        ]
+        return reads + [
             self._capability(item.value, True, item in _SUPPORTED_WRITES) for item in ActionName
         ]
 
@@ -243,7 +242,7 @@ class RedditAdapter:
             reliably_confirmed=supported and (not write or operation in {"create_post", "react"}),
             max_items_per_call=(
                 {"get_thread": 200, "search": 25, "get_feed": 25}.get(operation, 1)
-                if not write
+                if supported and not write
                 else None
             ),
             max_writes_per_confirmation=1 if supported and write else None,

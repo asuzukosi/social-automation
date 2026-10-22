@@ -4,7 +4,7 @@ import asyncio
 from collections.abc import Awaitable, Callable
 from functools import cached_property, partial
 from pathlib import Path
-from typing import TypeVar
+from typing import TypeVar, cast
 
 from social_automation.core.models import (
     ActionPreview,
@@ -14,9 +14,9 @@ from social_automation.core.models import (
     ReadResult,
     RenderedAction,
 )
-from social_automation.core.redaction import redact_error
 from social_automation.execution import execute_action, read_result, record_timeout
-from social_automation.platforms.base import PlatformAdapter
+from social_automation.inspection import authentication_status, service_status
+from social_automation.platforms.base import MessagingAdapter, PlatformAdapter
 from social_automation.platforms.linkedin.adapter import LinkedInAdapter
 from social_automation.platforms.reddit.adapter import RedditAdapter
 from social_automation.platforms.x.adapter import XAdapter
@@ -60,20 +60,7 @@ class SocialService:
     async def status(self) -> dict[str, object]:
         calls = [self._run(platform, adapter.status) for platform, adapter in self.adapters.items()]
         results = await asyncio.gather(*calls, return_exceptions=True)
-        platforms: dict[str, object] = {}
-        for platform, result in zip(self.adapters, results, strict=True):
-            platforms[platform.value] = (
-                {"available": False, "error": redact_error(result)}
-                if isinstance(result, BaseException)
-                else result
-            )
-        return {
-            "name": "social",
-            "platforms": platforms,
-            "queues": {
-                platform.value: queue.snapshot() for platform, queue in self.queues.items()
-            },
-        }
+        return service_status(self.adapters, self.queues, results)
 
     async def close(self) -> None:
         queues = asyncio.gather(*(queue.close() for queue in self.queues.values()))
@@ -95,17 +82,7 @@ class SocialService:
             for platform, adapter in self.adapters.items()
         ]
         results = await asyncio.gather(*calls, return_exceptions=True)
-        platforms: dict[str, object] = {}
-        for platform, result in zip(self.adapters, results, strict=True):
-            platforms[platform.value] = (
-                {
-                    "authenticated": None,
-                    "error": redact_error(result),
-                }
-                if isinstance(result, BaseException)
-                else result
-            )
-        return {"platforms": platforms}
+        return authentication_status(self.adapters, results)
 
     async def logout(self, platform: Platform) -> dict[str, object]:
         adapter = self._adapter(platform)
@@ -145,33 +122,35 @@ class SocialService:
         return {"query": query, "results": data}
 
     async def get_post(self, platform: Platform, post_id: str) -> ReadResult:
-        return await self._run(
-            platform,
-            lambda: read_result(self._adapter(platform).get_post(post_id)),
-            retry_on_timeout=True,
-        )
+        return await self._read(platform, lambda: self._adapter(platform).get_post(post_id))
 
     async def get_feed(
         self, platform: Platform, feed: str | None, limit: int, cursor: str | None = None
     ) -> ReadResult:
-        return await self._run(
-            platform,
-            lambda: read_result(self._adapter(platform).get_feed(feed, limit, cursor)),
-            retry_on_timeout=True,
+        return await self._read(
+            platform, lambda: self._adapter(platform).get_feed(feed, limit, cursor)
         )
 
     async def get_profile(self, platform: Platform, profile_id: str) -> ReadResult:
-        return await self._run(
-            platform,
-            lambda: read_result(self._adapter(platform).get_profile(profile_id)),
-            retry_on_timeout=True,
-        )
+        return await self._read(platform, lambda: self._adapter(platform).get_profile(profile_id))
 
     async def get_thread(self, platform: Platform, post_id: str, limit: int) -> ReadResult:
-        return await self._run(
+        return await self._read(
+            platform, lambda: self._adapter(platform).get_thread(post_id, limit)
+        )
+
+    async def get_inbox(self, platform: Platform, limit: int) -> ReadResult:
+        adapter = self._messaging_adapter(platform, "get_inbox")
+        return await self._read(platform, lambda: adapter.get_inbox(limit))
+
+    async def get_conversation(
+        self, platform: Platform, profile_id: str | None, thread_id: str | None, index: int
+    ) -> ReadResult:
+        adapter = self._messaging_adapter(platform, "get_conversation")
+        return await self._read(
             platform,
-            lambda: read_result(self._adapter(platform).get_thread(post_id, limit)),
-            retry_on_timeout=True,
+            lambda: adapter.get_conversation(profile_id, thread_id, index),
+            retry_on_timeout=False,
         )
 
     async def preview_action(self, request: ActionRequest) -> ActionPreview:
@@ -222,6 +201,26 @@ class SocialService:
             return self.adapters[platform]
         except KeyError as error:
             raise ValueError(f"Unsupported platform: {platform.value}") from error
+
+    def _messaging_adapter(self, platform: Platform, operation: str) -> MessagingAdapter:
+        adapter = self._adapter(platform)
+        supported = any(
+            item.operation == operation and item.supported for item in adapter.capabilities()
+        )
+        if not supported:
+            raise ValueError(f"{platform.value} does not support {operation}")
+        return cast(MessagingAdapter, adapter)
+
+    async def _read(
+        self,
+        platform: Platform,
+        call: Callable[[], Awaitable[ReadResult]],
+        *,
+        retry_on_timeout: bool = True,
+    ) -> ReadResult:
+        return await self._run(
+            platform, lambda: read_result(call()), retry_on_timeout=retry_on_timeout
+        )
 
     async def _run(
         self,

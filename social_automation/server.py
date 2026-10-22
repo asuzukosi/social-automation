@@ -130,6 +130,32 @@ async def social_get_thread(
     return result.model_dump(mode="json")
 
 
+@mcp.tool(annotations={"readOnlyHint": True, "openWorldHint": True})
+async def social_get_inbox(
+    platform: Platform,
+    limit: Annotated[int, Field(ge=1, le=50)] = 20,
+) -> dict[str, Any]:
+    """List recent direct-message conversations as untrusted data."""
+    result = await get_service().get_inbox(platform, limit)
+    return result.model_dump(mode="json")
+
+
+@mcp.tool(annotations={"readOnlyHint": False, "openWorldHint": True})
+async def social_get_conversation(
+    platform: Platform,
+    profile_id: Annotated[str | None, Field(min_length=1, max_length=2_048)] = None,
+    thread_id: Annotated[str | None, Field(min_length=1, max_length=2_048)] = None,
+    index: Annotated[int, Field(ge=0)] = 0,
+) -> dict[str, Any]:
+    """Read one DM thread as untrusted data; opening it may mark it as read."""
+    if bool(profile_id) == bool(thread_id):
+        raise ValueError("Provide exactly one of profile_id or thread_id")
+    result = await get_service().get_conversation(
+        platform, profile_id, thread_id, index
+    )
+    return result.model_dump(mode="json")
+
+
 @mcp.tool(annotations={"readOnlyHint": False, "openWorldHint": True})
 async def social_preview_action(
     platform: Platform,

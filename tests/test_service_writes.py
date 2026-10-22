@@ -11,7 +11,11 @@ from social_automation.core.models import (
     Platform,
     ReadResult,
 )
-from social_automation.scheduling import PlatformQueue, PlatformQueueFullError
+from social_automation.scheduling import (
+    PlatformQueue,
+    PlatformQueueFullError,
+    PlatformQueueTimeoutError,
+)
 from social_automation.service import SocialService
 
 
@@ -210,3 +214,26 @@ async def test_linkedin_write_timeout_is_not_retried(service: SocialService) -> 
     assert result.status == "outcome_unknown"
     assert result.retry_safe is False
     assert service.get_action(preview.operation_id)["status"] == "completed"
+
+
+async def test_linkedin_conversation_timeout_is_not_retried(service: SocialService) -> None:
+    adapter = service.adapters[Platform.LINKEDIN]
+    attempts = 0
+
+    async def get_conversation(*args: object) -> ReadResult:
+        nonlocal attempts
+        del args
+        attempts += 1
+        await asyncio.Event().wait()
+        raise AssertionError("unreachable")
+
+    adapter.get_conversation = get_conversation  # type: ignore[method-assign]
+    await service.queues[Platform.LINKEDIN].close()
+    service.queues[Platform.LINKEDIN] = PlatformQueue(
+        "linkedin", concurrency=1, capacity=12, timeout_seconds=0.01
+    )
+
+    with pytest.raises(PlatformQueueTimeoutError):
+        await service.get_conversation(Platform.LINKEDIN, "reader", None, 0)
+
+    assert attempts == 1

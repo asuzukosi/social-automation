@@ -121,6 +121,20 @@ def test_linkedin_profile_url_yields_activity_url() -> None:
             {},
         ),
         (
+            "get_inbox",
+            {"limit": 20},
+            "get_inbox",
+            (),
+            {"limit": 20},
+        ),
+        (
+            "get_conversation",
+            {"linkedin_username": "reader", "thread_id": None, "index": 0},
+            "get_conversation",
+            (),
+            {"linkedin_username": "reader", "thread_id": None, "index": 0},
+        ),
+        (
             "connect_with_person",
             {"linkedin_username": "reader", "note": "hello"},
             "connect_with_person",

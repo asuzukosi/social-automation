@@ -9,6 +9,7 @@ def capability(operation: str, write: bool, supported: bool) -> Capability:
     detail = {
         "get_profile": "Company reads require a canonical /company/ URL",
         "get_feed": "The visible feed does not expose a stable resume cursor",
+        "get_conversation": "Opening a conversation may mark it as read",
     }.get(operation)
     if detail:
         restrictions.append(detail)
@@ -29,4 +30,6 @@ def capability(operation: str, write: bool, supported: bool) -> Capability:
 
 
 def _read_limit(operation: str) -> int:
-    return {"get_thread": 200, "search": 25, "get_feed": 25}.get(operation, 1)
+    return {"get_thread": 200, "get_inbox": 50, "search": 25, "get_feed": 25}.get(
+        operation, 1
+    )

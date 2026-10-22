@@ -243,6 +243,73 @@ async def test_linkedin_thread_returns_blocked_without_opening_browser() -> None
     adapter._call.assert_not_awaited()
 
 
+async def test_linkedin_inbox_returns_conversation_references() -> None:
+    adapter = LinkedInAdapter()
+    adapter._call = AsyncMock(
+        return_value={
+            "url": "https://www.linkedin.com/messaging/",
+            "sections": {"inbox": "Reader\nLatest message"},
+            "references": {
+                "inbox": [
+                    {
+                        "kind": "conversation",
+                        "url": "/messaging/thread/thread-123/",
+                        "text": "Reader",
+                        "context": "inbox",
+                    }
+                ]
+            },
+        }
+    )
+
+    result = await adapter.get_inbox(20)
+
+    assert result.completeness.value == "partial"
+    assert result.conversations[0].thread_id == "thread-123"
+    assert result.conversations[0].participant_name == "Reader"
+    assert result.conversations[0].canonical_url == (
+        "https://www.linkedin.com/messaging/thread/thread-123/"
+    )
+    assert result.provider_metadata["inbox_text"] == "Reader\nLatest message"
+
+
+async def test_linkedin_conversation_returns_visible_transcript() -> None:
+    adapter = LinkedInAdapter()
+    adapter._call = AsyncMock(
+        return_value={
+            "url": "https://www.linkedin.com/messaging/thread/thread-123/",
+            "sections": {"conversation": "Reader\nHello\nYou\nHi"},
+            "references": {"conversation": []},
+        }
+    )
+
+    result = await adapter.get_conversation(thread_id="thread-123")
+
+    adapter._call.assert_awaited_once_with(
+        "get_conversation",
+        {"linkedin_username": None, "thread_id": "thread-123", "index": 0},
+    )
+    assert result.completeness.value == "partial"
+    assert result.conversations[0].thread_id == "thread-123"
+    assert result.conversations[0].transcript == "Reader\nHello\nYou\nHi"
+
+
+async def test_linkedin_conversation_keeps_profile_handle_separate_from_name() -> None:
+    adapter = LinkedInAdapter()
+    adapter._call = AsyncMock(
+        return_value={
+            "url": "https://www.linkedin.com/messaging/thread/thread-123/",
+            "sections": {"conversation": "Reader\nHello"},
+            "references": {"conversation": []},
+        }
+    )
+
+    result = await adapter.get_conversation(profile_id="https://linkedin.com/in/reader")
+
+    assert result.conversations[0].participant_id == "reader"
+    assert result.conversations[0].participant_name is None
+
+
 async def test_linkedin_post_read_reports_bounded_page_content() -> None:
     adapter = LinkedInAdapter()
     adapter._call = AsyncMock(

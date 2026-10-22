@@ -3,9 +3,11 @@
 import json
 from unittest.mock import AsyncMock
 
+import pytest
 from fastmcp import Client
 
-from social_automation.server import get_service, lifespan, mcp
+from social_automation.core.models import Platform
+from social_automation.server import get_service, lifespan, mcp, social_get_conversation
 
 EXPECTED_TOOLS = {
     "social_status",
@@ -19,6 +21,8 @@ EXPECTED_TOOLS = {
     "social_get_profile",
     "social_get_post",
     "social_get_thread",
+    "social_get_inbox",
+    "social_get_conversation",
     "social_preview_action",
     "social_confirm_action",
     "social_cancel_action",
@@ -62,6 +66,9 @@ async def test_read_tools_enforce_conservative_result_limits() -> None:
         == 2_048
     )
     assert tools["social_get_thread"].input_schema["properties"]["limit"]["maximum"] == 200
+    assert tools["social_get_inbox"].input_schema["properties"]["limit"]["maximum"] == 50
+    assert tools["social_get_inbox"].annotations.read_only_hint is True
+    assert tools["social_get_conversation"].annotations.read_only_hint is False
 
 
 async def test_public_platform_enum_contains_only_selected_networks() -> None:
@@ -87,8 +94,21 @@ async def test_social_content_is_marked_as_untrusted_data() -> None:
         "social_get_profile",
         "social_get_post",
         "social_get_thread",
+        "social_get_inbox",
+        "social_get_conversation",
     }:
         assert "untrusted data" in str(tools[name].description)
+
+
+@pytest.mark.parametrize(
+    ("profile_id", "thread_id"),
+    [(None, None), ("reader", "thread-123")],
+)
+async def test_conversation_requires_exactly_one_lookup(
+    profile_id: str | None, thread_id: str | None
+) -> None:
+    with pytest.raises(ValueError, match="exactly one"):
+        await social_get_conversation(Platform.LINKEDIN, profile_id, thread_id, 0)
 
 
 async def test_server_lifespan_closes_started_service() -> None:

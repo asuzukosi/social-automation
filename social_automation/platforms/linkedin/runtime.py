@@ -15,6 +15,7 @@ from linkedin_mcp_server.linkedin.navigation import PageNavigator
 from linkedin_mcp_server.linkedin.session import PageSession
 
 from social_automation.platforms.linkedin.browser_actions import LinkedInBrowserActions
+from social_automation.platforms.linkedin.messaging import read_operation
 from social_automation.platforms.linkedin.page_pool import LinkedInPagePool
 from social_automation.platforms.linkedin.urls import normalize_linkedin_url
 
@@ -24,6 +25,8 @@ _READ_OPERATIONS = {
     "get_person_profile",
     "get_company_profile",
     "read_post",
+    "get_inbox",
+    "get_conversation",
 }
 
 
@@ -141,6 +144,8 @@ class LinkedInRuntime:
         browser = await get_or_create_browser()
         async with self._pages.lease(browser.context) as page:
             extractor = LinkedInExtractor(page)
+            if name in {"get_inbox", "get_conversation"}:
+                return await read_operation(extractor, name, arguments)
             if name == "search_posts":
                 result = await extractor.search_posts(
                     str(arguments["keywords"]),
