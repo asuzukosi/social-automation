@@ -33,35 +33,19 @@ async def test_linkedin_reaction_confirmation_requires_observed_state(monkeypatc
 
 
 async def test_linkedin_more_menu_connect_opens_invite_dialog(monkeypatch) -> None:
-    more = SimpleNamespace(click=AsyncMock())
-    more.first = more
-    main = SimpleNamespace(get_by_role=Mock(return_value=more))
-    page = SimpleNamespace(get_by_role=Mock(return_value=main))
+    page = SimpleNamespace()
     navigator = SimpleNamespace(_navigate_to_page=AsyncMock())
-
-    @asynccontextmanager
-    async def available(element, timeout=8000):
-        del timeout
-        yield element
-
-    monkeypatch.setattr(
-        "social_automation.platforms.linkedin.browser_actions.linkedin_element",
-        available,
-    )
+    workflow = SimpleNamespace(_open_more_menu=AsyncMock(return_value=True))
     actions = LinkedInBrowserActions(SimpleNamespace(page=page), navigator)
     monkeypatch.setattr(actions, "_click_visible_connect", AsyncMock(return_value=True))
 
-    opened = await actions._open_more_connect("reader")
+    opened = await actions._open_more_connect(workflow, "reader")
 
     assert opened is True
     navigator._navigate_to_page.assert_awaited_once_with(
         "https://www.linkedin.com/in/reader/"
     )
-    page.get_by_role.assert_called_once_with("main")
-    role_call = main.get_by_role.call_args
-    assert role_call.args == ("button",)
-    assert role_call.kwargs["name"].fullmatch("More actions")
-    more.click.assert_awaited_once()
+    workflow._open_more_menu.assert_awaited_once_with()
 
 
 async def test_linkedin_more_menu_accepts_connect_button_role(monkeypatch) -> None:

@@ -1,7 +1,6 @@
 """Conservative LinkedIn writes through the imported visible browser."""
 
 import asyncio
-import re
 from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
 from typing import Any
@@ -86,10 +85,10 @@ class LinkedInBrowserActions:
         fallback: dict[str, Any],
     ) -> dict[str, Any]:
         username = normalize_person_identifier(username)
-        if not await self._open_more_connect(username):
+        workflow = extractor._connection
+        if not await self._open_more_connect(workflow, username):
             return fallback
 
-        workflow = extractor._connection
         submitted, note_sent, limit_message = await workflow._submit_invite_dialog(note)
         if limit_message is not None:
             return {
@@ -115,15 +114,11 @@ class LinkedInBrowserActions:
             "Submitted the invite dialog, but the updated connection state could not be verified"
         )
 
-    async def _open_more_connect(self, username: str) -> bool:
+    async def _open_more_connect(self, workflow: Any, username: str) -> bool:
         await self._navigator._navigate_to_page(person_profile_url(username, "/"))
         try:
-            main = self._session.page.get_by_role("main")
-            more_button = main.get_by_role(
-                "button", name=re.compile(r"^More(?: actions)?$", re.IGNORECASE)
-            ).first
-            async with linkedin_element(more_button, timeout=8000) as more:
-                await more.click()
+            if not await workflow._open_more_menu():
+                return False
             return await self._click_visible_connect()
         except OffLinkedInLandingError:
             raise
