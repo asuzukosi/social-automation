@@ -43,7 +43,7 @@ class FakeAdapter:
         return {"platform": self.platform.value, "authenticated": False}
 
     def capabilities(self) -> list[Capability]:
-        return [
+        capabilities = [
             Capability(
                 operation="search",
                 supported=True,
@@ -59,6 +59,17 @@ class FakeAdapter:
                 approval_required=True,
             ),
         ]
+        if self.platform is Platform.LINKEDIN:
+            capabilities.extend(
+                Capability(
+                    operation=operation,
+                    supported=True,
+                    authentication="test",
+                    access=AccessMode.BROWSER,
+                )
+                for operation in ("get_inbox", "get_conversation")
+            )
+        return capabilities
 
     async def search(self, query: str, limit: int) -> ReadResult:
         del limit
@@ -85,6 +96,16 @@ class FakeAdapter:
 
     async def get_thread(self, post_id: str, limit: int) -> ReadResult:
         del post_id, limit
+        return ReadResult(completeness=Completeness.COMPLETE)
+
+    async def get_inbox(self, limit: int) -> ReadResult:
+        del limit
+        return ReadResult(completeness=Completeness.COMPLETE)
+
+    async def get_conversation(
+        self, profile_id: str | None, thread_id: str | None, index: int
+    ) -> ReadResult:
+        del profile_id, thread_id, index
         return ReadResult(completeness=Completeness.COMPLETE)
 
     async def render_action(self, action: RenderedAction) -> RenderedAction:

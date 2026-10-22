@@ -18,6 +18,8 @@ EXPECTED_OPERATIONS = {
     "get_profile",
     "get_post",
     "get_thread",
+    "get_inbox",
+    "get_conversation",
     *(action.value for action in ActionName),
 }
 
@@ -37,7 +39,7 @@ def test_capabilities_expose_automation_and_interaction_bounds(adapter) -> None:
             assert capability.max_writes_per_confirmation == 1
         else:
             assert capability.automation_allowed is True
-            assert capability.max_items_per_call in {1, 25, 200}
+            assert capability.max_items_per_call in {1, 25, 50, 200}
 
 
 async def test_confirmations_run_independently_across_platforms(service: SocialService) -> None:

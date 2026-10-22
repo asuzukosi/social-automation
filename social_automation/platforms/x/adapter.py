@@ -14,7 +14,7 @@ from social_automation.core.models import (
     RenderedAction,
 )
 from social_automation.core.redaction import redact_error
-from social_automation.platforms.base import READ_OPERATIONS
+from social_automation.platforms.base import CONTENT_READ_OPERATIONS, READ_OPERATIONS
 from social_automation.platforms.x.auth import XAuthentication
 from social_automation.platforms.x.mapping import post_from_row, thread_nodes
 from social_automation.platforms.x.runtime import XRuntimePool
@@ -59,7 +59,10 @@ class XAdapter:
         return await self._authentication.logout()
 
     def capabilities(self) -> list[Capability]:
-        reads = [self._capability(name, False) for name in READ_OPERATIONS]
+        reads = [
+            self._capability(name, False, name in CONTENT_READ_OPERATIONS)
+            for name in READ_OPERATIONS
+        ]
         writes = [
             self._capability(action.value, True, action in _SUPPORTED_WRITES)
             for action in ActionName
@@ -213,7 +216,9 @@ class XAdapter:
             automation_allowed=supported and not write,
             approval_required=supported and write,
             reliably_confirmed=supported,
-            max_items_per_call=XAdapter._read_limit(operation) if not write else None,
+            max_items_per_call=(
+                XAdapter._read_limit(operation) if supported and not write else None
+            ),
             max_writes_per_confirmation=1 if supported and write else None,
             restrictions=restrictions,
         )

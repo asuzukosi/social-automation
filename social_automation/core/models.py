@@ -115,6 +115,18 @@ class ThreadNode(BaseModel):
     children: list[ThreadNode] = Field(default_factory=list)
 
 
+class Conversation(BaseModel):
+    """One LinkedIn messaging thread or inbox reference."""
+
+    platform: Platform
+    thread_id: str | None = None
+    canonical_url: str
+    participant_id: str | None = None
+    participant_name: str | None = None
+    transcript: str | None = None
+    provider_metadata: dict[str, Any] = Field(default_factory=dict)
+
+
 class ReadResult(BaseModel):
     """A normalized read with an explicit completeness claim."""
 
@@ -124,6 +136,8 @@ class ReadResult(BaseModel):
     items: list[Post] = Field(default_factory=list)
     profiles: list[Profile] = Field(default_factory=list)
     thread: list[ThreadNode] = Field(default_factory=list)
+    conversations: list[Conversation] = Field(default_factory=list)
+    provider_metadata: dict[str, Any] = Field(default_factory=dict)
 
 
 class ActionRequest(BaseModel):

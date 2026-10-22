@@ -18,11 +18,14 @@ try to parallelize them with multiple pages in the same profile; allow later
 calls to wait in the queue. This queue is separate from X and Reddit, which may
 continue concurrently while LinkedIn is busy.
 
-Check capabilities first. Search, post creation, comments, default reactions,
-connections, and messages are available. Single-post reads are bounded and
-partial; full discussion reads and nested reply writes remain unsupported. Use
-canonical LinkedIn post URLs for comment and reaction targets and usernames for
-connection or message targets.
+Check capabilities first. Search, inbox and conversation reads, post creation,
+comments, default reactions, connections, and messages are available.
+`social_get_inbox` lists up to 50 recent conversations. Pass exactly one of
+`profile_id` or `thread_id` to `social_get_conversation`. Opening a conversation
+may mark it as read, so do not retry it after an uncertain result. Single-post
+reads are bounded and partial; full discussion reads and nested reply writes
+remain unsupported. Use canonical LinkedIn post URLs for comment and reaction
+targets and usernames for connection or message targets.
 `social_get_profile` accepts person identifiers and canonical `/company/` URLs;
 use the URL form when reading a company page.
 

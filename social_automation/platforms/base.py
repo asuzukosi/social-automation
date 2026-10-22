@@ -11,7 +11,8 @@ from social_automation.core.models import (
     RenderedAction,
 )
 
-READ_OPERATIONS = ("search", "get_feed", "get_profile", "get_post", "get_thread")
+CONTENT_READ_OPERATIONS = ("search", "get_feed", "get_profile", "get_post", "get_thread")
+READ_OPERATIONS = (*CONTENT_READ_OPERATIONS, "get_inbox", "get_conversation")
 
 
 class PlatformAdapter(Protocol):
@@ -46,3 +47,11 @@ class PlatformAdapter(Protocol):
     async def execute_action(
         self, action: RenderedAction, idempotency_key: str
     ) -> ActionResult: ...
+
+
+class MessagingAdapter(Protocol):
+    async def get_inbox(self, limit: int) -> ReadResult: ...
+
+    async def get_conversation(
+        self, profile_id: str | None, thread_id: str | None, index: int
+    ) -> ReadResult: ...
