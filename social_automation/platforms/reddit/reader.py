@@ -34,7 +34,10 @@ class RedditReader:
         if cursor:
             params["after"] = cursor
         try:
-            data = await self.json(f"{path}/hot", params, browser_fallback=cursor is not None)
+            data = await self.json(f"{path}/hot", params, browser_fallback=True)
+        except RuntimeError:
+            self._json_blocked_until = time.monotonic() + 15 * 60
+            return await self._rss_feed(path, subreddit, limit)
         except httpx.HTTPStatusError as error:
             if error.response.status_code != 403:
                 raise
